@@ -1,3 +1,20 @@
+Jewels and Stones
+=====
+Description:
+--------
+>You're given strings J representing the types of stones that are jewels, and S representing the stones you have.  Each character in S is a type of stone you have.  You want to know how many of the stones you have are also jewels.
+
+>The letters in J are guaranteed distinct, and all characters in J and S are letters. Letters are case sensitive, so "a" is considered a different type of stone from "A".<br>
+
+Example 1:
+--------
+>`Input: J = "aA", S = "aAAbbbb"`<br>
+`Output: 3`
+
+Example 2:
+--------
+>`Input: J = "z", S = "ZZ"`<br>
+`Output: 0`
 ```cpp
 int numJewelsInStones(char* J, char* S) {
     int Jsize=strlen(J);
@@ -13,3 +30,7 @@ int numJewelsInStones(char* J, char* S) {
     return amount;
 }
 ```
+*****
+  对于这题，我们可以抽象为输出S数组中包含的J数组中元素的个数。
+  为了避免数组越界，这里我们首先要知道给定的两个数组的大小。*需要注意的是，此处不应用sizeof（array）/sizeof（char），经实验证明，**这种算法会将空字符也算进来**。*此处直接用strlen()即可。<br>
+  总体而言，代码的实现上并不难，最主要的是sizeof(array)/size(char)与strlen()的区别————这才是在做这道题的过程中最大的收获。
