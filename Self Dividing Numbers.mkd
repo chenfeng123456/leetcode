@@ -1,0 +1,59 @@
+Self Dividing Numbers
+=======
+Description:
+---------
+ >A self-dividing number is a number that is divisible by every digit it contains.
+
+>For example, 128 is a self-dividing number because 128 % 1 == 0, 128 % 2 == 0, and 128 % 8 == 0.
+
+>Also, a self-dividing number is not allowed to contain the digit zero.
+
+>Given a lower and upper number bound, output a list of every possible self dividing number, including the bounds if possible.
+
+Example 1:
+----
+>`Input:`<br> 
+>`left = 1, right = 22`<br>
+>`Output:` <br>`[1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 15, 22] `
+```cpp
+int* selfDividingNumbers(int left, int right, int* returnSize) {
+    int amount=0;
+    int *result=(int *)malloc((right-left)*sizeof(int));
+    for(int i=left;i<=right;i++)
+    {
+        int j=0,wei[5]={0},x=i;
+        bool dnum=1;
+        for(;j<5;j++)
+        {
+            wei[j]=x%10;
+            if(wei[j]==0)
+            {
+                dnum=0;
+                break;
+            }
+            x/=10;
+            if(x==0) break;
+        }
+        if(dnum==0) continue;
+        else
+        {
+            for(int k=0;k<=j;k++)
+            {
+                if(i%wei[k]!=0)
+                {
+                    dnum=0;
+                    break;
+                }
+            }
+        }
+        if(dnum==1) 
+        {
+            *(result+(*returnSize)++)=i;
+            amount++;
+        }
+    }
+    return result;
+}
+```
+*******
+本题在具体实现上主要为每位数的分离和判断是否能被整除两部分，在程序实现上跟以前做过的类似。**值得注意的是这题定义数组的方式和malloc函数的用法，在以后学习c++中动态数组时还有类似的用法，需特别关注一下。**
