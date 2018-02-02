@@ -1,0 +1,44 @@
+ Hamming Distance
+ ====================
+ <table><tr><td bgcolor=aquamarine>
+ Description:
+ ------
+ >The Hamming distance between two integers is the number of positions at which the corresponding bits are different.
+
+>Given two integers x and y, calculate the Hamming distance.<br>
+Note:<br>
+</td></tr></table>$$0 ≤ x, y < 2^31. $$
+<table><tr><td bgcolor=orange>Example:<br>
+Input: x = 1, y = 4
+
+Output: 2
+Explanation:<br>
+1   (0 0 0 1)<br>
+4   (0 1 0 0)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↑&nbsp;   ↑<br>
+
+The above arrows point to positions where the corresponding bits are different.</td></tr></table>
+
+```cpp
+int hammingDistance(int x, int y) {
+    int X[32]={0},Y[32]={0},distance=0;
+    for(int i=0;;x/=2,i++)
+    {
+        X[i]=x%2;
+        if(x==0) break;
+    }
+    for(int i=0;;y/=2,i++)
+    {
+        Y[i]=y%2;
+        if(y==0) break;
+    }
+    for(int i=0;i<32;i++)
+    {
+        distance+=(X[i]>Y[i]?X[i]-Y[i]:Y[i]-X[i]);
+    }
+    return distance;
+}
+```
+**********<table><tr><td bgcolor=aqua>
+本题中值得注意的是<font color=red>*二进制与十进制的换算及程序实现*</font><br>
+我们可以每次对x取余后直接将其除以2，由于x为int型变量，通过其取整相当于直接将余数舍掉，这样就模拟出了我们对于十进制转二进制的运算过程。</td></tr></table>
