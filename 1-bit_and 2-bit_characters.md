@@ -22,6 +22,11 @@ bits = [1, 1, 1, 0]<br>
 Output: False<br>
 Explanation: <br>
 The only way to decode it is two-bit character and two-bit character. So the last character is NOT one-bit character.<br>
+
+Note:
+--------------
+1.1 <= len(bits) <= 1000.   
+2.bits[i] is always 0 or 1.
 ```cpp
 bool isOneBitCharacter(int* bits, int bitsSize) {
     bool answer;
