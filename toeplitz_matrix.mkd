@@ -1,3 +1,31 @@
+Toeplitz Matrix
+===========
+Description:
+-----------
+Example 1:
+--------------
+Input: matrix = [[1,2,3,4],[5,1,2,3],[9,5,1,2]] <br>
+Output: True    
+Explanation:    
+1234    
+5123    
+9512    
+
+In the above grid, the diagonals are "[9]", "[5, 5]", "[1, 1, 1]", "[2, 2, 2]", "[3, 3]", "[4]", and in each diagonal all elements are the same, so the answer is True.
+
+Example 2:
+---------------
+Input: matrix = [[1,2],[2,2]]<br>
+Output: False<br>
+Explanation:<br>
+The diagonal "[1, 2]" has different elements.
+
+Note:
+-----------
+1.matrix will be a 2D array of integers.<br>
+2.matrix will have a number of rows and columns in range [1, 20].<br>
+3.matrix[i][j] will be integers in range [0, 99].<br>
+
 ```cpp
 bool isToeplitzMatrix(int** matrix, int matrixRowSize, int *matrixColSizes) {
     int row=0,col=0;
@@ -18,3 +46,5 @@ bool isToeplitzMatrix(int** matrix, int matrixRowSize, int *matrixColSizes) {
     return 1;
 }
 ```
+************************
+本题要求判断给定矩阵是否每条对角线上的数字都是一样的。我们只需要用两个for循环，从左上角开始，分别扫左半边和右半边。如果到达右边缘或底层则跳出。一旦有一个数不与该对角线上的第一个数相等，则直接返回0；若直到函数结束都没出现这样的情况的话，则返回1。
