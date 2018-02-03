@@ -1,0 +1,20 @@
+```cpp
+bool isToeplitzMatrix(int** matrix, int matrixRowSize, int *matrixColSizes) {
+    int row=0,col=0;
+    for(;row<matrixRowSize;row++)
+    {
+        for(int ro=row,co=0;ro<matrixRowSize&&co<*matrixColSizes;ro++,co++)
+        {
+            if(matrix[ro][co]!=matrix[row][0]) return 0;
+        }
+    }
+    for(row=0,col=1;col<*matrixColSizes;col++)
+    {
+        for(int ro=row,co=col;ro<matrixRowSize&&co<*matrixColSizes;ro++,co++)
+        {
+            if(matrix[ro][co]!=matrix[0][col]) return 0;
+        }
+    }
+    return 1;
+}
+```
