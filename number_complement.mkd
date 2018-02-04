@@ -1,0 +1,15 @@
+```c
+int findComplement(int num) {
+    int wei[1000]={0},i=0,x=num,answer=0;
+    for(;;i++)
+    {
+        wei[i]=x%2;//printf("%d",wei[i]);
+        x/=2;
+        if(wei[i]==0) wei[i]=1;
+        else wei[i]=0;
+        answer+=wei[i]*pow(2,i);
+        if(x==0) break;
+    }
+    return answer;
+}
+```
