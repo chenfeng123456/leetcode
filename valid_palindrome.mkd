@@ -56,6 +56,4 @@ bool isPalindrome(char* s) {
 
 ***几个函数：***   
 
-**isalnum：**判断字符变量c是否为字母或数字，若是则返回非零，否则返回零。[百度百科](https://baike.baidu.com/item/isalnum/387328?fr=aladdin)   
-
-**tolower：**tolower是一种函数，功能是把字母字符转换成小写，非字母字符不做出处理。和函数int _tolower( int c )功能一样，但是_tolower在VC6.0中头文件要用ctype.h。[百度百科](https://baike.baidu.com/item/tolower/6389989?fr=aladdin)
+**isalnum：**判断字符变量c是否为字母或数字，若是则返回非零，否则返回零。[百度百科](https://baike.baidu.com/item/isalnum/387328?fr=aladdin)<br>   **tolower：**tolower是一种函数，功能是把字母字符转换成小写，非字母字符不做出处理。和函数int _tolower( int c )功能一样，但是_tolower在VC6.0中头文件要用ctype.h。[百度百科](https://baike.baidu.com/item/tolower/6389989?fr=aladdin)
