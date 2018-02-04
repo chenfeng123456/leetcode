@@ -1,3 +1,18 @@
+Two Sum
+=========
+Description:
+-------------
+Given an array of integers, return indices of the two numbers such that they add up to a specific target.
+
+You may assume that each input would have exactly one solution, and you may not use the same element twice.  
+
+Example:  
+------------
+Given nums = [2, 7, 11, 15], target = 9,  
+Because nums[0] + nums[1] = 2 + 7 = 9,  
+return [0, 1].
+
+
 ```c
 /**
  * Note: The returned array must be malloced, assume caller calls free().
@@ -19,3 +34,4 @@ int* twoSum(int* nums, int numsSize, int target) {
     return answer;
 }
 ```
+这题有意思的地方在于按照题目要求*不能直接定义数组*，否则会是runtime error，一开始没看明白代码前面的note，于是被卡了半天。**在这里还要强调一下[定义数组与用malloc函数分配空间的区别](http://blog.csdn.net/qq361294382/article/details/52027448)**,二者在使用时区别并不大，但在本质上还是不同，需要我们注意一下。
