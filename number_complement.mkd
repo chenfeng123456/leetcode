@@ -1,3 +1,28 @@
+Number Complement
+================
+Description:
+------------------
+Given a positive integer, output its complement number. The complement strategy is to flip the bits of its binary representation.  
+
+Note:
+-----
+
+    1.The given integer is guaranteed to fit within the range of a 32-bit signed integer.
+    2.You could assume no leading zero bit in the integer’s binary representation.
+
+Example 1:
+--------------
+Input: 5<br>
+Output: 2<br>
+Explanation: The binary representation of 5 is 101 (no leading zero bits), and its complement is 010. So you need to output 2.<br>
+
+Example 2:
+-------------
+Input: 1<br>
+Output: 0<br>
+Explanation: The binary representation of 1 is 1 (no leading zero bits), and its complement is 0. So you need to output 0.<br>
+
+
 ```c
 int findComplement(int num) {
     int wei[1000]={0},i=0,x=num,answer=0;
@@ -13,3 +38,4 @@ int findComplement(int num) {
     return answer;
 }
 ```
+本题要求给定一个数，输出她的二进制码的反码所对应的值。关于如何将十进制数变为二进制，在之前的题目中已经做过一次，可以参考[Hamming Distance](https://github.com/chenfeng123456/leetcode/blob/note1/Hamming%20Distance.mkd)。转换成二进制后，我们将每一位存在一个数组中，并将每个数组中的数字“反转”，*注意此处我们需要知道共有多少位，否则会将后面空出来的部分一并反转并输出，在此我们可以借用前面在转换为二进制数时用于给循环计数的i，循环跳出后i刚好代表位数的多少。*最后再将二进制转换为十进制即可。
