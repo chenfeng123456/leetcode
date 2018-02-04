@@ -20,20 +20,8 @@ bool isPalindrome(char* s) {
         if(!((s[i]>='A'&&s[i]<='Z')||(s[i]>='a'&&s[i]<='z')||(s[i]>=48&&s[i]<=57))) 
         {
             for(int k=i;k<size-1;k++)
-            {
-                s[k]=s[k+1];
-            }
-            s[size-1]='\0';
-            size--;
-            continue;
-        }
-        i++;
-    }
-    for(i=0;i<size-1-i;i++)
-    {
-        if(s[i]!=s[size-1-i])
-        {
-            if(!((s[i]>='A'&&s[i]<='Z'||s[i]>='a'&&s[i]<='z')&&(s[size-1-i]>='A'&&s[size-1-i]<='Z'||s[size-1-i]>='a'&&s[size-1-i]<='z')))
+            {e-1-i]<='Z'||s[size-1-i]>='a'&&s[size-1-i]<='z')))
+
                 return 0;
             else if(abs(s[i]-s[size-1-i])!=32)
                 return 0;
@@ -52,7 +40,7 @@ bool isPalindrome(char* s) {
     while(p1 < p2){
         if(!isalnum(*p1)){p1++;continue;}
         if(!isalnum(*p2)){p2--;continue;}
-        if(tolower(*p1++) != tolower(*p2--)) return false;
+        if((*p1++) != tolower(*p2--)) return false;
     }
     return true;
 }
@@ -61,4 +49,13 @@ bool isPalindrome(char* s) {
 这题做了一上午，最终以	Time Limit Exceeded告终。于是到看了以下别人的代码，确实比我的好很多，灵活使用指针的确能让代码简化不少，并且思路也清晰。   
 
 ***我的思路：***  
-先判断数组是否为空，若为空，按题目要求返回1。接着再从最后一个开始检查是否为数字或字母，若是则置为空字符，并且size相应的减少1，然后循环回来继续检查，直到最后一个变为数字或字母为止。接下来再从头开始，依次检查每个元素是否为数字或字母，若不是则将其删掉，即将后面的每个元素往前移一位，并将原来的最后一位置为空字符，size减一。
+先判断数组是否为空，若为空，按题目要求返回1。接着再从最后一个开始检查是否为数字或字母，若是则置为空字符，并且size相应的减少1，然后循环回来继续检查，直到最后一个变为数字或字母为止。接下来再从头开始，依次检查每个元素是否为数字或字母，若不是则将其删掉，即将后面的每个元素往前移一位，并将原来的最后一位置为空字符，size减一。最后再判断是否为回文，情况要分的比较细。   
+
+***别人的思路：***   
+直接定义两个指针分别指向数组的第一个和最后一个，先判断所指向的元素是否为数字或字母，若不是则跳过；若是，则判断两个指针所指的元素是否相等。   
+
+***几个函数：***   
+
+**isalnum：**判断字符变量c是否为字母或数字，若是则返回非零，否则返回零。[百度百科](https://baike.baidu.com/item/isalnum/387328?fr=aladdin)   
+
+**tolower：**tolower是一种函数，功能是把字母字符转换成小写，非字母字符不做出处理。和函数int _tolower( int c )功能一样，但是_tolower在VC6.0中头文件要用ctype.h。[百度百科](https://baike.baidu.com/item/tolower/6389989?fr=aladdin)
