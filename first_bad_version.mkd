@@ -1,3 +1,16 @@
+First Bad Version
+=================
+Description:
+--------------
+ You are a product manager and currently leading a team to develop a new product. Unfortunately, the latest version of your product fails the quality check. Since each version is developed based on the previous version, all the versions after a bad version are also bad.
+
+Suppose you have n versions [1, 2, ..., n] and you want to find out the first bad one, which causes all the following ones to be bad.
+
+You are given an API bool isBadVersion(version) which will return whether version is bad. Implement a function to find the first bad version. You should minimize the number of calls to the API.   
+
+No example
+---------   
+
 ```c
 bool isBadVersion(int version);
 
@@ -13,3 +26,7 @@ int firstBadVersion(int n) {
     return left;
 }
 ```
+****************************
+这道题看起来很简单，但是如果直接遍历的话，效率太低（time limited exceed）。所以这里要用到***对分查找***。   
+我们分别设left，right，mid指向所要查找范围的最左端，最右端和中间。若mid不是bad version，则说明第一个出现在mid的右边，于是令left=mid+1；er如果mid是bad version，则第一个可能出现在mid的左边也可能就是它本身，所以令right=mid。如此循环，最终left和right重合且重合处就是first bad version（可用[强化归纳法](https://baike.baidu.com/item/%E7%AC%AC%E4%BA%8C%E6%95%B0%E5%AD%A6%E5%BD%92%E7%BA%B3%E6%B3%95/4641553)证明([strong induction](http://www.cs.cornell.edu/courses/cs211/2006sp/Lectures/L06-Induction/binary_search.html))。   
+值得注意的是，left+right有可能会溢出，避免这种情况的方法就是将其改写为left+（right-left）/2.<br>这道题也没做出来，算法来自本题后面的[solution](https://leetcode.com/problems/first-bad-version/solution/)。
