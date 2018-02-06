@@ -1,3 +1,20 @@
+Reverse words in a string III
+==========================
+Description:
+-------------------
+Given a string, you need to reverse the order of characters in each word within a sentence while still preserving whitespace and initial word order.
+
+Example: 
+--------
+Input: "Let's take LeetCode contest"<br>
+Output: "s'teL ekat edoCteeL tsetnoc"<br>
+
+Note:
+-----------------
+In the string, each word is separated by single space and there will not be any extra space in the string.   
+
+
+
 ```c
 char* reverseWords(char* s) {
     int size=strlen(s);
@@ -21,3 +38,4 @@ char* reverseWords(char* s) {
     return s;
 }
 ```
+本题要求将一句话中的每个单词反转，用 ***指针*** 来做要更为简单一些。我们可以定义三个指针pt1，pt2，pt3，其中pt1，pt2初始时都是指在数组的开头。先令pt2逐个向后移动并检查当前所指元素是否为空格，若是，且不为最后一个，则令pt3等于pt2-1；如果pt2指的是数组的最后一个，则令pt3等于pt2。这样pt1指的就是单词的开头,pt3指的就是单词的结尾，在用一个简单的for循环即可将单词反转。反转之后若pt2不在结尾，则令pt1指向pt2+1、pt2++，即指向下一个单词的开头，如此循环，即可完成此题要求。
