@@ -1,0 +1,55 @@
+/**
+ * Return an array of size *returnSize.
+ * Note: The returned array must be malloced, assume caller calls free().
+ */
+char *row1="qwertyuiop";
+char *row2="asdfghjkl";
+char *row3="zxcvbnm";
+
+
+int row(char a)
+{
+    a=tolower(a);
+    for(char *pt=row1;;pt++)
+    {
+        if(a==*pt) return 1;
+        if(pt==(row1)+10-1) break;
+    }
+    for(char *pt=row2;;pt++)
+    {
+        if(a==*pt) return 2;
+        if(pt==(row2)+9-1) break;
+    }
+    for(char *pt=row3;;pt++)
+    {
+        if(a==*pt) return 3;
+        if(pt==(row3)+7-1) break;
+    }
+    return 0;
+}
+
+
+bool sameRow(char *s)
+{
+    int size=strlen(s);
+    for(int i=1;i<size;i++)
+    {
+        if(row(s[i])!=row(s[i-1])) return 0;
+    }
+    return 1;
+}
+
+char** findWords(char** words, int wordsSize, int* returnSize) {
+    char **str;
+    str=(char **)malloc(sizeof(char *)*wordsSize);
+    for(int i=0;i<wordsSize;i++)
+    {
+        if(sameRow(words[i])) 
+        {
+            str[*returnSize]=words[i];
+            (*returnSize)++;
+        }
+    }
+    return str;
+    
+}
