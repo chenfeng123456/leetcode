@@ -1,0 +1,23 @@
+```c
+char* reverseWords(char* s) {
+    int size=strlen(s);
+    if(size==0) return s;
+    char *pt1=s,*pt2=s,*pt3=NULL;
+    while(1)
+    {
+        for(;*pt2!=' '&&pt2<s+size-1;pt2++){}
+        if(pt2==s+size-1) pt3=pt2;
+        else pt3=pt2-1;
+        for(;pt1<pt3;pt1++,pt3--)
+        {
+            char temp=*pt1;
+            *pt1=*pt3;
+            *pt3=temp;
+        }
+        if(pt2==s+size-1) break;
+        pt1=pt2+1;
+        pt2++;
+    }
+    return s;
+}
+```
