@@ -71,5 +71,4 @@ int* findDisappearedNumbers(int* nums, int numsSize, int* returnSize) {
     return result;
 }
 ```
-对于此题，先将数组进行排序做起来会方便一些，这里我们用到[快速排序](http://blog.csdn.net/morewindows/article/details/6684558)。   
-之后我们再定义一个数组a，令它当中的每个元素的值都是它的脚标加一。如此我们将元素的值与其脚标关联起来，这样给定数组中每一个元素的值都与数组a中的值有了对应，我们将序号为nums[i]-1的值置为0，所以a数组中不为0的元素即为所求。
+对于此题，先将数组进行排序做起来会方便一些，这里我们用到[快速排序](http://blog.csdn.net/morewindows/article/details/6684558)。<br> 之后我们再定义一个数组a，令它当中的每个元素的值都是它的脚标加一。如此我们将元素的值与其脚标关联起来，这样给定数组中每一个元素的值都与数组a中的值有了对应，我们将序号为nums[i]-1的值置为0，所以a数组中不为0的元素即为所求。
