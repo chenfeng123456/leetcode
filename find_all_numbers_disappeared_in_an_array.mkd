@@ -1,3 +1,24 @@
+Find All Numbers Disappeared in an Array
+===============================
+Description：
+------------
+Given an array of integers where 1 ≤ a[i] ≤ n (n = size of array), some elements appear twice and others appear once.
+
+Find all the elements of [1, n] inclusive that do not appear in this array.
+
+Could you do it without extra space and in O(n) runtime? You may assume the returned list does not count as extra space.
+
+Example:
+-----------------
+
+Input:<br>
+[4,3,2,7,8,2,3,1]<br>
+
+Output:<br>
+[5,6]
+
+
+
 ```c
 /**
  * Return an array of size *returnSize.
@@ -50,3 +71,5 @@ int* findDisappearedNumbers(int* nums, int numsSize, int* returnSize) {
     return result;
 }
 ```
+对于此题，先将数组进行排序做起来会方便一些，这里我们用到[快速排序](http://blog.csdn.net/morewindows/article/details/6684558)。   
+之后我们再定义一个数组a，令它当中的每个元素的值都是它的脚标加一。如此我们将元素的值与其脚标关联起来，这样给定数组中每一个元素的值都与数组a中的值有了对应，我们将序号为nums[i]-1的值置为0，所以a数组中不为0的元素即为所求。
