@@ -1,0 +1,49 @@
+```c
+char* countAndSay(int n) {
+    if(n==1)
+    {
+        char *answer=(char *)malloc(sizeof(char));
+        answer[0]='1';
+        return answer;
+    }
+    /*else if(n==2)
+    {
+            char *answer=(char *)malloc(sizeof(char)*2);
+            answer[0]='1';
+            answer[1]='1';
+            return answer;
+    }*/ //这段其实可以不要
+    else
+    {
+        char *pre=countAndSay(n-1);
+        int size=strlen(pre);
+        int *preN=(int *)malloc(2*size*sizeof(int));
+        int j=-2;
+        for(int i=0;i<size;)
+        {
+            j=j+2;
+            preN[j+1]=pre[i]-'1'+1;
+            preN[j]=0;
+            while(pre[i]==preN[j+1]-1+'1'&&i<size)
+            {
+                preN[j]++;
+                i++;
+            }
+        }
+        char *answer=(char *)malloc(sizeof(char)*2*size);
+        int k=0;
+        for(int i=0;k<j+1;i=i+2)
+        {
+            if(preN[i]==0) continue;
+            answer[k]=preN[i]-1+'1';
+            answer[k+1]=preN[i+1]-1+'1';
+            k=k+2;
+        }
+        answer[k]='\0';
+        free(preN);
+        free(pre);
+        return answer;
+    }
+}
+
+```
