@@ -134,3 +134,7 @@ char* countAndSay(int n) {
          [malloc 和alloc及calloc的区别](http://blog.csdn.net/woxincd/article/details/8279775)<br>
          [百度百科](https://baike.baidu.com/item/calloc/10931444?fr=aladdin)<br>
          
+另外的收获————sizeof：<br>
+1.sizeof是运算符而非函数。<br>
+2.sizeof操作符不能返回动态地被分派了的数组或外部的数组的尺寸。如果用sizeof计算一段用malloc申请的内存，返回值永远是对应指针变量的大小（如本题中是char\*，大小为8）。
+详情参考[百度百科](https://baike.baidu.com/item/sizeof#2)
