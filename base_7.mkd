@@ -38,4 +38,4 @@ public:
 这次刻意用了递归解题，**需要注意的是，应当将convertToBase7(num/7)放在前面，否则输出的字符串是反的。** <br>
 解题过程中还无意间发现了一个函数:     
    <br> 
-[ *to_string:* 用于将数字类型转化成string类型](blog.csdn.net/chavo0/article/details/51038397)
+[ *to_string:* 用于将数字类型转化成string类型](http://blog.csdn.net/chavo0/article/details/51038397)
