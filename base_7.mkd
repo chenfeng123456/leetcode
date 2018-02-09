@@ -1,0 +1,13 @@
+```cpp
+class Solution {
+public:
+    string convertToBase7(int num) {
+        if(num<0) return('-'+convertToBase7(-num));
+        if(num>=0) 
+        {
+            if(num>=7) return(convertToBase7(num/7)+to_string(num%7));
+            else return(to_string(num%7));
+        }
+    }
+};
+```
