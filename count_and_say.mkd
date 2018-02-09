@@ -48,6 +48,33 @@ char* countAndSay(int n) {
 }
 
 ```
+
+***modified code:***
+```c
+char* countAndSay(int n) {
+    if(n==1)
+    {
+        char *answer=(char *)calloc(2, sizeof(char));
+        answer[0]='1';
+        return answer;
+    }
+    
+    else
+    {
+        char *pre=countAndSay(n-1);
+        int size=strlen(pre);
+        int *preN=(int *)calloc(2*size, sizeof(int));
+        int j=-2;
+        for(int i=0;i<size;)
+        {
+            j=j+2;
+            preN[j+1]=pre[i]-'1'+1;
+            preN[j]=0;
+            while(pre[i]==preN[j+1]-1+'1'&&i<size)
+            {
+                preN[j]++;
+                i++;
+            }
         }
         char *answer=(char *)calloc(2*size, sizeof(char));
         int k=0;
