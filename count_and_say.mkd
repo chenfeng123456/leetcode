@@ -97,7 +97,7 @@ char* countAndSay(int n) {
 2.malloc函数的效率高于calloc函数。虽然calloc函数用起来更加安全，但它毕竟多了一个对内存写零的操作，其效率自然会低一些。而很多时候我们并不需要这个操作，所以在实际的代码编写<过程中，我们会更多地见到malloc函数而非calloc。<br>
 3.在使用时，malloc有一个参数，而calloc有两个。malloc的参数为所申请内存的大小，calloc的参数为元素的数目和每个元素的大小（二者的乘积即为分配内存的大小）。<br>
 以上就是我们在使用两个函数时应当注意的几个不同点。<br>
-参考资料：[realloc、malloc、以及calloc函数的区别](blog.csdn.net/u014170207/article/details/53126340)<br>
-         [malloc 和alloc及calloc的区别](blog.csdn.net/woxincd/article/details/8279775)<br>
+参考资料：[realloc、malloc、以及calloc函数的区别](http://blog.csdn.net/u014170207/article/details/53126340)<br>
+         [malloc 和alloc及calloc的区别](http://blog.csdn.net/woxincd/article/details/8279775)<br>
          [百度百科](https://baike.baidu.com/item/calloc/10931444?fr=aladdin)<br>
          
