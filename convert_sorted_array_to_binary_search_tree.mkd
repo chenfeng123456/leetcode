@@ -46,3 +46,8 @@ struct TreeNode* sortedArrayToBST(int* nums, int numsSize) {
     return answer;
 }
 ```
+一开始理解错题意了，此处的depth不是指各子树上元素的值的和，仅指树的数量。     
+
+所以我们每次只需要取区间当中最中间的数作为当前的root即可。不用担心int型强行取整，因为即使除不尽，两边元素的数量也不会相差超过1，完全符合题意。     
+
+这里还要强调以下递归的终止条件，必须是start>end，不能加‘=’。否则会有数据漏掉。比如，最后start为0，end为2，则root为1，那么left指向convert(nums,0,0),right指向convert(nums,2,2)，若终止条件为start>=end的话，则nums[0]和nums[2]都不能被包含进二叉树中。
