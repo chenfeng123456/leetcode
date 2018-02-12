@@ -70,4 +70,12 @@ public:
 ```
 这题本不难，只需将给定数组中的元素按要求一一填进新数组即可。注意两个数组的元素下标要分开存储。这里讲一讲c++关于数组几个要注意的地方：<br>
 1.用vector创建二维数组时，数组名后面括号中的数字代表行数；<br>
-2.
+2.    [push_back 方法介绍](http://blog.csdn.net/u013630349/article/details/46853297)
+
+    vector::void push_back (const value_type& val);
+
+    vector::void push_back (value_type&& val);
+
+    该函数将一个新的元素加到vector的最后面，位置为当前最后一个元素的下一个元素，新的元素的值是val的拷贝（或者是移动拷贝）
+
+
