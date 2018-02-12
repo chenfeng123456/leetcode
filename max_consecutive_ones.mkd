@@ -1,3 +1,23 @@
+Max Consecutive Ones
+===================
+Description:
+-----------------
+Given a binary array, find the maximum number of consecutive 1s in this array.
+
+Example 1:
+---------------------
+Input: [1,1,0,1,1,1]<br>
+Output: 3<br>
+Explanation: The first two digits or the last three digits are consecutive 1s.
+    The maximum number of consecutive 1s is 3.<br>
+
+Note:
+
+    1.The input array will only contain 0 and 1.
+    2.The length of input array is a positive integer and will not exceed 10,000
+
+
+
 ```cpp
 class Solution {
 public:
@@ -20,3 +40,5 @@ public:
     }
 };
 ```
+*******************************
+这题也是用来适应c++而选的，把题目看懂后就很简单了。只需要每次检测到1就开始计数，遇到非1时就停止，并比较所计的数与answer谁大，若比answer大，则将其值赋给answer。这里需要注意一点，***若最后一个元素的值为1，那么循环就直接跳出了而没有与answer比较，所以必须在循环之后在比较一次。***
