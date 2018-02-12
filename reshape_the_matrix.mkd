@@ -1,3 +1,49 @@
+Reshape the Matrix
+=====================
+Description:
+--------------------
+In MATLAB, there is a very useful function called 'reshape', which can reshape a matrix into a new one with different size but keep its original data.
+
+You're given a matrix represented by a two-dimensional array, and two positive integers r and c representing the row number and column number of the wanted reshaped matrix, respectively.
+
+The reshaped matrix need to be filled with all the elements of the original matrix in the same row-traversing order as they were.
+
+If the 'reshape' operation with given parameters is possible and legal, output the new reshaped matrix; Otherwise, output the original matrix.
+
+Example 1:
+--------------
+Input: <br>
+nums = <br>
+[[1,2],<br>
+ [3,4]]<br>
+r = 1, c = 4<br>
+Output: <br>
+[[1,2,3,4]]<br>
+Explanation:<br>
+The row-traversing of nums is [1,2,3,4]. The new reshaped matrix is a 1 * 4 matrix, fill it row by row by using the previous list.<br>
+
+Example 2:<br>
+-------------------
+Input: <br>
+nums = <br>
+[[1,2],<br>
+ [3,4]]<br>
+r = 2, c = 4<br>
+Output: <br>
+[[1,2],<br>
+ [3,4]]<br>
+Explanation:<br>
+There is no way to reshape a 2 * 2 matrix to a 2 * 4 matrix. So output the original matrix.<br>
+
+Note:<br>
+
+    1.The height and width of the given matrix is in range [1, 100].
+    2.The given r and c are all positive.
+
+
+
+
+
 ```cpp
 class Solution {
 public:
@@ -22,3 +68,6 @@ public:
     }
 };
 ```
+这题本不难，只需将给定数组中的元素按要求一一填进新数组即可。注意两个数组的元素下标要分开存储。这里讲一讲c++关于数组几个要注意的地方：<br>
+1.用vector创建二维数组时，数组名后面括号中的数字代表行数；<br>
+2.
