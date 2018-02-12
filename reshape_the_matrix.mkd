@@ -77,5 +77,5 @@ public:
     vector::void push_back (value_type&& val);
 
     该函数将一个新的元素加到vector的最后面，位置为当前最后一个元素的下一个元素，新的元素的值是val的拷贝（或者是移动拷贝）
-
+3.vector中size是一个函数，使用时后面要加“（）”。
 
