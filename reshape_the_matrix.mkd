@@ -1,0 +1,24 @@
+```cpp
+class Solution {
+public:
+    vector<vector<int>> matrixReshape(vector<vector<int>>& nums, int r, int c) {
+        if(r*c!=nums[0].size()*nums.size()) return nums;
+        vector<vector<int>> answer(r);
+        int row=0,col=0;
+        for(int i=0;i<r;i++)
+        {
+            for(int j=0;j<c;j++)
+            {
+                answer[i].push_back(nums[row][col]);
+                if(col==nums[0].size()-1)
+                {
+                        col=0;
+                        row++;
+                }
+                else col++;
+            }
+        }
+        return answer;
+    }
+};
+```
