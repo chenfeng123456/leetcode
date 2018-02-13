@@ -1,4 +1,5 @@
 ***code 1(Time Limit Exceeded):***
+
 ```c
 class Solution {
 public:
@@ -26,6 +27,7 @@ public:
 ```            
 <br>
 ***code 2(Accepted):***
+
 ```cpp
 class Solution {
 public:
