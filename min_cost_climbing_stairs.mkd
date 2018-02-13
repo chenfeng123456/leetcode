@@ -1,0 +1,46 @@
+***code 1(Time Limit Exceeded):***
+```c
+class Solution {
+public:
+    int minCost(vector<int>& cost,int index)
+    {
+        if(index==cost.size()) return 0;
+        else if(index==cost.size()-1) return(cost[index]);
+        else
+        {
+            int sum=0;
+            int x=minCost(cost,index+1);
+            int y=minCost(cost,index+2);
+            sum=cost[index]+(x>y?y:x);
+            return sum;
+        }
+    }
+    
+    
+    int minCostClimbingStairs(vector<int>& cost) {
+        int x=minCost(cost,0);
+        int y=minCost(cost,1);
+        return(x>y?y:x);
+    }
+};
+```            
+<br>
+***code 2(Accepted):***
+```cpp
+class Solution {
+public:
+    int minCostClimbingStairs(vector<int>& cost) {
+        int min[10001]={0};
+        min[0]=cost[0];
+        min[1]=cost[1];
+        int sum=0,i;
+        for(i=2;i<cost.size();i++)
+        {
+            min[i]=cost[i]+(min[i-1]>min[i-2]?min[i-2]:min[i-1]);
+            cout<<min[i]<<' '<<i<<endl;
+        }
+        min[i]=min[i-1]>min[i-2]?min[i-2]:min[i-1];
+        return min[cost.size()];
+    }
+};
+```
