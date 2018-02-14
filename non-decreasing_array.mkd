@@ -75,3 +75,5 @@ bool checkPossibility(int* nums, int numsSize) {
 }
 ```
 *************************************************
+对于这题，我们要考虑的情况比较细。假设nums[i]>nums[i+1],那么有两种可能的情况：nums[i]过大或nums[i+1]过小。这里的过大和过小指的是该元素与与之相隔的另一个元素仍不满足条件。若是nums[i]过大（即nums[i]>nums[i+2]），令nums[i]=nums[i-1]；若是nums[i+1]过小（即nums[i+1]<nums[i-1]），则令nums[i+1]=nums[i]。若既不是nums[i]过大也不是nums[i+1]过小，那么两种赋值方法都可以，此处为了简化代码，我们将nums[i+1]过小与这种情况合并，统一令nums[i+1]=nums[i]。<br>
+再来看看起始处和终止处的情况。若nums[0]>nums[1],直接令nums[0]=nums[1]即可；若nums[numsSize-1]<nums[numsSize-2]，同样只需令nums[numsSize-1]=nums[numsSize-2]。
