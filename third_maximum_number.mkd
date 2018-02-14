@@ -1,0 +1,58 @@
+```c
+int thirdMax(int* nums, int numsSize) {
+    if(numsSize==1) return nums[0];
+    if(numsSize==2) return(nums[0]>nums[1]?nums[0]:nums[1]);
+    int bl[3][2]={-2147483648,0,-2147483648,0,-2147483648,0};
+    for(int i=0;i<numsSize;i++)
+    {
+        if(nums[i]>=bl[0][0])
+        {
+            if(nums[i]==bl[0][0]) 
+            {
+                bl[0][1]=1;
+                continue;
+            }
+            int temp=bl[0][0];
+            bl[0][0]=nums[i];
+            if(bl[0][1]!=0)
+            {    
+                for(int j=1;j<3;j++)
+                {
+                    int t=bl[j][0];
+                    bl[j][0]=temp;
+                    temp=t;
+                    if(bl[j][1]==0)
+                    {
+                        bl[j][1]=1;
+                        break;
+                    }
+                }
+            }
+            else bl[0][1]=1;
+        }
+        else if(nums[i]>=bl[1][0])
+        {
+            if(nums[i]==bl[1][0]) 
+            {
+                bl[1][1]=1;
+                continue;
+            }
+            int temp=bl[1][0];
+            bl[1][0]=nums[i];
+            if(bl[1][1]!=0)
+            {
+                bl[2][0]=temp;
+                bl[2][1]=1;
+            }
+            else bl[1][1]=1;
+        }
+        else if(nums[i]>=bl[2][0])
+        {
+            bl[2][0]=nums[i];
+            bl[2][1]=1;
+        }
+    }
+    if(bl[2][1]==0) return bl[0][0];
+    else return bl[2][0];
+}
+```
