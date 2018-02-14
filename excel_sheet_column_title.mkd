@@ -1,0 +1,54 @@
+```c
+int amountOf26(int n)
+{
+        if(n/26==0||n==26) return 1;
+        else
+        {
+                int i=n%26;
+                /*while(n<pow(26,i))
+                {
+                        i++;
+                }*/
+                if(i==0) n=n/26-1;
+                else n=n/26;
+                return (1+amountOf26(n));
+        }
+}
+
+
+void Title(char *title,int n)
+{
+        if(n/26==0||n==26)
+        {
+                *title=64+n;
+        }
+        else
+        {
+                int i=n%26;
+                /*while(n>pow(26,i))
+                {
+                        i++;
+                }*/
+                if(i==0)
+                {
+                        *title='Z';
+                        n=n/26-1;
+                }
+                else
+                {
+                        *title=64+(i%26);
+                        n=n/26;
+                }
+                Title(--title,n);
+        }
+}
+
+
+char* convertToTitle(int n)
+{
+        int num=amountOf26(n);
+        char *title=(char*)malloc(sizeof(char)*num);
+        Title(title+num-1,n);
+        return title;
+}
+```
