@@ -13,3 +13,5 @@ bool compare(int a,int b)
 ```
 
 **要特别强调的是：compare函数要用static声明，否则会报错。**<br><br>
+另外对于一个用vector定义的数组而言，它的使用方法为sort(array.begin(),array.end()-1,排序方法），**注意这里array.end()返回的是数组中最后一个元素的后面一个地址，所以这里必须要减一。**<br><br>
+3.当我们要定义一个数组但无法确定其有多大时，可以先用vector定义一个数组，接着在每次需要加入元素时用array.push_back(元素)。*但是这里只能按顺序加入。*<br><br>
