@@ -11,4 +11,5 @@ bool compare(int a,int b)
     return a>b;
 }
 ```
-***要特别强调的是：compare函数要用static声明，否则会报错。***<br><br>
+
+**要特别强调的是：compare函数要用static声明，否则会报错。**<br><br>
