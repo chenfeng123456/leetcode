@@ -1,0 +1,33 @@
+```cpp
+class Solution {
+public:
+    int endIndex(string S,int start)
+    {
+        char c=S[start];
+        int end=start;
+        for(int i=start;i<S.length();i++)
+            if(S[i]==c) end=i;
+        return end;
+    }
+    
+    
+    int endI(string S,int start)
+    {
+        int end=endIndex(S,start);
+        for(int i=start;i<=end;i++)
+            if(end<endIndex(S,i)) end=endIndex(S,i);
+        return end;
+    }
+    
+    vector<int> partitionLabels(string S) {
+        vector<int> answer;
+        int start=0,end=0;
+        for(;start<S.length();start=end+1)
+        {
+            end=endI(S,start);
+            answer.push_back(end-start+1);
+        }
+        return answer;
+    }
+};
+```
