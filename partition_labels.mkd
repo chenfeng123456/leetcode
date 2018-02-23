@@ -21,7 +21,7 @@ Note:
 
 
 
-
+***my code:***
 
 ```cpp
 class Solution {
@@ -55,5 +55,27 @@ public:
         return answer;
     }
 };
+```
+
+***nice code:***
+```java
+class Solution {
+    public List<Integer> partitionLabels(String S) {
+        int[] last = new int[26];
+        for (int i = 0; i < S.length(); ++i)
+            last[S.charAt(i) - 'a'] = i;
+        
+        int j = 0, anchor = 0;
+        List<Integer> ans = new ArrayList();
+        for (int i = 0; i < S.length(); ++i) {
+            j = Math.max(j, last[S.charAt(i) - 'a']);
+            if (i == j) {
+                ans.add(i - anchor + 1);
+                anchor = i + 1;
+            }
+        }
+        return ans;
+    }
+}
 ```
 用了个简单粗暴的方法，即每次从下标为start的元素开始，然后调用函数找当前元素最后一次出现时的下标，若该下标大于end，则将end扩大到该下标处。
