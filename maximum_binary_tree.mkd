@@ -1,0 +1,53 @@
+```cpp
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    int max(vector<int> nums,int start,int end)
+    {
+        if(start<0||end<0||start>end) return -1;
+        if(end>=nums.size()||start>=nums.size()) return -1;
+        int max=nums[start],index=start;
+        for(int i=start+1;i<=end;i++)
+        {
+            if(nums[i]>max) 
+            {
+                max=nums[i];
+                index=i;
+            }
+        }
+        return index;
+    }
+    
+    
+    TreeNode* construct(vector<int>& nums,int index,int start,int end)
+    {
+        if(index<0||index>=nums.size()) return NULL;
+        TreeNode *root;
+        root=new TreeNode(nums[index]);
+        //cout<<root->val<<endl;
+        if(start==end) return root;
+        //cout<<"********"<<endl;
+        int leftRoot=max(nums,start,index-1);
+        int rightRoot=max(nums,index+1,end);
+        root->left=construct(nums,leftRoot,start,index-1);
+        root->right=construct(nums,rightRoot,index+1,end);
+        //cout<<root->val<<"*****"<<endl;
+        return root;
+    }
+    
+    
+    
+    TreeNode* constructMaximumBinaryTree(vector<int>& nums) {
+        int rootIndex=max(nums,0,nums.size()-1);
+        return construct(nums,rootIndex,0,nums.size()-1);
+    }
+};
+```
