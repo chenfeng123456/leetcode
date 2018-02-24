@@ -1,0 +1,52 @@
+```java
+
+public class Solution {
+
+    public int singleNumber(int[] nums) {
+
+        int[] count = new int[32];
+        int result = 0;
+
+        for (int i = 0; i < 32; i++) {
+            for (int n : nums) {
+                // 统计第i位的1的个数
+                if (((n >> i) & 1) == 1) {
+                    count[i]++;
+                }
+            }
+
+            result |= (count[i] % 3) << i;
+        }
+
+        return result;
+    }
+
+    public int singleNumber2(int[] nums) {
+        // 只出现一次的掩码变量，
+        int ones = 0;
+        // 只出现两次次的掩码变量
+        int twos = 0;
+        // 只出现三次的掩码变量
+        int threes;
+
+        for (int n : nums) {
+            twos |= ones & n;
+            // 异或3次 和 异或 1次的结果是一样的
+            ones ^= n;
+            // 对于ones和twos把出现了3次的位置设置为0（取反之后1的位置为0）
+            threes = ones & twos;
+
+            ones &= ~threes;
+            twos &= ~threes;
+        }
+
+        return ones;
+    }
+}
+```
+***************************
+从网上找来的方法，代码使用java实现的。   
+第一种方法是定义一个32位的数组，用来记录每一位1出现的个数。如果我们不考虑single number，那么每一位1的个数都应该是0或3的倍数。现在多了一个只出现了一次的数，那么它每个‘1’所对应的为上1的个数对3取余后应余1。这样对每一位取余后的结果就是我们要找的那个数。   
+第一种方法比较好理解，而且对于出现4次、5次及其它次数的情况都适用，具有通用性，效率上也为线性（32*n）。但用了额外的空间，不符合题目要求。    
+第二种方法定义了3个变量ones，twos，threes。分别用来记录各位上1出现一次、两次、三次的情况。      
+在具体实现时我们用ones与每一个元素进行异或运算，得到的ones上每一位上的1就代表该位上的1到目前为止只出现了1次；ones跟每个元素进行与运算得到的结果上的1就代表该位上1出现了两次；同理，ones&twos的结果就代表该位上1出现了三次，此时我们对threes取反，将ones、twos上对应的位置为0。**注意这里必须先进行twos |= ones & n，再进行ones ^= n，否则当1出现两次是就将ones、twos对应位变为0了。**
