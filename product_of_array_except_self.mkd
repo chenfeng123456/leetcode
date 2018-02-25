@@ -1,3 +1,18 @@
+Product of Array Except Self
+=================
+Description:
+-------------
+ Given an array of n integers where n > 1, nums, return an array output such that output[i] is equal to the product of all the elements of nums except nums[i].
+
+Solve it without division and in O(n).
+
+For example, given [1,2,3,4], return [24,12,8,6].
+
+Follow up:
+Could you solve it with constant space complexity? (Note: The output array does not count as extra space for the purpose of space complexity analysis.)
+
+
+
 ```cpp
 class Solution {
 public:
@@ -19,4 +34,6 @@ public:
     }
 };
 ```
-**************************
+*****************************************************************************
+看到这道题最开始的想法是先将整个数组的乘积求出来，然后扫到哪个数除以该数。但仔细一看题目发现不允许用除法，只好作罢。<br>
+后来想了一个多小时终于又想到了一个方法：所谓除自身以外所有数的乘积可以分为这个数之前所有数的乘积与这个数之后所有数的乘积。我们可以先将要返回的数组ans全部初始化为1，然后定义一个变量x，再用一个for循环，下标i从1开始。x用于储存i之前所有数的乘积，并分别把x赋给ans[i]。这样循环结束后，每个数组中每个元素除第一和最后一个的值都为在它之前的所有元素的乘积。我们再将上面的循环“反着”来一次，即可完成此题。
