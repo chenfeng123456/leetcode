@@ -1,0 +1,19 @@
+```cpp
+class Solution {
+public:
+    int maxProduct(vector<int>& nums) {
+        int minpre=nums[0],maxpre=nums[0],mincur,maxcur,MAX=nums[0];
+        cout<<minpre<<':'<<maxpre<<endl;
+        for(int i=1;i<nums.size();i++)
+        {
+            mincur=min(min(minpre*nums[i],maxpre*nums[i]),nums[i]);
+            maxcur=max(max(minpre*nums[i],maxpre*nums[i]),nums[i]);
+            minpre=mincur;
+            maxpre=maxcur;
+            cout<<minpre<<':'<<maxpre<<endl;
+            MAX=max(MAX,maxcur);
+        }
+        return MAX;
+    }
+};
+```

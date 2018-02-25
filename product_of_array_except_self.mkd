@@ -1,0 +1,22 @@
+```cpp
+class Solution {
+public:
+    vector<int> productExceptSelf(vector<int>& nums) {
+        vector<int> ans(nums.size(),1);
+        int x=1;
+        for(int i=1;i<nums.size();i++)
+        {
+            x*=nums[i-1];
+            ans[i]=x;
+        }
+        x=1;
+        for(int i=nums.size()-2;i>=0;i--)
+        {
+           x*=nums[i+1];
+            ans[i]*=x;
+        }
+        return ans;
+    }
+};
+```
+**************************
