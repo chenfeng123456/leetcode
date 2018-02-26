@@ -1,0 +1,41 @@
+```cpp
+class Solution {
+public:
+    int deleteAndEarn(vector<int>& nums) {
+        if(nums.size()==0) return 0;
+        if(nums.size()==1) return nums[0];
+        sort(nums.begin(),nums.end());
+        vector<vector<int>> maxp;
+        int temp=nums[0],count=0;
+        for(int i=0;i<nums.size();i++)
+        {
+            if(nums[i]!=temp)
+            {
+                vector<int> t(2);
+                t[0]=temp;
+                t[1]=count;
+                maxp.push_back(t);
+                temp=nums[i];
+                count=1;
+            }
+            else count++;
+        }
+        vector<int> t(2);
+        t[0]=temp;
+        t[1]=count;
+        maxp.push_back(t);
+        if(maxp.size()==1) return maxp[0][0]*maxp[0][1];
+        vector<int> res(maxp.size());
+        res[0]=maxp[0][0]*maxp[0][1];
+        if(maxp[1][0]-maxp[0][0]>1) res[1]=res[0]+maxp[1][0]*maxp[1][1];
+        else res[1]=(maxp[0][0]*maxp[0][1])>(maxp[1][0]*maxp[1][1])?(maxp[0][0]*maxp[0][1]):(maxp[1][0]*maxp[1][1]);
+        for(int i=2;i<res.size();i++)
+        {
+            if(maxp[i][0]-maxp[i-1][0]>1) res[i]=res[i-1]+maxp[i][0]*maxp[i][1];
+            else res[i]=(maxp[i][0]*maxp[i][1]+res[i-2])>res[i-1]?(maxp[i][0]*maxp[i][1]+res[i-2]):res[i-1];
+        }
+        return res[res.size()-1];
+        cout<<maxp.size()<<endl;
+    }
+};
+```
