@@ -8,9 +8,9 @@ You may assume the two numbers do not contain any leading zero, except the numbe
 
 Example
 ----------------------
-Input: (2 -> 4 -> 3) + (5 -> 6 -> 4)
-Output: 7 -> 0 -> 8
-Explanation: 342 + 465 = 807.
+Input: (2 -> 4 -> 3) + (5 -> 6 -> 4)<br>
+Output: 7 -> 0 -> 8<br>
+Explanation: 342 + 465 = 807.<br>
 
 
 
@@ -84,3 +84,6 @@ public:
     }
 };
 ```
+********************************************************************
+这道题主要要考虑到两个链表长度不等的情况，这时需要对二者区别处理。因此我们定义一个函数length(ListNode* l,int len)专门用于测定链表的长度。然后再定义一个完成相加操作的函数，add(ListNode* l1,ListNode* l2,int extra)，在传入参数时始终把较长的那个链表传给l1，这样在add中就能专心进行相加操作了。<br>
+由于给定的链表是低位在前，高位在右，所以相加时前端对齐。如果和大于10，就令extra=1，传入下一次操作的形参中。若最高位大于10，则还要在结尾处新开辟一个位置放“1”。若l2已到最高位而l1还没有，则在递归时将null传给l2，然后只考虑l1->val和extra相加的情况即可。
