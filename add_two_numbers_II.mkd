@@ -100,3 +100,4 @@ public:
     }
 };
 ```
+这道题跟[Add Two Numbers](https://github.com/chenfeng123456/leetcode/blob/note1/add_two_numbers.mkd)差不多，只不过低位跟高位的顺序变了。由于这是一个单向链表，我们不好用递归直接对链表直接进行操作。所以我用两个数组存放两个链表的数据，为了方便对齐我将短链表的空位全都用0补齐。其余的操作就差不多了，就是多了一个创建节点的工作。
