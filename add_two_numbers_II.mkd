@@ -1,0 +1,79 @@
+```cpp
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    void construct(vector<int> &ll,ListNode* l)
+    {
+        ll.push_back(l->val);
+        if(l->next!=NULL) construct(ll,l->next);
+    }
+    
+    
+    ListNode* add(vector<int>& ll1,vector<int>& ll2,vector<int>& extra,int i)
+    {
+        ListNode* node=new ListNode(0);
+        if(i<(ll1.size()-1)&&i>0)
+        {
+            node->next=add(ll1,ll2,extra,i+1);
+            int sum=ll1[i]+ll2[i]+extra[i];
+            if(sum>=10)
+            {
+                node->val=sum%10;
+                extra[i-1]=1;
+            }
+            else node->val=sum;
+        }
+        else if(i==0)
+        {
+            if(ll1.size()>1) node->next=add(ll1,ll2,extra,i+1);
+            int sum=ll1[i]+ll2[i]+extra[i];
+            if(sum>=10)
+            {
+                node->val=sum%10;
+                ListNode* head=new ListNode(1);
+                head->next=node;
+                return head;
+            }
+            else node->val=sum;
+        }
+        else if(i==ll1.size()-1)
+        {
+            int sum=ll1[i]+ll2[i];
+            if(sum>=10)
+            {
+                node->val=sum%10;
+                extra[i-1]=1;
+            }
+            else node->val=sum;
+        }
+        return node;
+    }
+    
+    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+        vector<int> ll1,ll2;
+        construct(ll1,l1);
+        construct(ll2,l2);
+        ListNode* ans=NULL;
+        if(ll1.size()>=ll2.size())
+        {
+            vector<int> extra(ll1.size(),0);
+            if(ll1.size()>ll2.size()) ll2.insert(ll2.begin(),ll1.size()-ll2.size(),0);
+            ans=add(ll1,ll2,extra,0);
+        }
+        else
+        {
+            vector<int> extra(ll2.size(),0);
+            ll1.insert(ll1.begin(),ll2.size()-ll1.size(),0);            
+            ans=add(ll2,ll1,extra,0);
+        }
+        return ans;
+    }
+};
+```
