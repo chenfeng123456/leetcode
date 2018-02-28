@@ -1,0 +1,55 @@
+```cpp
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+struct Tree
+{
+    int val;
+    int left;
+    int depth;
+};
+
+
+class Solution {
+public:
+    void findAllBottom(TreeNode* root,int depth,int left,vector<Tree> &res)
+    {
+        if(root->left==NULL&&root->right==NULL)
+        {
+            static int i=0;
+            Tree temp;
+            temp.val=root->val;
+            temp.left=left;
+            temp.depth=depth;
+            res.push_back(temp);
+        }
+        else if(root->left!=NULL&&root->right==NULL) findAllBottom(root->left,depth+1,left+1,res);
+        else if(root->left==NULL&&root->right!=NULL) findAllBottom(root->right,depth+1,left,res);
+        else
+        {
+            findAllBottom(root->left,depth+1,left+1,res);
+            findAllBottom(root->right,depth+1,left,res);
+        }
+    }
+    
+    
+    static bool complare(const Tree &x,Tree &y)
+    {
+        if(x.depth!=y.depth) return x.depth>y.depth;
+        else if(x.depth==y.depth) return x.left>y.left;
+    }
+    
+    int findBottomLeftValue(TreeNode* root) {
+        vector<Tree> res;
+        findAllBottom(root,0,0,res);
+        sort(res.begin(),res.end(),complare);
+        return res[0].val;
+    }
+};
+```
