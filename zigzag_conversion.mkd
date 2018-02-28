@@ -1,0 +1,41 @@
+```cpp
+class Solution {
+public:
+    string convert(string s, int numRows) {
+        if(numRows==1) return s;
+        int l=s.length();
+        vector<vector<char>> con(numRows);
+        for(int i=0;i<con.size();i++)
+        {
+            con[i].resize(l);
+            for(int j=0;j<con[i].size();j++)
+                con[i][j]='\0';
+        }
+        int row=0,col=0;
+        bool up=0;
+        for(int i=0;i<l;i++)
+        {
+            con[row][col]=s[i];
+            if(row==con.size()-1) up=1;
+            else if(row==0) up=0;
+            if(!up)
+                row++;
+            else
+            {
+                row--;
+                col++;
+            }
+        }
+        string ans;
+        for(int i=0;i<con.size();i++)
+        {
+            for(int j=0;j<con[0].size();j++)
+            {
+                //string t=&con[i][j];
+                if(con[i][j]!='\0') ans.append(1,con[i][j]);
+            }
+        }
+        return ans;
+    }
+};
+```
