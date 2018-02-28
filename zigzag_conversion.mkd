@@ -1,5 +1,7 @@
 ZigZag Conversion
 =====================
+Description:
+--------------------------
  The string "PAYPALISHIRING" is written in a zigzag pattern on a given number of rows like this: (you may want to display this pattern in a fixed font for better legibility)
 
 P    A    H   N<br>
@@ -59,3 +61,7 @@ public:
     }
 };
 ```
+*******************************************************************
+这题我们先定义一个二维数组，按照规定将字母按倒“N”型放进数组中，在按照顺序逐行读取即可。<br>
+在存放字符串时，我们定义一个bool型变量up，用于记录此时字符串是否在向上存放。每次到二维数组的底部时，将up置为1；到顶部时，在置为0。<br>
+这里还用到了一个函数append用于向string类型的变量后加字符或字符串。[具体用法](http://blog.csdn.net/wxn704414736/article/details/78551886)
