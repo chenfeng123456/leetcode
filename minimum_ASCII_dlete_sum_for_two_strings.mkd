@@ -63,4 +63,10 @@ public:
 };
 ```
 ************************************
-[思路来源](https://www.cnblogs.com/stAr-1/p/7719289.html)
+[思路来源](https://www.cnblogs.com/stAr-1/p/7719289.html)<br>
+这里从两个字符串的开头字符考虑，一个一个得考虑到最后一个，我们用二维数组dp[i][j]代表字符串1前i个字符和字符串2前j个字符实现相同所需要<br>
+       删除的ASCII value,有三种方法可以到达dp[i][j]:<br>
+       1.dp[i-1][j] + str1[i]:由于从dp[i-1][j]到dp[i][j]是多考虑了str1的一个字符，但是str2字符数没变，所以要想相同，必须删除str[i],考虑value的话就是加上str[i]<br>
+       2.dp[i][j-1] + str1[j]:对应于1，这个是多考虑str2的一个字符，所以要删除str2[j]<br>
+       3.dp[i-1][j-1] + a，这里是考虑两个str都加了一个，所以str1[i] =str2[j]时，a=0；str1[i] ！=str2[j]时，两个都要删除，a=str1[i] +str2[j]<br>
+       这三种情况每次比较出最小的来，最后返回dp[str1.length][str2.length](这里字符串下标从1开始，因为我们考虑dp数组的第0行代表str1还啥也没有，第0列代表str2啥也没有)<br>
