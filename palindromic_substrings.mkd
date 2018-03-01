@@ -1,3 +1,7 @@
+1. asdf
+2. dfaga
+3. weqf
+
 Palindromic Substrings
 ====================
 Description:
@@ -58,4 +62,3 @@ public:
 基于以上两点我们便可以写出递推关系式了。
 ```
 **注意j一定要从i开始向后遍历，否则会漏掉单个元素的情况。**
-`` `lkjl` ``
