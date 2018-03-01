@@ -2,6 +2,7 @@ Palindromic Substrings
 ====================
 Description:
 ---------------
+ adf[^1]
  ```
  Given a string, your task is to count how many palindromic substrings in this string.
 
@@ -58,3 +59,4 @@ public:
 基于以上两点我们便可以写出递推关系式了。
 ```
 **注意j一定要从i开始向后遍历，否则会漏掉单个元素的情况。**
+[^1]dsaf
