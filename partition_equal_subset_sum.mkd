@@ -1,0 +1,82 @@
+Partition Equal Subset Sum
+=============================
+Description:
+---------------
+Given a non-empty array containing only positive integers, find if the array can be partitioned into two subsets such that the sum of elements in both subsets is equal.
+
+###Note:
+
+    1. Each of the array element will not exceed 100.
+    2. The array size will not exceed 200.
+
+###Example 1:
+```
+Input: [1, 5, 11, 5]
+
+Output: true
+
+Explanation: The array can be partitioned as [1, 5, 5] and [11].
+```
+###Example 2:
+```
+Input: [1, 2, 3, 5]
+
+Output: false
+
+Explanation: The array cannot be partitioned into equal sum subsets.
+```
+
+
+## my code(Time Limit Exceeded):
+```cpp
+class Solution {
+public:
+    int halfOfSum;
+    
+    bool half(vector<int>& nums,int amount,int i)
+    {
+        if(i>=nums.size()) return false;
+        if(amount+nums[i]==halfOfSum) return true;
+        else return half(nums,amount,i+1)||half(nums,amount+nums[i],i+1);
+    }
+    
+    
+    
+    bool canPartition(vector<int>& nums) {
+        int sum=0,len=nums.size();
+        for(int i=0;i<len;i++)
+            sum+=nums[i];
+        if(sum%2!=0) return false;
+        halfOfSum=sum/2;
+        return half(nums,0,0);
+    }
+};
+```
+
+## nice code(Accepted):
+```cpp
+class Solution {
+public:
+    bool canPartition(vector<int>& nums) {
+        int sum=0,len=nums.size();
+        for(int i=0;i<len;i++)
+            sum+=nums[i];
+        if(sum%2!=0) return false;
+        int half=sum/2;
+        vector<bool> answer(half+1,0);
+        answer[0]=true;
+        for(int i=0;i<len;i++)
+            for(int j=half;j>=nums[i];j--)
+                answer[j]=answer[j]||answer[j-nums[i]];
+        return answer[half];
+    }
+};
+```
+******************************
+这道题我本来是用递归做的，不出所料，TLE了。然后又想了好久，没想出动态规划的解法，于是去网上找了[这个方法](https://www.cnblogs.com/grandyang/p/5951422.html)。
+
+既然是要将数组分为相等的两份，那么数组中所有的元素的和一定为偶数，所以如果和不为偶数我们可以直接返回false。若为偶数，我们用一个变量half记录这个和的一半，然后就要开始寻找能否在数组中找到合适的元素相加后等于half。    
+
+这里我们定义一个数组answer，其下标i表示i这个数能否由nums中的元素相加得到。当i=0时当然是可以的（空数组）。每一个小于half的nums元素（如果大于那么一定不可能等分）也都应将answer对应的元素置为true。同时我们对nums[i]到half之间的每个数都应检查是否能由它和其它的元素相加得到。
+
+最后直接返回answer[half]即可。   
