@@ -1,0 +1,59 @@
+#Find All Duplicates in an Array
+##Description:
+```
+Given an array of integers, 1 ≤ a[i] ≤ n (n = size of array), some elements appear twice and others appear once.
+
+Find all the elements that appear twice in this array.
+
+Could you do it without extra space and in O(n) runtime?
+```
+###Example:
+```
+Input:
+[4,3,2,7,8,2,3,1]
+
+Output:
+[2,3]
+```
+```cpp
+class Solution {
+public:
+    vector<int> findDuplicates(vector<int>& nums) {
+        vector<int> answer;
+        for(int i=0;i<nums.size();i++)
+        {
+            if(nums[i]==i+1) continue;
+            int x=nums[i];
+            nums[i]=0;
+            while(1)
+            {
+                if(x==0) 
+                {
+                    break;
+                }
+                else if(x==nums[x-1]) 
+                {
+                    answer.push_back(x);
+                    break;
+                }
+                else
+                {
+                    int temp=nums[x-1];
+                    nums[x-1]=x;
+                    x=temp;
+                }
+                /*for(int i=0;i<nums.size();i++)
+                {
+                    cout<<nums[i]<<' ';
+                }
+                cout<<endl;*/
+            }
+            //cout<<"*********************************"<<endl;
+        }
+        //for(int i=0;i<nums.size();i++) cout<<nums[i]<<' ';
+        return answer;
+    }
+};
+```
+*********************************
+这道题受快速排序算法的启发，我们可以靠“挖坑”来将每一个数放到序号为它的值减1的“坑”中去，如果发现“挖”出来的数跟对应“坑”中的数相等了，就说明这个数出现了两次，将其舍去（置为0）即可。
