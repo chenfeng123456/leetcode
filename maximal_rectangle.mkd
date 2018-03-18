@@ -1,0 +1,58 @@
+# Maximal Rectangle
+## Description:
+```
+ Given a 2D binary matrix filled with 0's and 1's, find the largest rectangle containing only 1's and return its area.
+```
+### For example
+given the following matrix:
+```
+1 0 1 0 0
+1 0 1 1 1
+1 1 1 1 1
+1 0 0 1 0
+
+Return 6. 
+```
+```cpp
+class Solution {
+public:
+    int maximalRectangle(vector<vector<char>>& matrix) {
+        if (matrix.empty() || matrix[0].empty()) return 0;
+        int res = 0, m = matrix.size(), n = matrix[0].size();
+        vector<int> height(n, 0), left(n, 0), right(n, n);
+        for (int i = 0; i < m; ++i) {
+            int cur_left = 0, cur_right = n;
+            for (int j = 0; j < n; ++j) {
+                if (matrix[i][j] == '1') ++height[j];
+                else height[j] = 0;
+            }
+            for (int j = 0; j < n; ++j) {
+                if (matrix[i][j] == '1') left[j] = max(left[j], cur_left);
+                else {left[j] = 0; cur_left = j + 1;}
+            }
+            for (int j = n - 1; j >= 0; --j) {
+                if (matrix[i][j] == '1') right[j] = min(right[j], cur_right);
+                else {right[j] = n; cur_right = j;}
+            }
+            for (int j = 0; j < n; ++j) {
+                res = max(res, (right[j] - left[j]) * height[j]);
+            }
+        }
+        return res;
+    }
+};
+```
+*************************************
+- [思路来源](https://www.cnblogs.com/grandyang/p/4322667.html)
+本想顺着Maximal Square的思路趁热打铁挑战以下hard难度的题目，结果发现不管怎样都行不通，可以说是“顾此失彼”，始终无法包含所有情况。所以还是来看看别人的DP解法吧。
+
+我们定义3个数组hight、left、right。分别存放当前元素所能到达的上边界高度，左边界下标以及右边界下标。
+
+- hight：若当前元素为0，则将hight置为0；否则加一；
+- 边界：
+    - 由于我们要得到一个矩形，所以应该取上下两行边界的交集。对left来说就是说取二者中的较大值，right则相反。
+    - 注意left中存放的是上一行同一列元素对应的左边界下标，cur_left存放的是当前行对应元素的左边界下标。right同样如此。
+    - 事实上left绝不会大于当前元素的下标，right绝不会小于当前元素的下标。
+- 当前元素对应的矩形面积为(right[j] - left[j]) * height[j]。用res存放到目前为止的最大面积，最后返回res即可。
+        
+           
