@@ -1,0 +1,68 @@
+# Sort Colors
+## Description:
+```
+ Given an array with n objects colored red, white or blue, sort them so that objects of the same color are adjacent, with the colors in the order red, white and blue.
+
+Here, we will use the integers 0, 1, and 2 to represent the color red, white, and blue respectively.
+```
+
+### Note:
+```
+You are not suppose to use the library's sort function for this problem. 
+```
+### Follow up:
+```
+A rather straight forward solution is a two-pass algorithm using counting sort.
+First, iterate the array counting number of 0's, 1's, and 2's, then overwrite array with total number of 0's, then 1's and followed by 2's.
+
+Could you come up with an one-pass algorithm using only constant space?
+```
+#### my code(*Accepted*)
+```cpp
+class Solution {
+public:
+    void sortColors(vector<int>& nums) {
+        if(nums.size()==2)
+        {
+            if(nums[0]>nums[1]) swap(nums[0],nums[1]);
+        }
+        if(nums.size()!=0&&nums.size()!=1)
+        {   
+            int p1=0;
+            for(int i=0;i<nums.size();i++)
+            {
+                if(nums[i]==0)
+                {
+                    nums.erase(nums.begin()+i);
+                    nums.insert(nums.begin(),0);
+                    p1++;
+                }
+                else if(nums[i]==1)
+                {
+                    nums.erase(nums.begin()+i);
+                    nums.insert(nums.begin()+p1,1);
+                }
+            }
+        }
+    }
+};
+```
+#### nice code(*Accepted*)
+```
+void sortColors(vector<int>& nums) {
+    int r=0, w=0, b=0; // label the end of different colors;
+    for(int num: nums){
+        if(num==0) {nums[b++]=2; nums[w++]=1; nums[r++]=0; } 
+        else if(num==1) {nums[b++]=2; nums[w++]=1;}
+        else if(num==2) b++;
+    }
+}
+```
+************************************
+************************************
+这题要求我们仅遍历一次数组就把所有的0，1，2排序。而实际上我们只需要把0和1移到最前面，2自然就到最后了。
+所以我们用一个数p1记录第一个1的下标，初始值为0。然后我们遍历数组，若遇到0则先删去此元素，然后插入到最前端，p1需加1；若遇到1，则删去并插入到p1的前端。注意，由于移动元素所以此时的下标i指向的实际上是移动之前数组的前一个元素，故i仍需加1。
+*******************************************
+- [代码来源](https://leetcode.com/problems/sort-colors/discuss/26518/4ms-and-only-5-lines-c++-code-without-delete-and-insert)
+
+还有一个没完成的方法，就是记录0、1、2三个元素子序列的位置，然后将遇到的数字插入到对应的子序列中去。但是因为没考虑到这三个子序列是挨着的，插入一个元素后后面的序列都要往后移动。后来看到了别人的方法，才恍然大悟。
