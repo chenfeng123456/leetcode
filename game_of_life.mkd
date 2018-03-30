@@ -1,0 +1,119 @@
+# Game of Life
+## Description:
+```
+ According to the Wikipedia's article: "The Game of Life, also known simply as Life, is a cellular automaton devised by the British mathematician John Horton Conway in 1970."
+
+Given a board with m by n cells, each cell has an initial state live (1) or dead (0). Each cell interacts with its eight neighbors (horizontal, vertical, diagonal) using the following four rules (taken from the above Wikipedia article):
+```
+   1. Any live cell with fewer than two live neighbors dies, as if caused by under-population.
+   2. Any live cell with two or three live neighbors lives on to the next generation.
+   3. Any live cell with more than three live neighbors dies, as if by over-population..
+   4. Any dead cell with exactly three live neighbors becomes a live cell, as if by reproduction.
+```
+Write a function to compute the next state (after one update) of the board given its current state.
+```
+### Follow up:
+
+    1. Could you solve it in-place? Remember that the board needs to be updated at the same time: You cannot update some cells first and then use their updated values to update other cells.
+    2. In this question, we represent the board using a 2D array. In principle, the board is infinite, which would cause problems when the active area encroaches the border of the array. How would you address these problems?
+
+
+#### my code:
+```cpp
+class Solution {
+public:
+    int judge(vector<vector<int>>& board,int row,int col,bool count)
+    {
+        if(row>=board.size()||row<0||col>=board[0].size()||col<0) return 0;
+        if(!count)
+        {
+            return board[row][col]%2;
+        }
+        else
+        {
+            int sum=0;
+            sum+=judge(board,row-1,col-1,0);
+            sum+=judge(board,row-1,col,0);
+            sum+=judge(board,row-1,col+1,0);
+            sum+=judge(board,row,col-1,0);
+            sum+=judge(board,row,col+1,0);
+            sum+=judge(board,row+1,col-1,0);
+            sum+=judge(board,row+1,col,0);
+            sum+=judge(board,row+1,col+1,0);
+            
+            if(board[row][col]==1)
+            {
+                if(sum==2||sum==3) return 1;
+                else return 3;
+            }
+            else
+            {
+                if(sum==3) return 2;
+                else return 0;
+            }
+        }
+    }
+    
+    
+    void gameOfLife(vector<vector<int>>& board) {
+        if(board.size()!=0)
+        {
+            for(int i=0;i<board.size();i++)
+            {
+                for(int j=0;j<board[0].size();j++)
+                {
+                    board[i][j]=judge(board,i,j,1);
+                }
+            }
+            for(int i=0;i<board.size();i++)
+            {
+                for(int j=0;j<board[0].size();j++)
+                {
+                    if(board[i][j]==3) board[i][j]=0;
+                    else if(board[i][j]==2) board[i][j]=1;
+                }
+            }
+        }
+    }
+};
+```
+#### [nice code](https://www.cnblogs.com/grandyang/p/4854466.html):
+```cpp
+class Solution {
+public:
+    void gameOfLife(vector<vector<int> >& board) {
+        int m = board.size(), n = m ? board[0].size() : 0;
+        int dx[] = {-1, -1, -1, 0, 1, 1, 1, 0};
+        int dy[] = {-1, 0, 1, 1, 1, 0, -1, -1};
+        for (int i = 0; i < m; ++i) {
+            for (int j = 0; j < n; ++j) {
+                int cnt = 0;
+                for (int k = 0; k < 8; ++k) {
+                    int x = i + dx[k], y = j + dy[k];
+                    if (x >= 0 && x < m && y >= 0 && y < n && (board[x][y] == 1 || board[x][y] == 2)) {
+                        ++cnt;
+                    }
+                }
+                if (board[i][j] && (cnt < 2 || cnt > 3)) board[i][j] = 2;
+                else if (!board[i][j] && cnt == 3) board[i][j] = 3;
+            }
+        }
+        for (int i = 0; i < m; ++i) {
+            for (int j = 0; j < n; ++j) {
+                board[i][j] %= 2;
+            }
+        }
+    }
+};
+```
+*********************************************
+这道题在于不能新建一个数组来记录原数组的情况，所以必须在标记上想一点办法：
+
+1. 活细胞变为死细胞，状态置为3；
+2. 死细胞变为活细胞，状态置为2；
+3. 死细胞仍为死细胞，状态保持为0；
+4. 活细胞仍为活细胞，状态保持为1。
+
+这样做的好处是当我们检查一个细胞原本为什么状态时，只需要对它的值%2即可。最后再将对应的3变为0，2变为1就行了。
+
+当然，我对于检查周围八个细胞的过程写得比较冗长，在网上找了个很简便的方法，一并贴了出来。
