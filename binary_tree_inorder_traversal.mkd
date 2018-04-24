@@ -1,0 +1,48 @@
+# Binary Tree Inorder Traversal
+## Description:
+```
+Given a binary tree, return the inorder traversal of its nodes' values.
+```
+### For example:
+Given binary tree [1,null,2,3],
+
+   1
+    \
+     2
+    /
+   3
+```
+return [1,3,2].
+```
+### Note: 
+Recursive solution is trivial, could you do it iteratively?
+```cpp
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    void push(vector<int>& res,TreeNode* root)
+    {
+        if(root!=NULL) 
+        {
+            push(res,root->left);
+            res.push_back(root->val);
+            push(res,root->right);
+        }
+    }
+    vector<int> inorderTraversal(TreeNode* root) {
+        vector<int> res;
+        push(res,root);
+        return res;
+    }
+};
+```
+******************************************
+本题用递归做非常简单，因为递归就是从最后一次开始执行，与题目的要求顺序刚好吻合。
