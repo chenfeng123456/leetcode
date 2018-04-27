@@ -1,0 +1,104 @@
+# Brick Wall
+## Description:
+```
+There is a brick wall in front of you. The wall is rectangular and has several rows of bricks. The bricks have the same height but different width. You want to draw a vertical line from the top to the bottom and cross the least bricks.
+
+The brick wall is represented by a list of rows. Each row is a list of integers representing the width of each brick in this row from left to right.
+
+If your line go through the edge of a brick, then the brick is not considered as crossed. You need to find out how to draw the line to cross the least bricks and return the number of crossed bricks.
+
+You cannot draw a line just along one of the two vertical edges of the wall, in which case the line will obviously cross no bricks.
+```
+### Example:
+
+**Input**: 
+```
+[[1,2,2,1],
+ [3,1,2],
+ [1,3,2],
+ [2,4],
+ [3,1,2],
+ [1,3,1,1]]
+```
+**Output**: 
+```
+2
+```
+**Explanation**: 
+
+### Note:
+
+   1. The width sum of bricks in different rows are the same and won't exceed INT_MAX.
+   2. The number of bricks in each row is in range [1,10,000]. The height of wall is in range [1,10,000]. Total number of bricks of the wall won't exceed 20,000.
+
+## bad code(*Memory Limit Exceeded*)
+```cpp
+class Solution {
+public:
+    int leastBricks(vector<vector<int>>& wall) {
+        int width=0;
+        int height=wall.size();
+        for(int i=0;i<wall[0].size();i++)
+            width+=wall[0][i];
+        vector<int> interspace(width+1,0);
+        int res=0;
+        for(int i=0;i<height;i++)
+        {
+            int len=0;
+            for(int j=0;j<wall[i].size();j++)
+            {
+                len+=wall[i][j];
+                if(len==width) break;
+                res=max(res,++interspace[len]);
+            }
+        }
+        return height-res;
+    }
+};
+```
+
+## modified code(*Accepted*)
+```cpp
+class Solution {
+public:
+    int leastBricks(vector<vector<int>>& wall) {
+        map<int,int> lenAndInterspace;
+        int width=0;
+        for(int i=0;i<wall[0].size();i++) width+=wall[0][i];
+        int height=wall.size();
+        int res=0;
+        for(int i=0;i<height;i++)
+        {
+            int len=0;
+            for(int j=0;j<wall[i].size();j++)
+            {
+                len+=wall[i][j];
+                if(len==width) break;
+                map<int,int>::iterator it=lenAndInterspace.find(len);
+                if(it==lenAndInterspace.end()) 
+                {
+                    lenAndInterspace[len]=1;
+                    res=max(res,1);
+                    //cout<<"row"<<i<<" len"<<len<<"   interspace:"<<lenAndInterspace[len]<<endl<<res<<endl;
+                } 
+                else 
+                {
+                    lenAndInterspace[len]+=1;
+                    res=max(res,lenAndInterspace[len]);
+                   // cout<<"******************"<<endl<<"row"<<i<<" len"<<len<<"   interspace:"<<lenAndInterspace[len]<<endl<<res<<endl<<"*********"<<endl;
+                }
+            }
+        }
+        return height-res;
+    }
+};
+```
+************************************
+第一次用map做Hash Table的题目。
+
+不过我首先还是试了一下不用map的方法，leetcode当然没让我过。于是用刚学的map顺着之前的思路重新写了一遍。
+
+要求穿过的砖块数最小，就是要求穿过的空隙最多，所以我们可以通过计算空隙数，最后再用每一列上砖块的总数，即墙的高度，来减去空隙数就是砖块数了。
+
+空隙其实很好找，每一块砖的末端就是空隙，而它的坐标就是在其之前所有砖块的长度之和。由此我们用一个map容器lenAndInterspace来记录空隙的坐标和在该坐标的垂直方向上有多少个空隙。每找到一处，就先判断这个坐标上有没有空隙，如果有，就直接加一；没有就创建一个，second值为1.
+最后找出second最大的元素并用height减去该值即可。
