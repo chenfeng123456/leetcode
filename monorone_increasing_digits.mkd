@@ -1,0 +1,55 @@
+# Monotone Increasing Digits
+## Description:
+```
+ Given a non-negative integer N, find the largest number that is less than or equal to N with monotone increasing digits.
+
+(Recall that an integer has monotone increasing digits if and only if each pair of adjacent digits x and y satisfy x <= y.)
+```
+### Example 1:
+
+####Input:
+        N = 10
+#### Output: 
+        9
+
+### Example 2:
+
+#### Input: 
+        N = 1234
+#### Output: 
+        1234
+
+### Example 3:
+
+####Input: 
+        N = 332
+#### Output: 
+        299
+
+### Note: 
+        N is an integer in the range [0, 10^9]. 
+  
+```cpp
+class Solution {
+public:
+    int monotoneIncreasingDigits(int N) {
+        string s=to_string(N);
+        int n=s.length(),j=n;
+        for(int i=n-1;i>0;i--)
+        {
+            if(s[i]>=s[i-1]) continue;
+            s[i-1]--;
+            j=i;
+        }
+        for(int i=j;i<n;i++)
+            s[i]='9';
+        return stoi(s);
+    }
+};
+```
+****************************************
+- [思路来源](https://www.cnblogs.com/grandyang/p/8068326.html)
+
+这道题要求我们找到小于等于给定数字且该数的各位是递增的。我们可以想到，在保证前面若干位尽可能大的情况下，将之后的所有位全部置为9即可得到结果。
+
+所以我们从最后一位开始，检验其是否比前一位大，若不是，则将前一位减一，用一个变量j来记录当前位。**这里减一的目的就是保证当我们把其后的所有位变为9时，不会使这个数的值大于给定数。**最后再从j位开始，将之后依次置为9即可。

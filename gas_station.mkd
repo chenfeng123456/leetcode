@@ -1,0 +1,44 @@
+# Gas Station
+## Description:
+```
+ There are N gas stations along a circular route, where the amount of gas at station i is gas[i].
+
+You have a car with an unlimited gas tank and it costs cost[i] of gas to travel from station i to its next station (i+1). You begin the journey with an empty tank at one of the gas stations.
+
+Return the starting gas station's index if you can travel around the circuit once, otherwise return -1.
+```
+### Note:
+The solution is guaranteed to be unique. 
+```cpp
+class Solution {
+public:
+    int canCompleteCircuit(vector<int>& gas, vector<int>& cost) {
+        if(gas.empty()||cost.empty()||gas.size()!=cost.size()) return -1;
+        int totalGas=0,sumOfGas=0,start=0;
+        for(int i=0;i<gas.size();i++)
+        {
+            totalGas+=gas[i]-cost[i];
+            sumOfGas+=gas[i]-cost[i];
+            if(sumOfGas<0)
+            {
+                sumOfGas=0;
+                start=i+1;
+            }
+        }
+        return totalGas>=0?start:-1;
+    }
+};
+```
+********************************************
+- [思路来源](https://blog.csdn.net/fly_yr/article/details/49798265)
+
+对于每个加油站都有一个可加油量和去下一个加油站的耗油量，我们可以把二者合成一个“净加油量”，即可加油量减去耗油量。而是否能回到出发点就是要看在走的过程中净加油量的和是否会小于0。
+
+以上这些都容易想到，但这还远远不够，n^2的复杂度一定会TLE，所以我们还要发现这几点：
+
+1. 若所有净加油量的和小于0，则不论从那里出发，最后一定到不了出发点。
+2. 当我们对每到一个加油站都对油箱检查时，若有一次发现净加油量和小于0，则从当前出发点到上一个加油站都是可行的。
+3. 由递推可知：从第i-1个出发点到第i个出发点的上一个加油站都是可行的；第i-1个出发点到第i个出发点净加油量一定是负的，我们暂且称之为“差油量”。
+4. 若所有净加油量大于等于0，那么从最后一个出发点到最后一个加油站的净加油量值一定大于0且大于等于前面所有差油量之和。
+
+由此我们便得到了一个高效的算法（线性复杂度）并论证了它的正确性。
