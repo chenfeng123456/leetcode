@@ -1,0 +1,94 @@
+# Shortest Completing Word
+## Description:
+```
+ Find the minimum length word from a given dictionary words, which has all the letters from the string licensePlate. Such a word is said to complete the given string licensePlate
+
+Here, for letters we ignore case. For example, "P" on the licensePlate still matches "p" on the word.
+
+It is guaranteed an answer exists. If there are multiple answers, return the one that occurs first in the array.
+
+The license plate might have the same letter occurring multiple times. For example, given a licensePlate of "PP", the word "pair" does not complete the licensePlate, but the word "supper" does.
+```
+### Example 1:
+
+##### Input: 
+licensePlate = "1s3 PSt", words = ["step", "steps", "stripe", "stepple"]
+##### Output:
+ "steps"
+##### Explanation: 
+The smallest length word that contains the letters "S", "P", "S", and "T".
+Note that the answer is not "step", because the letter "s" must occur in the word twice.
+Also note that we ignored case for the purposes of comparing whether a letter exists in the word.
+
+### Example 2:
+
+##### Input: 
+licensePlate = "1s3 456", words = ["looks", "pest", "stew", "show"]
+##### Output:
+ "pest"
+##### Explanation:
+There are 3 smallest length words that contains the letters "s".
+We return the one that occurred first.
+
+### Note:
+
+   1. licensePlate will be a string with length in range [1, 7].
+   2. licensePlate will contain digits, spaces, or letters (uppercase or lowercase).
+   3. words will have a length in the range [10, 1000].
+   4. Every words[i] will consist of lowercase letters, and have length in range [1, 15].
+```cpp
+class Solution {
+public:
+    string shortestCompletingWord(string licensePlate, vector<string>& words) {
+        map<char,int> mp;
+        int len=licensePlate.length();
+        for(int i=0;i<len;i++)
+        {
+            if(licensePlate[i]<='Z'&&licensePlate[i]>='A') mp[licensePlate[i]+32]++;
+            else if(licensePlate[i]<='z'&&licensePlate[i]>='a') mp[licensePlate[i]]++;
+        }
+       /* 
+        cout<<"map:"<<endl;
+        for(map<char,int>::iterator it=mp.begin();it!=mp.end();it++) cout<<it->first<<"  "<<it->second<<endl;
+        */
+        int match=-1,length=INT_MAX,index=-1;
+        for(int i=0;i<words.size();i++)
+        {
+            int tmatch=0;
+            int size=words[i].size();
+            map<char,int> temp=mp;
+            for(int j=0;j<size;j++)
+            {
+                if(mp.find(words[i][j])!=mp.end()) 
+                {
+                    if(temp[words[i][j]]>0) 
+                    {
+                             tmatch++;
+                             temp[words[i][j]]--;
+                    }
+                }      
+            }
+            if(tmatch>match||(tmatch==match&&size<length))
+            {
+                match=tmatch;
+                length=words[i].size();
+                index=i;
+            }
+           
+         //   cout<<words[i]<<endl<<"         match:"<<tmatch<<endl<<"        length:"<<words[i].size()<<endl;
+        
+        }
+        return words[index];
+    }
+};
+```
+***************************************
+真的是贼长的题目啊，不过好歹是耐着性子看完了……
+
+总体的思路就是建立一个map来存放每个字符出现的次数，然后在用三个变量match、length、index来存放最符合条件的字符串中与licensePlate匹配的字符数、对应字符串的长度及其下标。另外还有一个tmatch表示当前这个字符串中的匹配字符数。
+
+我们没遍历完一个字符串就要判断一次match是否小于tmatch，若小于，则更新match、length和index；若等于且length大于这个字符串的长度，也同样更新。其余情况则直接跳过。
+
+另外每次发现有匹配字符是还要再看该字符出现的次数是否大于licensePlate中它出现的次数，只有当不大于时，才去对tmatch加一。这样做同时配合比较tmatch和match的好处是可以完美地把在licensePlate中连续出现相同字符的情况包含进来。
+
+- [参考](https://www.cnblogs.com/grandyang/p/8407446.html)
