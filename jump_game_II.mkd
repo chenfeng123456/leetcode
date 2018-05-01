@@ -1,0 +1,98 @@
+# Jump Game II
+## Description:  
+```
+Given an array of non-negative integers, you are initially positioned at the first index of the array.
+
+Each element in the array represents your maximum jump length at that position.
+
+Your goal is to reach the last index in the minimum number of jumps.
+```
+### Example:
+
+##### Input: 
+[2,3,1,1,4]
+##### Output: 
+2
+##### Explanation:
+ The minimum number of jumps to reach the last index is 2.
+    Jump 1 step from index 0 to 1, then 3 steps to the last index.
+
+### Note:
+
+You can assume that you can always reach the last index.
+
+#### my code 1(*Time Limit Exceeded*)
+```cpp
+class Solution {
+public:
+    int jump(vector<int>& nums) {
+        vector<int> dp(nums.size(),0);
+        for(int i=1;i<nums.size();i++)
+        {
+            int minStep=INT_MAX;
+            for(int j=i-1;j>=0;j--)
+            {
+                if(j+nums[j]>=i)
+                {
+                    minStep=dp[j]+1;
+                }
+            }
+            dp[i]=minStep;
+        }
+        return dp[nums.size()-1];
+    }
+};
+```
+#### my code 2(*Time Limit Exceed*)
+```cpp
+class Solution {
+public:
+    int jump(vector<int>& nums) {
+        int size=nums.size();
+        int cur=0,maxTo=0,steps=0;
+        while(cur<size-1)
+        {
+            steps++;
+            maxTo=nums[cur]+cur;
+            if(maxTo>=size-1) break;
+            for(int i=cur+1;i<=maxTo;i++)
+            {
+                cur=max(cur,i+nums[i]);
+            }
+            steps++;
+        }
+        return steps;
+    }
+};
+```
+#### nice code(*Accepted*)
+```cpp
+class Solution {
+public:
+    int jump(vector<int>& nums) {
+        int res = 0, n = nums.size(), i = 0, cur = 0;
+        while (cur < n - 1) {
+            ++res;
+            int pre = cur;
+            for (; i <= pre; ++i) {
+                cur = max(cur, i + nums[i]);
+            }
+            if (pre == cur) return -1; // May not need this
+        }
+        return res;
+    }
+};
+```
+**********************************************
+- [思路来源](https://www.cnblogs.com/grandyang/p/4373533.html)
+
+又一次挑战hard的题目失败。
+
+首先用动态规划，到最后一组数据卡住了。然后去网上搜了搜，发现这道题用贪心算法是要贪能走到的最大距离，于是回来推到重写，没想到还是TLE，原因呢是如果最大距离处的值为0，那么会一直被困在那。
+
+最后还是去看了别人的代码，它仍然是贪最远距离，只不过在实现时是从上一次跳到的最远距离开始，依次向后找最远距离，这样可以遍历到所有数字；而我那样子到达一个地方后就直接往后遍历会忽略中间很多数据。
+
+
+
+
+
