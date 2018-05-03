@@ -1,0 +1,62 @@
+# 4Sum II
+## Description:
+```
+Given four lists A, B, C, D of integer values, compute how many tuples (i, j, k, l) there are such that A[i] + B[j] + C[k] + D[l] is zero.
+
+To make problem a bit easier, all A, B, C, D have same length of N where 0 ≤ N ≤ 500. All integers are in the range of -228 to 228 - 1 and the result is guaranteed to be at most 231 - 1.
+```
+### Example:
+
+#### Input:
+```
+A = [ 1, 2]
+B = [-2,-1]
+C = [-1, 2]
+D = [ 0, 2]
+```
+#### Output:
+```
+2
+```
+#### Explanation:
+```
+The two tuples are:
+1. (0, 0, 0, 1) -> A[0] + B[0] + C[0] + D[1] = 1 + (-2) + (-1) + 2 = 0
+2. (1, 1, 0, 0) -> A[1] + B[1] + C[0] + D[0] = 2 + (-1) + (-1) + 0 = 0
+```
+```cpp
+class Solution {
+public:
+    int ans=0;
+    
+
+    int fourSumCount(vector<int>& A, vector<int>& B, vector<int>& C, vector<int>& D) {
+        map<int,int> m;
+        for(int i=0;i<A.size();i++)
+        {
+            for(int j=0;j<B.size();j++)
+            {
+                m[A[i]+B[j]]++;
+            }
+        }
+        int count=0;
+        for(int i=0;i<C.size();i++)
+        {
+            for(int j=0;j<D.size();j++)
+            {
+                map<int,int>::iterator it=m.find(-C[i]-D[j]);
+                if(it!=m.end()) count+=it->second;
+            }
+        }
+        return count;
+    }
+};
+```
+********************************************
+- [思路来源](https://leetcode.com/problems/4sum-ii/discuss/93925/Concise-C++-11-code-beat-99.5)
+
+这道题的做法之前其实见过不少，只不过这里把vector换成了map，可以省很多空间。
+
+这道题先穷举出A和B的所有组合，把每种结果出现的次数记录在map中。这里结果为key，次数为value。
+
+然后再穷举出所有C和D的组合，在map中寻找它们组合结果的相反数，如果找到了，则证明存在对应的A和B组合可以使得当前D与D的组合与之相加等于0，并且组合数为对应结果下A、B的组合数。
