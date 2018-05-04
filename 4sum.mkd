@@ -1,0 +1,114 @@
+# 4Sum
+## Description:
+```
+Given an array nums of n integers and an integer target, are there elements a, b, c, and d in nums such that a + b + c + d = target? Find all unique quadruplets in the array which gives the sum of target.
+```
+### Note:
+
+The solution set must not contain duplicate quadruplets.
+
+### Example:
+```
+Given array nums = [1, 0, -1, 0, -2, 2], and target = 0.
+
+A solution set is:
+[
+  [-1,  0, 0, 1],
+  [-2, -1, 1, 2],
+  [-2,  0, 0, 2]
+]
+```
+```cpp
+class Solution {
+public:
+    vector<vector<int>> fourSum(vector<int>& nums, int target) {
+        if(nums.empty()) 
+        {
+            vector<vector<int> > res;
+            return res;
+        }
+        
+        multimap<int,pair<int,int>> m;
+        map<int,int> count;
+        typedef multimap<int,pair<int,int>>::iterator iterator;
+        sort(nums.begin(),nums.end());
+        set<vector<int>> ans;
+        
+        for(int i=0;i<nums.size()-1;++i)
+        {
+            count[nums[i]]++;
+            if(i>0&&nums[i]==nums[i-1]) continue;
+            for(int j=i+1;j<nums.size();j++)
+            {
+                //if(j>i+1&&nums[j]==nums[j-1]) continue;
+                m.insert(make_pair(nums[i]+nums[j],make_pair(nums[i],nums[j])));
+            }
+        }
+        count[nums.back()]++;
+ 
+        iterator i=m.begin();
+        for(;i!=m.end();++i)
+        {
+            iterator lo=m.lower_bound(target-(i->first));
+            iterator hi=m.upper_bound(target-(i->first));
+            
+            //cout<<endl<<i->second.first<<"   "<<i->second.second<<":"<<endl;
+            
+            for(iterator j=lo;j!=hi;++j)
+            {
+                if(j==i) continue;
+                vector<int> temp;
+                temp.push_back(i->second.first);
+                temp.push_back(i->second.second);
+                temp.push_back(j->second.first);
+                temp.push_back(j->second.second);
+                //cout<<"         "<<j->second.first<<"   "<<j->second.second<<endl;
+                
+                sort(temp.begin(),temp.end());
+                
+                //for(int t=0;t<temp.size();t++) cout<<temp[t]<<"   ";
+                //cout<<endl;
+                
+                bool flag=1;
+                int c=1;
+                for(int t=1;t<4;t++)
+                {
+                    if(temp[t]!=temp[t-1])
+                    {
+                        
+                        //cout<<"         "<<temp[t-1]<<":"<<c<<endl;
+                        
+                        if(c>count[temp[t-1]]) 
+                        {
+                            flag=0;
+                            break;
+                        }
+                        c=1;
+                    }
+                    else c++;
+                }
+                if(c>count[temp[3]]) flag=0;
+                
+                //cout<<"         "<<temp[3]<<":"<<c<<endl;
+                //cout<<"flag:"<<flag<<endl;
+                if(flag) ans.insert(temp);
+            }
+            int len=m.count(target-(i->first));
+           // for(int t=0;t<len;t++)
+           //     if(lo!=i) lo=m.erase(lo);
+        }
+        vector<vector<int>> res(ans.begin(),ans.end());
+        return res;
+    }
+};
+```
+*****************************************
+由于我是先做的[4SumII](),所以是顺着4SumII的思路来的。虽然做到最后发现这样做太麻烦了，不过还是硬着头皮把它写完了。
+
+按照4SumII的思路，我把数组中的数两两组合，把组合的结果放在一个multimap中，first是两数相加的结果，second是一个pair类型，用来存放这两个数。然后对这个multimap中的每一个key值，用lower_bound和upper_bound找其相反数，把区间内的所有结果放进数组中。
+
+但这样有一个很严重的后果，即里面会有大量重复。这里的重复一方面是相同的四个数换了不同的顺序被当作不同的结果输出了出来；另一方面部分数在同一个结果中被重复调用的次数大于它本身在nums中出现的次数，比如在样例中1只出现了一次，但结果中有一组结果是-2，0，1，1。很明显1被调用的次数超过了其个数。
+
+对于第一种重复，我们采取的方法是用一个set来存放所有结果，这样重复的结果不会被插入进来。注意在插入前要先对结果数组排序，否则set还是无法识别处相同的结果。
+
+对于第二种情况，我们用一个map来存放每个数的个数。然后检查每个结果中各个数出现的次数是否大于其个数，若大于，则不将其插入set中。
