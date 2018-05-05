@@ -1,0 +1,67 @@
+# 299. Bulls and Cows
+## Description
+```
+You are playing the following Bulls and Cows game with your friend: You write down a number and ask your friend to guess what the number is. Each time your friend makes a guess, you provide a hint that indicates how many digits in said guess match your secret number exactly in both digit and position (called "bulls") and how many digits match the secret number but locate in the wrong position (called "cows"). Your friend will use successive guesses and hints to eventually derive the secret number.
+```
+###For example:
+```
+Secret number:  "1807"
+Friend's guess: "7810"
+
+Hint: 1 bull and 3 cows. (The bull is 8, the cows are 0, 1 and 7.)
+```
+```
+Write a function to return a hint according to the secret number and friend's guess, use A to indicate the bulls and B to indicate the cows. In the above example, your function should return "1A3B".
+
+Please note that both secret number and friend's guess may contain duplicate digits, for example:
+
+Secret number:  "1123"
+Friend's guess: "0111"
+
+In this case, the 1st 1 in friend's guess is a bull, the 2nd or 3rd 1 is a cow, and your function should return "1A1B".
+
+You may assume that the secret number and your friend's guess only contain digits, and their lengths are always equal.
+```
+```cpp
+class Solution {
+public:
+    string getHint(string secret, string guess) {
+        int a=0,b=0,len=secret.length();
+        map<int,int> m;
+        for(int i=0;i<len;i++)
+        {
+            if(secret[i]==guess[i])
+            {
+                a++;
+                secret[i]='a';
+                guess[i]='a';
+            }
+            else m[secret[i]]++;
+        }
+        for(int i=0;i<len;i++)
+        {
+            if(guess[i]=='a') continue;
+            if(m.count(guess[i])&&m[guess[i]]!=0)
+            {
+                b++;
+                m[guess[i]]--;
+            }
+        }
+      
+        string res;
+        res.append(to_string(a));
+        res.push_back('A');
+        res.append(to_string(b));
+        res.push_back('B');
+        return res;
+    }
+};
+```
+*************************************
+这道题题目很长，思路却很简单。 
+
+我们先用一个循环计算A的值，即若secret[i]==guess[i]，a++，并且要把secret和guess对应的数字标记起来，以免影响B的计算；若不等，则用一个map记下这个数出现的次数。
+
+之后我们再用一个循环来计算B的值。对guess中每个未标记的数字在map中找到对应的出现次数，若找得到且出现次数不为0，则b++。
+
+最后在用to_string函数把结果转化成string类型返回即可。
