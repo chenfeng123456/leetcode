@@ -1,0 +1,77 @@
+# 49. Group Anagrams
+## Description:
+```
+Given an array of strings, group anagrams together.
+```
+### Example:
+
+##### Input:
+ ["eat", "tea", "tan", "ate", "nat", "bat"],
+##### Output:
+[
+  ["ate","eat","tea"],
+  ["nat","tan"],
+  ["bat"]
+]
+
+### Note:
+
+   1. All inputs will be in lowercase.
+   2. The order of your output does not matter.
+
+```cpp
+class Solution {
+public:
+    vector<vector<string>> groupAnagrams(vector<string>& strs) {
+        vector<vector<string>> res;
+        if(strs.empty()) return res;
+        int index=0;
+        map<string,int> m;
+        for(int i=0;i<strs.size();i++)
+        {
+            string s=strs[i];
+            sort(s.begin(),s.end());
+            if(!m.count(s)) m[s]=index++;
+        }
+        res.resize(index);
+        for(int i=0;i<strs.size();i++)
+        {
+            string s=strs[i];
+            sort(s.begin(),s.end());
+            res[m[s]].push_back(strs[i]);
+        }
+        return res;
+    }
+};
+```
+
+```cpp
+class Solution {
+public:
+    vector<vector<string>> groupAnagrams(vector<string>& strs) {
+        vector<vector<string>> res;
+        unordered_map<string, vector<string>> m;
+        for (string str : strs) {
+            vector<int> cnt(26, 0);
+            string t = "";
+            for (char c : str) ++cnt[c - 'a'];
+            for (int d : cnt) t += to_string(d) + "/";
+            m[t].push_back(str);
+        }
+        for (auto a : m) {
+            res.push_back(a.second);
+        }
+        return res;
+    }
+};
+```
+****************************************
+- [思路来源](https://www.cnblogs.com/grandyang/p/4385822.html)
+
+虽然很不甘心，但还是不得不承认自己是受了别人的启发才写出来的。一开始我想着用哈希表记录各个字符串中每个字符出现的次数，若出现的字符和对应次数均相同，则这两个字符串是一个错位词。但是无论如何都做不出来，于是上网看了以下别人的思路，刚看了一半就豁然开朗。只要换一个思路问题立马就变得简单了。
+
+于是我回去推到重写。这次我们维护一个map<string,int\>类型的map，用经过sort排序后的整个字符串作为key，value则记录的是与key互为错位词的字符串应当被放在的结果数组中的位置。
+
+主要思路就是这样，实现起来很简单，具体见代码。
+
+另外还可以对这个算法进行优化，就是第二份代码。其实是我最初的思路与这个思路的结合，只是它实现起来非常巧妙。它将每个字符出现的次数用一个含26组数字的string储存起来，这样就避免了对字符串排序。
