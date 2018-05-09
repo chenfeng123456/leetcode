@@ -1,0 +1,75 @@
+# 274. H-Index
+## Description:
+```
+ Given an array of citations (each citation is a non-negative integer) of a researcher, write a function to compute the researcher's h-index.
+
+According to the definition of h-index on Wikipedia: "A scientist has index h if h of his/her N papers have at least h citations each, and the other N − h papers have no more than h citations each."
+
+For example, given citations = [3, 0, 6, 1, 5], which means the researcher has 5 papers in total and each of them had received 3, 0, 6, 1, 5 citations respectively. Since the researcher has 3 papers with at least 3 citations each and the remaining two with no more than 3 citations each, his h-index is 3.
+```
+### Note: 
+If there are several possible values for h, the maximum one is taken as the h-index.
+
+#### my code(*Accepted*)
+```cpp
+class Solution {
+public:
+    int hIndex(vector<int>& citations) {
+        map<int,int> m;
+        int size=citations.size();
+        for(int i=0;i<size;i++)
+        {
+            int len=citations[i];
+            for(int j=0;j<=len;j++)
+                m[j]++;
+        }
+        int res=0;
+        for(auto it=m.begin();it!=m.end();++it)
+        {
+            //cout<<(*it).first<<"    "<<(*it).second<<endl;
+            if((*it).second>=(*it).first)
+            {
+                res=(*it).first;
+            }
+        }
+        return res;
+    }
+};
+```
+#### nice code(*Accepted*)
+```cpp
+class Solution {
+public:
+    int hIndex(vector<int>& citations) {
+        int citationSize = citations.size();
+        if (citationSize < 1) return 0;
+        vector<int> record(citationSize + 1, 0);
+        for (int i = 0; i < citationSize; ++i)
+        {
+            if (citations[i] <= citationSize)
+                ++record[citations[i]];
+            else
+                ++record[citationSize];
+        }
+
+        for (int j = citationSize, paperNum = 0; j >= 0; --j)
+        {
+            paperNum += record[j];
+            if (paperNum >= j) return j;
+        }
+        return 0;
+    }
+};
+```
+****************************************
+这道题我一开始用一个极其暴力的方法做出来了，就是建立一个map，key表示被引用的次数，value表示被至少引用key次的论文篇数。对citations中的每一个元素，我都要把以0到该元素值为key的map加一。最后再判断key的值是否小于等于value的值即可。
+
+但这样做慢得令人发指。于是我想着提高一下效率。我打算将value改为刚好被引用了key次的论文篇数，然后反向遍历map，并用一个变量记录被引用次数大于等于key的论文篇数。即定义一个变量，初始化为0，对于每个map中的元素，先加上其value的值，然后判断这个变量是否大于等于其key值。然而这样做忽略了一个很重要的问题，那就是答案不一定就是key值。它有可能是论文0到总篇数之间的任何一个值。
+
+**所以这题其实用map反而不方便，应当用vector**，即开辟一个新数组record，用于记录0~N次引用次数的各有几篇文章（引用次数大于N的按照N次计算）遍历数组，统计过后，遍历一次统计数组record，即可算出h值的最大值。时间复杂度为O(n)。
+
+说明一下，这里的N就是论文的总篇数，因为我们要求的结果是有多少篇论文的引用次数不少于它们的篇数。所以这里的下标自然不能大于论文篇数。
+
+还要注意一点：根据定义，我们最终返回的是数组的下标而非paperNum。
+
+- [代码来源](https://blog.csdn.net/liyuefeilong/article/details/50618867)
