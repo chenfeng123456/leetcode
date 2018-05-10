@@ -1,0 +1,106 @@
+# 560. Subarray Sum Equals K
+## Description:
+```
+Given an array of integers and an integer k, you need to find the total number of continuous subarrays whose sum equals to k.
+```
+### Example 1:
+
+##### Input:
+nums = [1,1,1], k = 2
+##### Output: 
+2
+
+### Note:
+
+   1. The length of the array is in range [1, 20,000].
+   2. The range of numbers in the array is [-1000, 1000] and the range of the integer k is [-1e7, 1e7].
+
+
+#### my code1(*Wrong Answer*)
+```cpp
+class Solution {
+public:
+    int subarraySum(vector<int>& nums, int k) {
+        int start=0,end=0,sum=0,res=0;
+        for(;start<nums.size();)
+        {
+            if(start==end)
+            {
+                sum=nums[start];
+                if(nums[start]==k) {res++;cout<<"start:"<<start<<"  end:"<<end<<endl;}
+                end++;
+            }
+            else if(start>end)
+            {
+                end=start;
+            }
+            else
+            {
+                if(end<nums.size()) sum+=nums[end];
+                while(sum>k)
+                {
+                    sum-=nums[start];
+                    start++;
+                }
+                if(end>=nums.size()) break;
+                else end++;
+                if(sum==k) {res++;cout<<"start:"<<start<<"  end:"<<end<<endl;}
+                
+            }
+        }
+        return res;
+    }
+};
+```
+
+#### my code2(*Memory Limit Exceeded*)
+```cpp
+class Solution {
+public:
+    int subarraySum(vector<int>& nums, int k) {
+        vector<vector<int>> dp(nums.size(),vector<int>(nums.size(),0));
+        int res=0;
+        for(int i=0;i<nums.size();i++)
+        {
+            for(int j=i;j<nums.size();j++)
+            {
+                if(j==i) dp[i][j]=nums[i];
+                else
+                {
+                    dp[i][j]=dp[i][j-1]+nums[j];
+                }
+                if(dp[i][j]==k) res++;
+            }
+        }
+        return res;
+    }
+};
+```
+
+#### nice code(*Accepted*)
+```cpp
+class Solution {
+public:
+    int subarraySum(vector<int>& nums, int k) {
+        map<int,int> m;
+        m[0]=1;
+        int res=0,sum=0;
+        for(int i=0;i<nums.size();i++)
+        {
+            sum+=nums[i];
+            if(m.find(sum-k)!=m.end()) res+=m[sum-k];
+            m[sum]++;
+        }
+        return res;
+    }
+};
+```
+******************************************
+- [思路来源](https://leetcode.com/problems/subarray-sum-equals-k/solution/#)
+
+
+一开始看这道题跟之前做的一道题有点像，打算用动态规划做，结果发现这道题有负数，行不通；于是换了一种动态规划，结果是Memory Limit Exceeded。最后到题目后面的solution中看了看，花了好半天终于看懂了。
+
+这道题的核心思想就是***任意一个连续子数组的累加和可以由从0到两个下标为止的累加和之差表示***。
+
+我们用一个变量sum来记录从0到当前位置的所有元素的和，并用map记录每一个累加和出现的次数。然后再在map中找sum-k出现了几次，出现了给结果加几。
