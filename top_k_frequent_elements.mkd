@@ -1,0 +1,41 @@
+# Top K Frequent Elements
+## Description:
+```
+ Given a non-empty array of integers, return the k most frequent elements.
+
+For example,
+Given [1,1,1,2,2,3] and k = 2, return [1,2].
+```
+### Note:
+
+   1. You may assume k is always valid, 1 ≤ k ≤ number of unique elements.
+   2. Your algorithm's time complexity must be better than O(n log n), where n is the array's size.
+```cpp
+class Solution {
+public:
+    static bool comp(pair<int,int> a,pair<int,int> b)
+    {
+        return a.second>b.second;
+    }
+    
+    
+    vector<int> topKFrequent(vector<int>& nums, int k) {
+        map<int,int> m;
+        for(int i=0;i<nums.size();i++)
+            m[nums[i]]++;
+        vector<pair<int,int>> v(m.begin(),m.end());
+        sort(v.begin(),v.end(),comp);
+        vector<int> res;
+        for(int i=0;i<v.size()&&k>0;i++,k--)
+            res.push_back(v[i].first);
+        return res;
+    }
+};
+```
+*************************************
+这样的题已经做到好几次了，用一个map记录每个数字出现的次数，然后放进一个可以用来排序的容器（优先队列、向量等）中按照second，也就是出现的次数，进行排序，最后把前k个数放进数组中返回即可。
+
+
+
+
+
