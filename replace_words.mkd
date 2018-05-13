@@ -1,0 +1,64 @@
+# 648. Replace Words
+## Description:
+```
+ In English, we have a concept called root, which can be followed by some other words to form another longer word - let's call this word successor. For example, the root an, followed by other, which can form another word another.
+
+Now, given a dictionary consisting of many roots and a sentence. You need to replace all the successor in the sentence with the root forming it. If a successor has many roots can form it, replace it with the root with the shortest length.
+
+You need to output the sentence after the replacement.
+```
+### Example 1:
+```
+Input: dict = ["cat", "bat", "rat"]
+sentence = "the cattle was rattled by the battery"
+Output: "the cat was rat by the bat"
+```
+### Note:
+
+   1. The input will only have lower-case letters.
+   2. 1 <= dict words number <= 1000
+   3. 1 <= sentence words number <= 1000
+   4. 1 <= root length <= 100
+   5. 1 <= sentence words length <= 1000
+
+```cpp
+class Solution {
+public:
+    string replaceWords(vector<string>& dict, string sentence) {
+        set<string> m(dict.begin(),dict.end());
+        string res;
+        string temp;
+        bool flag=0;
+        for(int i=0;i<sentence.size();i++)
+        {
+            if(flag&&sentence[i]!=' ') continue;
+            else if(flag&&sentence[i]==' ') 
+            {
+                res.append(temp);
+                temp.clear();
+                flag=0;
+                res.push_back(' ');
+            }
+            else if(sentence[i]==' ')
+            {
+                res.append(temp);
+                temp.clear();
+                res.push_back(' ');
+            }
+            else if(sentence[i]!=' ')
+            {
+                temp.push_back(sentence[i]);
+                if(m.count(temp))
+                {
+                    temp=*(m.find(temp));
+                    flag=1;
+                }
+            }
+        }
+        res.append(temp);
+        return res;
+    }
+};
+```
+*******************************************
+这道题要求用词根代替单词。代码写得有点啰嗦，不过思路还算清晰。这道题没必要用map，set就可以满足要求。我们把dict中的词根放进一个set中。然后遍历sentence，对于每一个**连续**的字符串判断它里面是否有词根，如果有则直接将这个词根压入到返回结果中，词根后面直到第一个空格为止的所有字符全部忽略。*注意循环结束结束后我们还有最后一个单词没有放进结果中，需单独操作*。
