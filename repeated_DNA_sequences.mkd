@@ -1,0 +1,42 @@
+# 187. Repeated DNA Sequences
+## Description:  
+```
+All DNA is composed of a series of nucleotides abbreviated as A, C, G, and T, for example: "ACGAATTCCG". When studying DNA, it is sometimes useful to identify repeated sequences within the DNA.
+
+Write a function to find all the 10-letter-long sequences (substrings) that occur more than once in a DNA molecule.
+```
+### Example:
+```
+Input: s = "AAAAACCCCCAAAAACCCCCCAAAAAGGGTTT"
+
+Output: ["AAAAACCCCC", "CCCCCAAAAA"]
+```
+```cpp
+class Solution {
+public:
+    vector<string> findRepeatedDnaSequences(string s) {
+        string temp(s.begin(),s.begin()+10);
+        set<string> m,ans;
+        m.insert(temp);
+        string pre=temp;
+        for(int i=10;i<s.size();i++)
+        {
+            string t(pre.begin()+1,pre.end());
+            t.push_back(s[i]);
+            pair<set<string>::iterator,bool> flag=m.insert(t);
+            if(!flag.second) ans.insert(t);
+            pre=t;
+        }
+        vector<string> res(ans.begin(),ans.end());
+        return res;
+    }
+};
+```
+*******************************************
+这道题最好的方法是对字符编码，不过我没看太明白。所以这里只讲一下我自己的方法吧。
+
+我这里用了两个set：m和ans，一个set用于存放所有不同的、长度为10的子字符串，另一个用于存放重复出现过的子字符串。这里ans的作用主要是为了避免答案中有重复。
+
+另外这里还有一个递推的思想，有一点向动态规划：*我们可以想象有一个长度为10的窗口从最开始依次往后移动，每次框到的子字符串等于将前一个子字符串的第一个去掉，再将当前窗口的最后一个加在最后面*。
+
+对于每一个子字符串，我们先将它插入到m中，如果插入成功，则直接进行下一次循环；如果不成功，则证明该字符串已经出现过，还需将它插入到ans中。最后创建一个vector并用ans来初始化即可。
