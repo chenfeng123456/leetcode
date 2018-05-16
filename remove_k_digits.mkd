@@ -79,9 +79,6 @@ public class Solution {
 - [思路来源1](https://leetcode.com/problems/remove-k-digits/discuss/120311/~)
 - [思路来源](https://blog.csdn.net/qq508618087/article/details/52584133)
 
-楼主的讲解对我这样的新手来说依然有点难理解，所以斗胆来进一步解释一下。
-
-
 这道题的核心思想就是尽可能地使原数组保持递增。
 
 要想是一个数尽可能小，最快的方法就是其高位尽可能小，，对这道题而言就是要把较小数字前面所有比它大的数删去来使之变成高位。
