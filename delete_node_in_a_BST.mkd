@@ -1,0 +1,143 @@
+# 450. Delete Node in a BST
+## Description:
+```
+Given a root node reference of a BST and a key, delete the node with the given key in the BST. Return the root node reference (possibly updated) of the BST.
+
+Basically, the deletion can be divided into two stages:
+
+    Search for a node to remove.
+    If the node is found, delete the node.
+```
+### Note:
+ Time complexity should be O(height of tree).
+
+### Example:
+```
+root = [5,3,6,2,4,null,7]
+key = 3
+
+    5
+   / \
+  3   6
+ / \   \
+2   4   7
+
+Given key to delete is 3. So we find the node with value 3 and delete it.
+
+One valid answer is [5,4,6,2,null,null,7], shown in the following BST.
+
+    5
+   / \
+  4   6
+ /     \
+2       7
+
+Another valid answer is [5,2,6,null,4,null,7].
+
+    5
+   / \
+  2   6
+   \   \
+    4   7
+```
+```cpp
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    
+    void Delete(TreeNode* root,TreeNode* father,bool direction)
+    {
+        if(root->left==NULL&&root->right==NULL)
+        {
+            if(direction) father->right=NULL;
+            else father->left=NULL;
+        }
+        else if(root->left==NULL&&root->right!=NULL)
+        {
+            if(direction) father->right=root->right;
+            else father->left=root->right;
+        }
+        else if(root->left!=NULL&&root->right==NULL)
+        {
+            if(direction) father->right=root->left;
+            else father->left=root->left;
+        }
+        else
+        {
+            TreeNode *temp=root->right,*pre=root;
+            while(temp->left!=NULL)
+            {
+                pre=temp;
+                temp=temp->left;
+            }
+            root->val=temp->val;
+            if(pre!=root) pre->left=pre->left->right;
+            else pre->right=pre->right->right;
+        }
+    }
+    
+    bool deletion(TreeNode* root,int key)
+    {
+        
+        if(root->val==key)
+        {
+            return true;
+        }
+        else if(root->val>key&&root->left!=NULL)
+        {
+            if(deletion(root->left,key))
+            {
+                Delete(root->left,root,0);
+            }
+        }
+        else if(root->val<key&&root->right!=NULL)
+        {
+            if(deletion(root->right,key))
+            {
+                Delete(root->right,root,1);
+            }
+        }
+        return 0;
+    }
+    
+    
+    TreeNode* deleteNode(TreeNode* root, int key) {
+        if(root==NULL) return root;
+        if(deletion(root,key))
+        {
+            if(root->left==NULL&&root->right==NULL) return NULL;
+            else if(root->left==NULL&&root->right!=NULL) return root->right;
+            else if(root->left!=NULL&&root->right==NULL) return root->left;
+            else
+        {
+            TreeNode *temp=root->right,*pre=root;
+            while(temp->left!=NULL)
+            {
+                pre=temp;
+                temp=temp->left;
+            }
+            root->val=temp->val;
+            if(pre!=root) pre->left=pre->left->right;
+            else pre->right=pre->right->right;
+        }
+        }
+        return root;
+    }
+};
+```
+************************************
+这道题主要复杂在删除这个操作上，而删除这个操作又主要复杂在被删除节点有两个子树这个操作上。
+
+如果被删除节点有两个子树，那么我们有两种选择：一是把该节点的值替换为其左子树中的最大值，并把左子树的最大值节点删掉；一是把节点值替换为其右子树中的最小值，并把右子树的最小值节点删掉。我们这里用的是后者。
+
+这里复杂的主要是有几种特殊情况：
+1. 右子树只有一个元素，这个还好说，只是删除测最后一步有所区别；
+2. 被删除的就是根节点，这个的情况得重新考虑，具体见代码；
