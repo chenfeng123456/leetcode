@@ -1,0 +1,60 @@
+# 230. Kth Smallest Element in a BST
+## Description:
+```
+Given a binary search tree, write a function kthSmallest to find the kth smallest element in it.
+```
+### Note:
+You may assume k is always valid, 1 ≤ k ≤ BST's total elements.
+
+### Example 1:
+```
+Input: root = [3,1,4,null,2], k = 1
+Output: 1
+```
+### Example 2:
+```
+Input: root = [5,3,6,2,4,null,null,1], k = 3
+Output: 3
+```
+### Follow up:
+What if the BST is modified (insert/delete operations) often and you need to find the kth smallest frequently? How would you optimize the kthSmallest routine?
+
+```cpp
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    int res;
+    
+    void find(TreeNode* root,int &k)
+    {
+        if(root==NULL) return ;
+        find(root->left,k);
+        if(!k) return ;
+        k=k-1;
+        if(k==0) 
+        {
+            res=root->val;
+            return ;
+        }
+        find(root->right,k);
+    }
+    
+    
+    int kthSmallest(TreeNode* root, int k) {
+        find(root,k);
+        return res;
+    }
+};
+```
+*************************************
+这道题实际上是要我们从最小到大访问二叉树的节点，显然访问的顺序应该为左根右，即中序遍历。另外我们需要定义一个int型的计数器，来计算当前是第几小的元素，当计数器为0是代表已找到题目要求的元素，直接返回即可。
+
+注意一点，由于是所有函数都共用一个计数器，所以我用的是int型的引用。
