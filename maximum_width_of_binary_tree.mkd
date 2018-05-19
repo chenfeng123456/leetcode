@@ -1,0 +1,125 @@
+# 662. Maximum Width of Binary Tree
+## Description:
+```
+Given a binary tree, write a function to get the maximum width of the given tree. The width of a tree is the maximum width among all levels. The binary tree has the same structure as a full binary tree, but some nodes are null.
+
+The width of one level is defined as the length between the end-nodes (the leftmost and right most non-null nodes in the level, where the null nodes between the end-nodes are also counted into the length calculation.
+```
+### Example 1:
+```
+Input: 
+
+           1
+         /   \
+        3     2
+       / \     \  
+      5   3     9 
+
+Output: 4
+Explanation: The maximum width existing in the third level with the length 4 (5,3,null,9).
+```
+### Example 2:
+```
+Input: 
+
+          1
+         /  
+        3    
+       / \       
+      5   3     
+
+Output: 2
+Explanation: The maximum width existing in the third level with the length 2 (5,3).
+```
+### Example 3:
+```
+Input: 
+
+          1
+         / \
+        3   2 
+       /        
+      5      
+
+Output: 2
+Explanation: The maximum width existing in the second level with the length 2 (3,2).
+```
+### Example 4:
+```
+Input: 
+
+          1
+         / \
+        3   2
+       /     \  
+      5       9 
+     /         \
+    6           7
+Output: 8
+Explanation:The maximum width existing in the fourth level with the length 8 (6,null,null,null,null,null,null,7).
+```
+
+### Note: 
+Answer will in the range of 32-bit signed integer. 
+
+```cpp
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    vector<int> leftmost;
+    vector<int> rightmost;
+    
+    void left(int len,int depth,TreeNode *root)
+    {
+        if(root==NULL) return ;
+        if(leftmost.size()>depth) leftmost[depth]=max(leftmost[depth],len);
+        else leftmost.push_back(len);
+        left(len*2,depth+1,root->left);
+        left(len*2-1,depth+1,root->right);
+    }
+    
+    void right(int len,int depth,TreeNode *root)
+    {
+        if(root==NULL) return;
+        if(rightmost.size()>depth) rightmost[depth]=max(rightmost[depth],len);
+        else rightmost.push_back(len);
+        right(len*2,depth+1,root->right);
+        right(len*2-1,depth+1,root->left);
+    }
+    
+    
+    int widthOfBinaryTree(TreeNode* root) {
+        if(root==NULL) return 0;
+        left(1,0,root->left);
+        left(0,0,root->right);
+        right(1,0,root->right);
+        right(0,0,root->left);
+        if(leftmost.size()>rightmost.size()) rightmost.resize(leftmost.size(),0);
+        else if(leftmost.size()<rightmost.size()) leftmost.resize(rightmost.size(),0);
+        int res=1;
+        for(int i=0;i<rightmost.size();i++)
+        {
+            rightmost[i]+=leftmost[i];
+            res=max(res,rightmost[i]);
+        }
+        return res;
+    }
+};
+```
+******************************************
+这道题我的思路是把左右的宽度分开计算。
+
+我们以左边为例，从root下的第一个节点开始计depth为0，并令外维护一个数组leftmost记录每一深度下左边的宽度。由于是一个满二叉树，我们很容易知道深度每加一，左边的节点数是上一层的2倍。相应的，如果当前这一节点的左子树非空，那么其下一深度的宽度是这一深度的2倍；若为空，则下一深度的宽度是这一深度的2倍减1。
+
+我们能看出，当某一层的一个节点的左子树为空，它之下的每一深度的宽度与这一节点非空时的以下相同深度的宽度相差越来越大，分别为1，2，4……而我们这样做刚好可以反映处这一差距。假设当前深度的宽度为l，若这一节点的左子树为空，则以下每一深度的宽度分别为2*l-1,2^2\*l-2\*1,2^3\*l-2^2\*1……，满足我们的要求。
+
+我们还需考虑一个特殊的情况，那就是两边的子树深度不一样时，我们这里以左边小于右边为例，假设左子树的最大深度d，则当深度大于d时左子树已经没有节点了，此时我们应该到右子树中找最左节点。**但需注意一点，由于我们最后的结果是将两边的深度相加，所以在右子树找最左节点实际上最后是减小了右边的宽度，所以此时左边的宽度应取负值**。<br>
+看上去这个特殊情况写起来好像很麻烦，但我们完全可以利用之前用于计算左边宽度的那个递归，只需要把初始的长度该位0，并把节点改为右子树第一个即可。这是因为若右子树的最左非空节点一直就是最左节点（即右子树的每一深度下最左节点一直非空），那么此时我们找的这个最左非空节点在最后相加时不会影响右子树的宽度，所以宽度直接取0即可。但如果在某一节点处左子树为空，那么以下每一深度的最左非空节点就会一次导致右子树的宽度依次减少1，2，4……，这根上面降到的情况相同。所以我们可以直接利用之前的递归，这样大大减少了代码量。
