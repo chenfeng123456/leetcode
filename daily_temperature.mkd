@@ -1,0 +1,101 @@
+# Daily Temperatures
+## Description:
+```
+ Given a list of daily temperatures, produce a list that, for each day in the input, tells you how many days you would have to wait until a warmer temperature. If there is no future day for which this is possible, put 0 instead.
+
+For example, given the list temperatures = [73, 74, 75, 71, 69, 72, 76, 73], your output should be [1, 1, 4, 2, 1, 1, 0, 0].
+```
+### Note: 
+The length of temperatures will be in the range [1, 30000]. Each temperature will be an integer in the range [30, 100]. 
+#### code 1(*Wrong Answer*)
+```cpp
+class Solution {
+public:
+    vector<int> dailyTemperatures(vector<int>& temperatures) {
+        stack<int> st;
+        map<int,int> m;
+        int size=temperatures.size();
+        for(int i=0;i<size;i++)
+        {
+                while((!st.empty())&&st.top()<temperatures[i])
+                {
+                    m[st.top()]=i;
+                    st.pop();
+                }
+            st.push(temperatures[i]);
+        }
+        vector<int> res;
+        for(int i=0;i<size;i++)
+        {
+            res.push_back(m[temperatures[i]]-i);
+            if(res[i]<0) res[i]=0;
+        }
+        return res;
+    }
+};
+```
+
+
+#### code 2(*Wrong Answer*)
+```cpp
+class Solution {
+public:
+    vector<int> dailyTemperatures(vector<int>& temperatures) {
+        stack<int> st;
+        map<int,int> m;
+        int size=temperatures.size();
+        vector<int> res(size);
+        for(int i=0;i<size;i++)
+        {
+            m[temperatures[i]]=i;
+                while((!st.empty())&&st.top()<temperatures[i])
+                {
+                    res[m[st.top()]]=i-m[st.top()];
+                    st.pop();
+                }
+            st.push(temperatures[i]);
+        }
+        /*
+        for(int i=0;i<size;i++)
+        {
+            res.push_back(m[temperatures[i]]-i);
+            if(res[i]<0) res[i]=0;
+        }*/
+        return res;
+    }
+};
+```
+#### modified code(*Accepted*)
+```cpp
+class Solution {
+public:
+    vector<int> dailyTemperatures(vector<int>& temperatures) {
+        stack<int> st;
+       
+        int size=temperatures.size();
+        vector<int> res(size);
+        for(int i=0;i<size;i++)
+        {
+           
+                while((!st.empty())&&temperatures[st.top()]<temperatures[i])
+                {
+                    res[st.top()]=i-st.top();
+                    st.pop();
+                }
+            st.push(i);
+        }
+        
+        return res;
+    }
+};
+```
+**************************************
+- [参考来源](https://www.cnblogs.com/grandyang/p/8097513.html)
+
+我一开始是顺着Next Greater Element I的思路做的，写出来代码一，然而这样做map中记录的总是最后一个该温度的下一个更高温度的下标。
+
+于是改成了代码二，然而这样做无法解决有相同温度且两次相同温度之间没有更高温度时的情况（位于前面的温度对应天数总是0，应为map中记录的下标总是最后一次出现的那个温度的下标）。
+
+这里关键就在于更新了map后会覆盖之前相同温度的下标。我想了很久是在想不出来于是去网上看了看别人的代码，发现其实只要稍作改变就能解决这个问题，于是有了最后一个代码。
+
+实际上我们根本连map都不需要，只要把stack中存放的数据改成下标就行了，因为温度相同但是下标肯定不一样。其余的原理基本相同。
