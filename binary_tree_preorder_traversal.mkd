@@ -1,0 +1,96 @@
+# 144. Binary Tree Preorder Traversal
+## Description:
+```
+Given a binary tree, return the preorder traversal of its nodes' values.
+```
+### Example:
+```
+Input: [1,null,2,3]
+   1
+    \
+     2
+    /
+   3
+
+Output: [1,2,3]
+```
+### Follow up:
+ Recursive solution is trivial, could you do it iteratively?
+```cpp
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    vector<int> preorderTraversal(TreeNode* root) {
+        stack<TreeNode*> s;
+        stack<int> direction;
+        vector<int> res;
+        TreeNode *p=root;
+        while(p!=NULL)
+        {
+            if(s.empty()||p!=s.top()) 
+            {
+                s.push(p);
+                res.push_back(p->val);
+                if(p->left!=NULL) 
+                {
+                    p=p->left;
+                    direction.push(-1);
+                }
+                else if(p->right!=NULL) 
+                {
+                    p=p->right;
+                    direction.push(1);
+                }
+                else
+                {
+                    s.pop();
+                    if(!s.empty()) p=s.top();
+                    else break;
+                }
+            }
+            else
+            {
+                if(direction.top()==1||p->right==NULL)
+                {
+                    s.pop();
+                    if(s.empty()) break;
+                    p=s.top();
+                    direction.pop();
+                }
+                else if(direction.top()==-1)
+                {
+                    direction.top()=1;
+                    p=p->right;
+                }
+            }
+       }
+        return res;
+    }
+};
+```
+************************************
+这道题要求在不用递归的情况下实现对二叉树的先序遍历。问题的关键在于由于二叉树只有指向下一个节点的指针，我们在没有递归的情况下如何回退到上一个节点。事实上，栈的特性刚好能满足我们的要求。
+
+我们用一个栈s保存经历过的每一个节点的指针，用另一个栈direction保存在此节点处我们是走的左子树还是右子树，分别用-1和1来表示。
+
+本题最重要的是判断我们是如何到这个节点的：
+
+1. 如果是自上而下第一次到这个节点，根据先序遍历的规则，首先把当前节点的值保存到数组中：
+    1. 优先考虑左子树是否为空，若不为空令指针指向左子树的第一个节点，同时direction中放入-1；
+    2. 若为空，则再判断右子树是否为空，如不为空，令指针指向右子树的第一个节点；
+    3. 若右子树也为空，那么此时我们要回退到上一个节点，弹出s的第一个元素（即当前节点），然后将top的值赋   给指针p；
+    4. 我们还需考虑到一种特殊情况，即整个二叉树只有一个元素，此时3中执行了pop操作后栈为空，并且也只有这种情况会使得3中弹出了栈顶元素后栈为空，故这是直接break结束循环即可；
+2. 如果是回退到这个节点，我们还要判断是从哪个子树退回来的：
+    1. 如果是从右子树退回来的，证明该节点以下的所有节点均已访问到，直接弹出s和direction的栈顶元素；
+    2. 如果是从左子树退回来的，那么还有右子树要遍历，令指针指向右子树节点，同时把direction的栈顶元素改为1；
+    3. 这里还要考虑到如果是从右子树回到了整个二叉树的根节点，那么在1中pop后s就为空了，而且当二叉树的节点大于1时也只有这种情况会使得s为空，此时直接break结束循环即可。   
+
+如此便可以先序遍历整个二叉树，最后返回数组就行了。
