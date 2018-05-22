@@ -36,7 +36,7 @@ So function 0 totally execute 2 + 1 = 3 units of time, and function 1 totally ex
 - [思路来源](https://www.cnblogs.com/grandyang/p/7244767.html)
 
 这题的题目又长又难理解，看得人云里雾里。以上思路来源中作者的解析个人觉得有点问题。对于case：
->["0:start\:0","0:start\:2","0:end\:5","1:start\:7","1:end\:7","0:end\:8"]
+>["0\:start\:0","0\:start\:2","0\:end\:5","1\:start\:7","1\:end\:7","0\:end\:8"]
 
 在5时刻关掉一个0进程后，还有一个0进程，剩下的这个在6秒时有运行了一秒，我想博主应该是漏掉了这个算出来是7秒。按理说任何时刻都只会有一个进程在执行。
 
