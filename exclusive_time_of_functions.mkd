@@ -1,0 +1,45 @@
+# 636. Exclusive Time of Functions
+## Description:
+```
+Given the running logs of n functions that are executed in a nonpreemptive single threaded CPU, find the exclusive time of these functions.
+
+Each function has a unique id, start from 0 to n-1. A function may be called recursively or by another function.
+
+A log is a string has this format : function_id:start_or_end:timestamp. For example, "0:start:0" means function 0 starts from the very beginning of time 0. "0:end:0" means function 0 ends to the very end of time 0.
+
+Exclusive time of a function is defined as the time spent within this function, the time spent by calling other functions should not be considered as this function's exclusive time. You should return the exclusive time of each function sorted by their function id.
+```
+### Example 1:
+```
+Input:
+n = 2
+logs = 
+["0:start:0",
+ "1:start:2",
+ "1:end:5",
+ "0:end:6"]
+Output:[3, 4]
+Explanation:
+Function 0 starts at time 0, then it executes 2 units of time and reaches the end of time 1. 
+Now function 0 calls function 1, function 1 starts at time 2, executes 4 units of time and end at time 5.
+Function 0 is running again at time 6, and also end at the time 6, thus executes 1 unit of time. 
+So function 0 totally execute 2 + 1 = 3 units of time, and function 1 totally execute 4 units of time.
+```
+### Note:
+
+   1. Input logs will be sorted by timestamp, NOT log id.
+   2. Your output should be sorted by function id, which means the 0th element of your output corresponds to the exclusive time of function 0.
+   3. Two functions won't start or end at the same time.
+   4. Functions could be called recursively, and will always end.
+   5. 1 <= n <= 100
+*****************************************
+- [思路来源](https://www.cnblogs.com/grandyang/p/7244767.html)
+
+这题的题目又长又难理解，看得人云里雾里。以上思路来源中作者的解析个人觉得有点问题。对于case：
+>["0:start:0","0:start:2","0:end:5","1:start:7","1:end:7","0:end:8"]
+
+在5时刻关掉一个0进程后，还有一个0进程，剩下的这个在6秒时有运行了一秒，我想博主应该是漏掉了这个算出来是7秒。按理说任何时刻都只会有一个进程在执行。
+
+不过他贴出来的代码倒是对的。我自己一开始的想法是用一个进程的结束时刻减起始时刻加一再减去在这期间其它进程的运行时间，但这样做要考虑的情况太多了，做了一上午还是Wrong Answer。
+
+如果说我的思路是做减法的话，代码的思路就是做加法。它相当于是把一个进程的执行时间分块求出再加起来。代码里的pretime是被pop掉的那个进程的结束时间点，而time是当前操作的时间点，这二者相减就是目前进程执行的一个时间段长度，我们先把它加到数组中去。然后还要判断当前操作是start还是end，如果是end的话，还要给它加一；如果是start，它会立即使当前进程待机，所以不用再去加一。
