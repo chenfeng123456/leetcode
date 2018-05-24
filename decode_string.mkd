@@ -1,0 +1,57 @@
+# 394. Decode String
+## Description:
+```
+ Given an encoded string, return it's decoded string.
+
+The encoding rule is: k[encoded_string], where the encoded_string inside the square brackets is being repeated exactly k times. Note that k is guaranteed to be a positive integer.
+
+You may assume that the input string is always valid; No extra white spaces, square brackets are well-formed, etc.
+
+Furthermore, you may assume that the original data does not contain any digits and that digits are only for those repeat numbers, k. For example, there won't be input like 3a or 2[4].
+```
+### Examples:
+```
+s = "3[a]2[bc]", return "aaabcbc".
+s = "3[a2[c]]", return "accaccacc".
+s = "2[abc]3[cd]ef", return "abcabccdcdcdef".
+```
+```cpp
+class Solution {
+public:
+    string construct(string::iterator &p,string s)
+    {
+        string temp;
+        int n=0;
+        while((*p)!=']'&&p!=s.end())
+        {
+            string t;
+            if((*p)=='[')
+            {
+                t=construct(++p,s);
+                for(;n>0;n--) temp.append(t);
+                n=0;
+            }
+            else if((*p)>='0'&&(*p)<='9')
+            {
+                n=n*10+(*p)-'0';
+            }
+            else if((*p)==']') break;
+            else temp.push_back((*p));
+            p++;
+        }
+        return temp;
+    }
+    
+    
+    string decodeString(string s) {
+        auto p=s.begin();
+        return construct(p,s);
+    }
+};
+```
+*******************************************
+之前老想着用栈，怎么也做不出来，后来换了个思路用递归没想到一下子就解决了。
+
+我们定义一个函数construct用于返回一对"[]"内的字符串，同时还要有一个变量n来记录这个字符串需要出现几次。我们遍历整个字符串，如果是单个字符，直接push到实现定义好的string中；如果碰到是数字，我们要把它转化成int型，要注意数字可能多为的，这时我们需要先将之前的数乘10；如果碰到的是'['，则进行递归调用；如果碰到']'，跳出循环，返回字符串。
+
+***这里要特别注意的一点是：当我们递归调用结束后，回到之前的函数中时，下一步我们要处理的是"[]"中字符串后面的字符，但我们的函数已经定义成了返回字符串，不能再返回一个迭代器，所以这里我们的形参要写成迭代器的引用。***另外还要注意递归结束后要把n重新置为0。
