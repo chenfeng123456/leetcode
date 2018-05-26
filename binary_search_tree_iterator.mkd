@@ -1,0 +1,75 @@
+# 173. Binary Search Tree Iterator
+## Description:
+```
+Implement an iterator over a binary search tree (BST). Your iterator will be initialized with the root node of a BST.
+
+Calling next() will return the next smallest number in the BST.
+
+Note: next() and hasNext() should run in average O(1) time and uses O(h) memory, where h is the height of the tree.
+
+```
+
+```cpp
+/**
+ * Definition for binary tree
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class BSTIterator {
+public:
+    stack<TreeNode *> minus;
+    
+    BSTIterator(TreeNode *root) {
+        TreeNode *p=root;
+        while(p!=NULL)
+        {
+            TreeNode *t=p;
+            minus.push(t);
+            p=p->left;
+        }
+    }
+
+    /** @return whether we have a next smallest number */
+    bool hasNext() {
+        return !minus.empty();
+    }
+
+    /** @return the next smallest number */
+    int next() {
+        TreeNode *p=minus.top();
+        minus.pop();
+        int res=p->val;
+        p=p->right;
+        while(p!=NULL)
+        {
+            TreeNode *t=p;
+            minus.push(t);
+            p=p->left;
+        }
+        return res;
+    }
+};
+
+/**
+ * Your BSTIterator will be called like this:
+ * BSTIterator i = BSTIterator(root);
+ * while (i.hasNext()) cout << i.next();
+ */
+```
+ 
+ *************************************
+ - [思路来源](https://blog.csdn.net/smile_watermelon/article/details/47280679)
+ 
+ 第一次碰到这样的题,有点摸不着头脑。后来渐渐有了点头绪：可以用一个栈按从小到大的顺序把所有的节点都放进去，但是这样不满足空间复杂度为O(h)的要求。最后去网上搜了搜，发现了这个很巧妙的方法。
+ 
+ 对这个问题，我们不需要把所有的节点都放进去，只需要保证在栈顶的元素一定是当前最小的即可。
+ 
+ 所以我们一开始我们为类初始化的时候，只需要从根节点开始，一直往左走，直至底端，注意我们放的不是值，而是指针，这是为了后面操作方便。如此我们就能保证初始化完之后栈顶的一定是整个二叉树中最小的元素。而hasNext也很好说，直接返回栈是否为空就可以了。
+ 
+ 关键在于next，当我们pop掉栈顶元素后，此时栈顶元素就不能保证是最小的了。但我们知道下一个最小元素一定会是当前节点右子树中的最小节点或当前节点的上一个节点。因此我们可以仿照初始化的思路，以当前节点的右子树的第一个节点作为根节点，再“初始化”一次整个栈。若右子树非空，那么栈顶就是右子树的最小节点；若右子树为空，那么这个操作不会放进任何元素，此时的栈顶就是当前节点的上一个节点。符合我们的要求。
+ 
+ 最后来看一下复杂度。我们一共要调用n次next()，在这n次调用中，每个结点都进栈/出栈，共n次入栈操作，n次出栈操作，平均起来，每次next()只有一次入栈操作+一次出栈操作，因此满足平均时间复杂度O(1)的要求。而空间复杂度，我们每次都是顺着树的左分支往下，因此最多只会添加h个节点，也满足要求。
