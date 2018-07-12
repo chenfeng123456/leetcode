@@ -1,0 +1,89 @@
+# *Binary Tree Pruning
+## Description
+```
+We are given the head node root of a binary tree, where additionally every node's value is either a 0 or a 1.
+
+Return the same tree where every subtree (of the given tree) not containing a 1 has been removed.
+
+(Recall that the subtree of a node X is X, plus every node that is a descendant of X.)
+```
+
+### Example 1:
+```
+Input: [1,null,0,0,1]
+Output: [1,null,0,null,1]
+ 
+Explanation: 
+Only the red nodes satisfy the property "every subtree not containing a 1".
+The diagram on the right represents the answer.
+```
+
+### Example 2:
+```
+Input: [1,0,1,0,0,0,1]
+Output: [1,null,1,null,1]
+```
+
+
+### Example 3:
+```
+Input: [1,1,0,1,1,0,1,0]
+Output: [1,1,0,1,1,null,1]
+```
+
+
+### Note:
+
+   1. The binary tree will have at most 100 nodes.
+   2. The value of each node will only be 0 or 1.
+
+```cpp
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    bool judge(TreeNode* root)
+    {
+        if(root==NULL) return true;
+        bool leftTree=judge(root->left);
+        bool rightTree=judge(root->right);
+        if(root->val==0)
+        {
+            if(leftTree&&rightTree) return true;
+            if(leftTree) root->left=NULL;
+            if(rightTree) root->right=NULL;
+            return false;
+        }
+        else if(root->val==1)
+        {
+            if(leftTree) root->left=NULL;
+            if(rightTree) root->right=NULL;
+            return false;
+        }
+    }
+    
+    
+    TreeNode* pruneTree(TreeNode* root) {
+        judge(root);
+        return root;
+    }
+};
+```
+******************************************
+- beat 100%
+
+本题用递归的基础上分两种情况讨论：
+
+1. 若当前节点为0，则当前节点有可能连同其子树一起被剪掉。
+
+        1. 若两个子树都全为0，那么直接返回true，将当前节点及两子树一起剪掉；
+        2. 若只有一边的子树符合条件，则将该子树剪掉，并且返回false，保留当前节点及另一边子树；
+        
+2. 若当前节点为1，则该节点一定会保留，将全为0的子树剪掉后直接返回false即可。
