@@ -1,0 +1,84 @@
+# Count Complete Tree Nodes
+## Descripton
+```
+Given a complete binary tree, count the number of nodes.
+```
+### Note:
+```
+Definition of a complete binary tree from Wikipedia:
+In a complete binary tree every level, except possibly the last, is completely filled, and all nodes in the last level are as far left as possible. It can have between 1 and 2h nodes inclusive at the last level h.
+```
+### Example
+```
+Example:
+
+Input: 
+    1
+   / \
+  2   3
+ / \  /
+4  5 6
+
+Output: 6
+```
+#### my code(*Time Limit Exceeded*):
+```cpp
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:    
+    int countNodes(TreeNode* root) {
+        if(root == NULL) return 0;
+        if(root->left == NULL && root->right == NULL) return 1;
+        return countNodes(root->left) + countNodes(root->right) + 1;
+    }
+};
+```
+
+#### nice code(*Acceptd*):
+```cpp
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    int countNodes(TreeNode* root) {
+        int hLeft = 0, hRight = 0;
+        TreeNode *pLeft = root, *pRight = root;
+        while (pLeft)
+        {
+            pLeft = pLeft->left;
+            hLeft++;
+        }
+        while (pRight)
+        {
+            pRight = pRight->right;
+            hRight++;
+        }
+        if (hLeft == hRight) 
+            return pow(2, hLeft) - 1;
+        return countNodes(root->left) + countNodes(root->right) + 1;
+    }
+};
+```
+****************************************
+- [思路来源](https://www.cnblogs.com/grandyang/p/4567827.html)
+
+最初想着暴力解题，不出所料是TLE，优化了几次过后仍然免不了超时的命运，最后取网上搜了搜别人的代码。
+
+他们的思路是：完全二叉树有可能是完美二叉树，而且如果是完美二叉树的话，其节点个数就为2的h次方-1，h为完美二叉树的高度。而判断的标准就是算出最左节点和最右节点的深度，比较二者是否相等。相等即为完美二叉树。若不相等则进行递归，算出左右子树的节点数再加1结尾结果。
+
+事实上，完全二叉树可以被分解成若干个小完美二叉树，这就使得我们往往可以不用遍历所有节点就能得出结果。
