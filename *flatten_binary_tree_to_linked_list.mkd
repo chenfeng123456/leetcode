@@ -1,0 +1,113 @@
+# Flatten Binary Tree to Linked List
+## Description:
+```
+Given a binary tree, flatten it to a linked list in-place.
+
+For example, given the following tree:
+
+    1
+   / \
+  2   5
+ / \   \
+3   4   6
+
+The flattened tree should look like:
+
+1
+ \
+  2
+   \
+    3
+     \
+      4
+       \
+        5
+         \
+          6
+
+
+```
+#### my code(*Accepted*):
+```cpp
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:    
+    TreeNode* link(TreeNode *root, TreeNode *lastNode)
+    {
+        if(!root) return NULL;
+        lastNode->left = root;
+        lastNode = link(root->left, root);
+        TreeNode *temp;
+        if(lastNode == NULL) 
+        {
+            lastNode = link(root->right, root);
+            lastNode = lastNode == NULL ? root : lastNode;
+        }
+        else 
+        {
+            temp = link(root->right, lastNode);
+            lastNode = temp == NULL ? lastNode : temp;
+        }
+        return lastNode;
+    }
+    void moveToRight(TreeNode *root)
+    {
+        if(!root) return;
+        root->right = root->left;
+        root->left = NULL;
+        moveToRight(root->right);
+    }
+    
+    void flatten(TreeNode* root) {
+        if(root == NULL) return;
+        TreeNode *lastNode = link(root->left, root);
+        if(lastNode == NULL) link(root->right, root);
+        else link(root->right, lastNode);
+        moveToRight(root);
+    }
+};
+```
+#### nice code(*Accepted*):
+```
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+    
+    TreeNode* pre = nullptr;
+public:
+    void flatten(TreeNode* root) {
+        
+        if(!root) return;
+        
+        flatten( root->right );
+        flatten( root->left );
+        
+        // do ot bottom up manner from leaf to  root
+        root->right = pre;
+        root->left = nullptr;
+        pre = root;      
+        
+    }
+};
+```
+***************************************
+- beat 100%
+
+这道题要求将二叉树按给定的形式展开成一个链表，其顺序是根左右。不过按照根左右的顺序来遍历的话，将链表连在左子树上比较方便，所以我的想法是先连到左子树上，最后再换过来，总体而言思路比较简单。
+
+虽然显示了beat 100%，不过还是看了一下最快的答案。它的思路更巧妙，是按照右左根的顺序到着来遍历的，这样既能保证正确的结果，又能把链表一次性连在右子树上。
