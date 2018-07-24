@@ -1,0 +1,50 @@
+# To Lower Case
+## Description
+```
+Implement function ToLowerCase() that has a string parameter str, and returns the same string in lowercase.
+```
+ 
+
+### Example 1:
+```
+Input: "Hello"
+Output: "hello"
+```
+### Example 2:
+```
+Input: "here"
+Output: "here"
+```
+### Example 3:
+```
+Input: "LOVELY"
+Output: "lovely"
+```
+```python
+class Solution:
+    def toLowerCase(self, str):
+        """
+        :type str: str
+        :rtype: str
+        """
+        res = ''
+        for each in str:
+            temp = ord(each)
+            if 65<=temp<=90:
+                temp += 32
+            res += chr(temp)
+        
+        return res
+```
+***************************************
+
+*最近在学python，但是总觉得用得不熟练，所以决定从今天开始学着用python做leetcode，由于对python的语法、函数掌握的还不牢，所以先从easy的开始做起。*
+
+这道题用C或C++做十分简单，直接把所有的大写字母加32即可。但是python中不允许直接给字符加减整数，所以需要另寻方法。
+
+最直接的当然是用**str.lower()**函数，不过这样也太偷懒了。于是上网查了一下，发现有两个函数刚好可以用的上：
+
+- ord():返回字符所对应的ASCII码
+- chr():返回ASCII码所对应的字符
+
+这样问题就迎刃而解了。
