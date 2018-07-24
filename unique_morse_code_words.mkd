@@ -1,0 +1,58 @@
+# Unique Morse Code Words
+## Description:
+```
+International Morse Code defines a standard encoding where each letter is mapped to a series of dots and dashes, as follows: "a" maps to ".-", "b" maps to "-...", "c" maps to "-.-.", and so on.
+
+For convenience, the full table for the 26 letters of the English alphabet is given below:
+
+[".-","-...","-.-.","-..",".","..-.","--.","....","..",".---","-.-",".-..","--","-.","---",".--.","--.-",".-.","...","-","..-","...-",".--","-..-","-.--","--.."]
+
+Now, given a list of words, each word can be written as a concatenation of the Morse code of each letter. For example, "cab" can be written as "-.-.-....-", (which is the concatenation "-.-." + "-..." + ".-"). We'll call such a concatenation, the transformation of a word.
+
+Return the number of different transformations among all words we have.
+```
+
+### Example:
+```
+Input: words = ["gin", "zen", "gig", "msg"]
+Output: 2
+Explanation: 
+The transformation of each word is:
+"gin" -> "--...-."
+"zen" -> "--...-."
+"gig" -> "--...--."
+"msg" -> "--...--."
+
+There are 2 different transformations, "--...-." and "--...--.".
+```
+
+### Note:
+
+   - The length of words will be at most 100.
+   - Each words[i] will have length in range [1, 12].
+   - words[i] will only consist of lowercase letters.
+   
+```python
+  class Solution:
+    def uniqueMorseRepresentations(self, words):
+        """
+        :type words: List[str]
+        :rtype: int
+        """
+        morse = [".-","-...","-.-.","-..",".","..-.","--.","....","..",".---","-.-",".-..","--","-.","---",".--.","--.-",".-.","...","-","..-","...-",".--","-..-","-.--","--.."]
+        
+        tWords = set()
+        for each_word in words:
+            temp = ''
+            for each in each_word:
+                s = morse[ord(each) - 97]
+                temp += s
+            tWords.add(temp)
+            
+        return len(tWords)
+```
+********************************************
+这道题比较简洁的做法就是：
+
+        先建立一个列表，把莫斯码按照字母的顺序都存进去，在针对每一个单词把字母一次转换成莫斯码。
+        剩下的就是如何查重了。我所能想到的最简单的做法就是建立一个set，把所有转化好了的元素插入进去，由于set会自动剔除重复的元素，所以我们最后直接返回set的长度即可。
