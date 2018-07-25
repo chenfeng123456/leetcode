@@ -1,0 +1,59 @@
+#  Reverse String
+## Description
+```
+Write a function that takes a string as input and returns the string reversed.
+```
+### Example:
+```
+Given s = "hello", return "olleh". 
+```
+#### my code(*Accepted*)
+```python
+class Solution:
+    def reverseString(self, s):
+        """
+        :type s: str
+        :rtype: str
+        """
+        l = reversed(s)
+        res = ''
+        for i in l:
+            res += i
+        return res
+```
+#### nice code(*Accepted*)
+```python
+class Solution:
+    def reverseString(self, s):
+        return s[::-1]
+```
+*******************************************
+这道题的关键在于如何用python反向遍历一个字符串，推而广之就是如何反向遍历一个序列。
+
+总共查到以下三种方法：
+
+-  
+
+```python
+ for x in reversed(array):
+           print x
+```
+-  
+```python
+for x in range(len(array)-1,-1,-1):
+           print array[x]
+```
+-  
+```python
+for x in array[::-1]:
+           print x
+```
+
+其中第二和第三中都用到了“步长”这个参数。我们可以这么理解步长的作用，即遍历时，current_index = starting_index + step。所以就不难理解当步长为-1时其实就代表要反向遍历了。
+
+***实际上第三种方法是python中对于反转字符串经常用到一个方法***
+
+这里还要强调的一点是，reversed(s)返回的并不是一个反向序列本身，而是一个反向迭代子。以下引用一段网上查到的[原文](https://blog.csdn.net/sxingming/article/details/51353379)：
+> That’s because reversed creates an iterator, which is already spent when you’re calling list(ll) for the second time.
+
+>The reason is that ll is not the reversed list itself, but a **listreverseiterator**. So when you call list(ll) the first time, it iterates over ll and creates a new list from the items output from that iterator.When you do it a second time, ll is still the original iterator and has already gone through all the items, so it doesn’t iterate over anything, resulting in an empty list.
