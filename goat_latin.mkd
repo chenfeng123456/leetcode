@@ -1,0 +1,117 @@
+# Goat Latin
+## Desription:
+```
+A sentence S is given, composed of words separated by spaces. Each word consists of lowercase and uppercase letters only.
+
+We would like to convert the sentence to "Goat Latin" (a made-up language similar to Pig Latin.)
+
+The rules of Goat Latin are as follows:
+```
+
+   - If a word begins with a vowel (a, e, i, o, or u), append "ma" to the end of the word.<br>
+    For example, the word 'apple' becomes 'applema'.
+     
+   - If a word begins with a consonant (i.e. not a vowel), remove the first letter and append it to the end, then add "ma".<br>
+    For example, the word "goat" becomes "oatgma".
+     
+   - Add one letter 'a' to the end of each word per its word index in the sentence, starting with 1.<br>
+    For example, the first word gets "a" added to the end, the second word gets "aa" added to the end and so on.
+
+Return the final sentence representing the conversion from S to Goat Latin. 
+
+```python
+class Solution:
+    def toGoatLatin(self, S):
+        """
+        :type S: str
+        :rtype: str
+        """
+        res = ""
+        l = S.split(" ")
+        print(l)
+        vowel = {'a', 'o', 'e', 'i', 'u', 'A', 'O', 'E', 'I', 'U'}
+        
+        for i in range(len(l)):
+            temp = ""
+            if l[i][0] not in vowel:
+                temp += l[i][1:]
+                temp += l[i][0]
+            else:
+                temp +=l[i]
+            #print(temp)
+            temp += "ma"
+            for j in range(i+1):
+                temp += 'a'
+            res += temp
+            res += ' '
+        
+        return res[:-1]
+```
+
+
+***********************************
+目前我做leetcode的主要目的是为了熟悉python的语言特性即各种用法，所以除了做出这道题以外，我还上网搜了搜可能与这道题相关的各种函数即方法。
+
+
+1. 用for each in sequence  
+这样的语句遍历序列时，对each做的任何改动不会影响到原序列。
+2. strip() 方法用于移除字符串头尾指定的字符（默认为**空格**或**换行符**）或字符序列。<br>
+***注意***：该方法只能删除开头或是结尾的字符，不能删除中间部分的字符。
+3. 字符串转列表：str.split("分隔符")
+4. 列表转字符串："分隔符".join(l)
+5. 删除字符串中的字符：
+    1. 如果想要删除字符串中的某一个字符，似乎没有现成的函数，但我们可以用切片+拼接的方法来达到这个效果
+    2. 如果要删除任意位置的同种字符，可以用str.replace()或re.sub()（注意用re时要import re）
+主要针对1、3、4以及5，自己写了个例子：
+```python
+>>> a = [1, 2, 3, 4, 5, 6]
+>>> for each in a:
+...     each+=1
+... 
+>>> a
+[1, 2, 3, 4, 5, 6]
+>>> for each in a:
+...     each+=1
+...     print(each)
+... 
+2
+3
+4
+5
+6
+7
+>>> print(a)
+[1, 2, 3, 4, 5, 6]
+>>> for i in range(len(a)):
+...     a[i] += 1
+... 
+>>> a
+[2, 3, 4, 5, 6, 7]
+>>> s = "apple, banana, peach, watermelon, pear"
+>>> l = s.split(", ")
+>>> l
+['apple', 'banana', 'peach', 'watermelon', 'pear']
+>>> s2 = ", ".join(l)
+>>> s2
+'apple, banana, peach, watermelon, pear'
+>>> s2.replace(',', 'a')
+'applea bananaa peacha watermelona pear'
+>>> s2.replace('a', '')
+'pple, bnn, pech, wtermelon, per'
+>>> s2.replace(',', 'a')
+'applea bananaa peacha watermelona pear'
+>>> s2.replace('a', '')
+'pple, bnn, pech, wtermelon, per'
+>>> re.sub('[, ]', 'p', s)
+'appleppbananapppeachppwatermelonpppear'
+>>> re.sub('pp', 'p', s)
+'aple, banana, peach, watermelon, pear'
+>>> re.sub(', ', ' and ', s)
+'apple and banana and peach and watermelon and pear'
+>>> re.sub(', ', '', s)
+'applebananapeachwatermelonpear'
+>>> s
+'apple, banana, peach, watermelon, pear'
+```
+
+在回到这道题上来，其实思路很简单，先把字符串转换成一个列表，以空格为分隔符。再对列表中的每个元素即单个单词进行操作。注意单词在列表中的下标为多少，我们最后就要在这个词的结尾加上“下标+1”个’a‘。
