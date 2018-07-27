@@ -1,0 +1,53 @@
+# Detect Capital
+## Description:
+```
+ Given a word, you need to judge whether the usage of capitals in it is right or not.
+
+We define the usage of capitals in a word to be right when one of the following cases holds:
+```
+   1. All letters in this word are capitals, like "USA".
+   2. All letters in this word are not capitals, like "leetcode".
+   3. Only the first letter in this word is capital if it has more than one letter, like "Google".
+```
+Otherwise, we define that this word doesn't use capitals in a right way.
+```
+### Example 1:
+```
+Input: "USA"
+Output: True
+```
+### Example 2:
+```
+Input: "FlaG"
+Output: False
+```
+### Note: 
+The input will be a non-empty word consisting of uppercase and lowercase latin letters.
+```python
+class Solution:
+    def detectCapitalUse(self, word):
+        """
+        :type word: str
+        :rtype: bool
+        """
+        if word.islower() or word.isupper() or word.istitle():
+            return True
+        else:
+            return False
+```
+****************************************
+如果这题用C或C++做的话，我应该会逐个单词去判断：
+
+- 先判断第一个字母是不是大写：
+    - 如果是，则再判断第二个字母是不是大写：
+        - 如果是，继续遍历字符串，只要遇到小写字母就直接返回False；反之返回True；
+        - 如果不是，则之后凡遇到大写字母就返回False；否则返回True；
+    - 如果不是，那么再之后遍历字符串的过程中如果遇到大写字母则直接返回False；如到最终都未遇到，则返回True。
+ 
+ 但在这里我们的目标是要熟悉Python的各种用法，所以我们当然还要看看有没有什么Python独有的简洁做法。于是我找到了这三个函数：
+
+- str.islower()：判断字符串是否都为小写；
+- str.isupper()：判断字符串是否都为大写；
+- str.istitle()：判断是否所有单词的首字母都是大写且其余字母小写。
+
+我们发现这三个函数刚好对应了三种做法，所以直接用一个条件判断就做出来了。
