@@ -1,0 +1,83 @@
+# Count Binary Substrings
+## Description:
+```
+Give a string s, count the number of non-empty (contiguous) substrings that have the same number of 0's and 1's, and all the 0's and all the 1's in these substrings are grouped consecutively.
+
+Substrings that occur multiple times are counted the number of times they occur.
+```
+### Example 1:
+```
+Input: "00110011"
+Output: 6
+Explanation: There are 6 substrings that have equal number of consecutive 1's and 0's: "0011", "01", "1100", "10", "0011", and "01".
+
+Notice that some of these substrings repeat and are counted the number of times they occur.
+
+Also, "00110011" is not a valid substring because all the 0's (and 1's) are not grouped together.
+```
+### Example 2:
+```
+Input: "10101"
+Output: 4
+Explanation: There are 4 substrings: "10", "01", "10", "01" that have equal number of consecutive 1's and 0's.
+```
+### Note:
+- s.length will be between 1 and 50,000.
+- s will only consist of "0" or "1" characters.
+```python
+class Solution:
+    
+    def count1(self, s, end, ones, length):
+        while(end < length and s[end] == '1'):
+                    ones += 1
+                    end += 1
+        return end, ones
+    
+    def count0(self, s, end, zeros, length):
+        while(end < length and s[end] == '0'):
+            zeros += 1
+            end += 1
+        return end, zeros
+    
+    def countBinarySubstrings(self, s):
+        """
+        :type s: str
+        :rtype: int
+        """
+        res = 0
+        ones = 0
+        zeros = 0
+        end = 0
+        start = 0
+        length = len(s)
+        while(end < length):
+            if(s[end] == '1'):
+                ones += 1
+                end += 1
+                end, ones = self.count1(s, end, ones, length)
+                end, zeros = self.count0(s, end, zeros, length)
+            else:
+                zeros += 1
+                end += 1
+                end, zeros = self.count0(s, end, zeros, length)
+                end, ones = self.count1(s, end, ones, length)
+                
+            if ones == zeros or ones < zeros:
+                res += ones
+            else:
+                res += zeros
+                
+            if s[start] == '1':
+                start += ones
+            else:
+                start += zeros
+            end = start
+            zeros = 0
+            ones = 0
+            
+        return res
+```
+*************************************
+这道题的思路不难，就是数出两段连续的1和0中1和0的个数，那么这一段子序列中满足要求的子序列个数为二者较小的那个。加上这个数，然后令start跳过当前这一段连续的1或0，并让end退回来等于start。反复迭代直至end到达末尾。
+
+这里关于python的语法中有一点要注意的是，**在一个类中调用成员函数，需要用self.function()的形式**
