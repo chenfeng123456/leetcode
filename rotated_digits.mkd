@@ -1,0 +1,63 @@
+# Rotated Digits
+## Description:
+```
+X is a good number if after rotating each digit individually by 180 degrees, we get a valid number that is different from X.  Each digit must be rotated - we cannot choose to leave it alone.
+
+A number is valid if each digit remains a digit after rotation. 0, 1, and 8 rotate to themselves; 2 and 5 rotate to each other; 6 and 9 rotate to each other, and the rest of the numbers do not rotate to any other number and become invalid.
+
+Now given a positive number N, how many numbers X from 1 to N are good?
+```
+### Example:
+```
+Input: 10
+Output: 4
+Explanation: 
+There are four good numbers in the range [1, 10] : 2, 5, 6, 9.
+Note that 1 and 10 are not good numbers, since they remain unchanged after rotating.
+```
+### Note:
+
+   - N  will be in range [1, 10000].
+```python
+class Solution:
+    def rotatedDigits(self, N):
+        """
+        :type N: int
+        :rtype: int
+        """
+        invalid_num = {'3', '4', '7'}
+        count = 0
+        
+        for i in range(1, N+1):
+            s = str(i)
+            res = ""
+            
+            for char in s:
+                if char in invalid_num:
+                    break
+                elif char == '2':
+                    res += '5'
+                elif char == '5':
+                    res += '2'
+                elif char == '6':
+                    res += '9'
+                elif char == '9':
+                    res += '6'
+                else:
+                    res += char
+            else:
+                if res != s:
+                    count += 1
+             
+            
+        
+        return count
+            
+```
+******************************************
+我做这道题的思路很暴力，直接挨个判断：先把当前数子转换成字符串s，再创建一个空字符串res。然后遍历s中每个数字。若碰到不能旋转的数字直接跳出循环；若是旋转后变为另一个数字
+，则在res后面加上那另一个数；其余情况则直接在res后面加上当前数字。若成功遍历完了s，则判断res是否等于s，若不等说明s符合要求，count加1。
+
+这里所学到的python新语法是for与else的连用。在C和C++中，else语句只能和if连用，但在python里else还可以与循环语句连用。这时else的意思为如果成功执行完了整个循环，就执行else里面的语句。
+
+对这道题而言，用else语句的好处是可以让我减少一个bool型变量。否则的话我还要用一个flag来判断是否执行完了整个循环。
