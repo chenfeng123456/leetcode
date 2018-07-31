@@ -1,0 +1,58 @@
+# Most Common Word
+## Description
+```
+Given a paragraph and a list of banned words, return the most frequent word that is not in the list of banned words.  It is guaranteed there is at least one word that isn't banned, and that the answer is unique.
+
+Words in the list of banned words are given in lowercase, and free of punctuation.  Words in the paragraph are not case sensitive.  The answer is in lowercase.
+```
+### Example:
+```
+Input: 
+paragraph = "Bob hit a ball, the hit BALL flew far after it was hit."
+banned = ["hit"]
+Output: "ball"
+Explanation: 
+"hit" occurs 3 times, but it is a banned word.
+"ball" occurs twice (and no other word does), so it is the most frequent non-banned word in the paragraph. 
+Note that words in the paragraph are not case sensitive,
+that punctuation is ignored (even if adjacent to words, such as "ball,"), 
+and that "hit" isn't the answer even though it occurs more because it is banned.
+```
+ 
+
+### Note:
+
+   - 1 <= paragraph.length <= 1000.
+   - 1 <= banned.length <= 100.
+   - 1 <= banned[i].length <= 10.
+   - The answer is unique, and written in lowercase (even if its occurrences in paragraph may have uppercase symbols, and even if it is a proper noun.)
+   - paragraph only consists of letters, spaces, or the punctuation symbols !?',;.
+   - Different words in paragraph are always separated by a space.
+   - There are no hyphens or hyphenated words.
+   - Words only consist of letters, never apostrophes or other punctuation symbols.
+
+```python
+class Solution:
+    def mostCommonWord(self, paragraph, banned):
+        """
+        :type paragraph: str
+        :type banned: List[str]
+        :rtype: str
+        """
+        s = re.split(r'[ !?,;\'.]', paragraph.lower())
+        d = {}
+        
+        for each in s:
+            if each in banned or each == "":
+                continue
+            if each in d:
+                d[each] += 1
+            else:
+                d[each] = 1
+          
+        return max(d, key=d.get)
+                     
+```
+由于str.split()不支持多个分隔符，所以我们要用re.split(r'[]', str)来分隔。同时我们还有一个简便方法获取字典中最值对应的键值：max(dict, key=dict.get)或min(dict, key=dict.get)。
+
+**不过我发先这道题有一个缺陷，就是它对“'“分割的字符串定义不明确。**我自己写了个例子放进去测试，它把“its“作为一个整体来计算，于是我没有将'作为分隔符，结果提交后显示wrong answer。调式了半天我发现有些字符计算的次数少了，最后找到原因为在那个例子中它是将'作为分隔符来使用的，于是我又把它加上，结果通过了。
