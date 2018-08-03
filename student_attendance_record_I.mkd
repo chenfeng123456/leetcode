@@ -1,0 +1,66 @@
+# Student Attendance Record I
+## Description
+```
+You are given a string representing an attendance record for a student. The record only contains the following three characters:
+```
+   
+1. 'A' : Absent.
+2. 'L' : Late.
+3. 'P' : Present.
+
+```
+A student could be rewarded if his attendance record doesn't contain more than one 'A' (absent) or more than two continuous 'L' (late).
+
+You need to return whether the student could be rewarded according to his attendance record.
+```
+### Example 1:
+```
+Input: "PPALLP"
+Output: True
+```
+### Example 2:
+```
+Input: "PPALLL"
+Output: False
+```
+#### my code(*Accepted*)
+```python
+class Solution:
+    def checkRecord(self, s):
+        """
+        :type s: str
+        :rtype: bool
+        """
+        a = 0
+        l = 0
+        for each in s:
+            if each == 'L':
+                l += 1
+            elif each == 'A':
+                a += 1
+                l = 0
+            else:
+                l = 0
+            if a > 1 or l > 2:
+                return False
+        else:
+            return True
+```
+#### nice code(*Accepted*)
+```cpp
+
+
+class Solution {
+public:
+    bool checkRecord(string s) {
+        return !regex_search(s, regex("A.*A|LLL"));
+    }
+};
+
+```
+
+
+**************************************
+这道题不难，思路很简单也很好实现。不过我在看别人的代码时牵扯出了一个叫“正则表达式”的概念，之前在看别人用python处理数据的代码时好像见过类似的用法，当时还不明白那样写是基于一个什么样的语法规则，今天看了正则表达式之后突然想到那可能是正则表达式。
+
+正则表达式的语法有些复杂，我还不是很明白。不过它在本题中用得比较简单，就是看是否匹配到一个以上的“$A$”或连续三个“$L$”，若匹配到，就返回$False$。
