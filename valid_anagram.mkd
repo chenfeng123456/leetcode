@@ -1,0 +1,91 @@
+# Valid Anagram
+## Description:
+```
+Given two strings s and t , write a function to determine if t is an anagram of s.
+```
+### Example 1:
+```
+Input: s = "anagram", t = "nagaram"
+Output: true
+```
+### Example 2:
+```
+Input: s = "rat", t = "car"
+Output: false
+```
+### Note:
+You may assume the string contains only lowercase alphabets.
+
+### Follow up:
+What if the inputs contain unicode characters? How would you adapt your solution to such case?
+
+#### solution1(*Accepted*)
+```python
+class Solution:
+    def isAnagram(self, s, t):
+        """
+        :type s: str
+        :type t: str
+        :rtype: bool
+        """
+        if (len(s) == 0 and len(t) == 0) or (len(s) == 1 and s == t):
+            return True
+        if len(s) != len(t) or s == t:
+            return False
+        
+        dic = {}
+        for each in s:
+            if each not in dic:
+                dic[each] = 1
+            else:
+                dic[each] += 1
+        
+        
+        
+        for each in t:
+            if each in dic and dic[each] > 0:
+                dic[each] -= 1
+            else:
+                break
+        else:
+            return True
+        return False
+```
+
+#### solution2(*Accepted*)
+```python
+for char in 'abcdefghijklmnopqrstuvwxyz':
+            if s.count(char) != t.count(char):
+                return False
+        return True
+```
+
+#### solution3(*Accepted*)
+```python
+
+
+class Solution:
+    def isAnagram(self, s, t):
+        """
+        :type s: str
+        :type t: str
+        :rtype: bool
+        """
+        seen = [0] * 26
+        for c in s:
+            seen[ord(c) - ord('a')] += 1
+        for c in t:
+            seen[ord(c) - ord('a')] -= 1
+            
+        for count in seen:
+            if count != 0:
+                return False
+        return True
+
+```
+****************************************
+做了一段时间的String的题目，这是我能想到的三种方法。第二种是最快的，1和3当中，我觉得3应该更快些，因为通过下标访问元素是常数时间，但是运行结果是1更快一点。
+
+关于python语法方面想说的是：在python中想要建立一定长度的列表并初始化为相同数字其实很简单，直接建立一个长度为1的列表然后再乘上想要的长度就行了。
+
+另外在Collections库中有一个Counter类可以计算序列中每一个元素出现的次数，它还有一个most_common(n)方法可以返回前n个出现次数最多的元素及其个数。
