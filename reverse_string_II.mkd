@@ -1,0 +1,43 @@
+# Reverse String II
+## Description:
+```
+Given a string and an integer k, you need to reverse the first k characters for every 2k characters counting from the start of the string. If there are less than k characters left, reverse all of them. If there are less than 2k but greater than or equal to k characters, then reverse the first k characters and left the other as original.
+```
+### Example:
+```
+Input: s = "abcdefg", k = 2
+Output: "bacdfeg"
+```
+### Restrictions:
+
+   1. The string consists of lower English letters only.
+   2. Length of the given string and k will in the range [1, 10000]
+
+```python
+class Solution:
+    def reverseStr(self, s, k):
+        """
+        :type s: str
+        :type k: int
+        :rtype: str
+        """
+        res = ""
+        for i in range(0, len(s), k):
+            if i % (2*k) == 0:    
+                temp = s[i : i + k]
+                temp = temp[::-1]
+                #print("i = " + str(i) + ", temp = " + str(temp))
+                res += temp
+            else:
+                #temp = s[i : i + k]
+                res += s[i : i + k]
+                #print("i = " + str(i) + ", temp = " + str(temp))
+        
+        return res
+```
+***************************************
+反转字符串**没有现成的函数**，所以要借助`切片`进行。
+
+根据题目的意思，每$2k$个字符的前k个要被反转，事实上就是从下标为k的偶数倍的字符开始往后数$k$个字符（包括下标为$k$的元素），这$k$个需要被反转。
+
+一开始我想直接在原字符串上“反着”切片，但是发现由于切片是一个左闭右开区间，所以切片时结束位置要写成$i-1$，而$i$是从$0$开始计数的，这就导致了第一个字符会漏掉，所以我们还是先用一个中间变量来存放“正着”的切片，再把这个中间变量整个“反着”切片。 
