@@ -1,0 +1,64 @@
+# Number of Segments in a String
+## Description:
+```
+Count the number of segments in a string, where a segment is defined to be a contiguous sequence of non-space characters.
+
+Please note that the string does not contain any non-printable characters.
+```
+### Example:
+```
+Input: "Hello, my name is John"
+Output: 5
+```
+
+
+
+
+#### my code(*Accepted*)
+```python
+class Solution:
+    def countSegments(self, s):
+        """
+        :type s: str
+        :rtype: int
+        """
+        if len(s) == 0:
+            return 0
+        res = 0
+        add = True
+        for ch in s:
+            if ch != ' ' and add:
+                res += 1
+                add = False
+            elif ch == ' ' and add == False:
+                add = True
+            
+        return res
+```
+
+#### nice code(*Accepted*)
+```python
+class Solution:
+    def countSegments(self, s):
+        """
+        :type s: str
+        :rtype: int
+        """
+        
+        L = [word for word in s.split(" ") if word != ""]
+        return len(L)
+        
+        
+```
+**************************************
+这道题思路上并不难，但是最快的代码又用到了一个python的高级特性——列表生成式：
+
+列表生成式可以将好几行的循环语句浓缩为一句，要生成的元素放在最前面，后面跟一个循环，如：
+> \>\>\> [x * x for x in range(1, 11)]<br>
+> [1, 4, 9, 16, 25, 36, 49, 64, 81, 100]
+
+for循环中还可以加上条件语句，比如最快代码就是通过一个条件语句把所有空格去掉的。
+
+也可以用两层循环：
+> \>\>\> [m + n for m in 'ABC' for n in 'XYZ']<br>
+> ['AX', 'AY', 'AZ', 'BX', 'BY', 'BZ', 'CX', 'CY', 'CZ']
