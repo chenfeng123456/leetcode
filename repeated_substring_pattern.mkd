@@ -1,0 +1,94 @@
+# Repeated Substring Pattern 
+## Description:
+```
+Given a non-empty string check if it can be constructed by taking a substring of it and appending multiple copies of the substring together. You may assume the given string consists of lowercase English letters only and its length will not exceed 10000.
+```
+ 
+
+### Example 1:
+```
+Input: "abab"
+Output: True
+Explanation: It's the substring "ab" twice.
+```
+### Example 2:
+```
+Input: "aba"
+Output: False
+```
+### Example 3:
+```
+Input: "abcabcabcabc"
+Output: True
+Explanation: It's the substring "abc" four times. (And the substring "abcabc" twice.)
+```
+#### my code(*Accepted*)
+```
+class Solution:
+    def repeatedSubstringPattern(self, s):
+        """
+        :type s: str
+        :rtype: bool
+        """
+        if len(s) == 1:
+            return False
+        
+        end = len(s) // 2 
+        for i in range(1, end+1):
+            if len(s) % i == 0:
+                ss = s[0 : i]
+                for j in range(1, len(s) // i):
+                    if s[j * i : (j+1) * i] != ss:
+                        break
+                else:
+                    return True
+        else:
+            return False
+                        
+                
+```
+
+#### [nice code1](https://leetcode.com/submissions/detail/168218529/)(*Accepted*)
+```python
+class Solution:
+    def repeatedSubstringPattern(self, s):
+        """
+        :type s: str
+        :rtype: bool
+        """
+        ss=(s+s)[1:-1]
+        
+        return ss.find(s)!=-1
+        
+```
+
+#### [nice code2](https://www.cnblogs.com/grandyang/p/6087347.html)(*Accepted*)
+```cpp
+class Solution {
+public:
+    bool repeatedSubstringPattern(string str) {
+        int i = 1, j = 0, n = str.size();
+        vector<int> dp(n + 1, 0);
+        while (i < n) {
+            if (str[i] == str[j]) dp[++i] = ++j;
+            else if (j == 0) ++i;
+            else j = dp[j];
+        }
+        return dp[n] && (dp[n] % (n - dp[n]) == 0);
+    }
+};
+```
+***************************************
+暴力解法就不说了，我们来看一下python的最快解法。
+
+我们把s重复一遍然后再“掐头去尾”构成一个新串ss。假设原字符串中有$n$个重复的模式串，那么ss中就有$2n - 2$个模式串。如果$ss$中仍能找到一个完整的$s$，即：
+$$
+2n - 2 ≥ n  \tag{1}
+$$
+于是我们解得：
+$$
+n ≥ 2  \tag{2}
+$$
+我们不难发现，$n ≥ 2$正好与题意等价，问题得以解决。
+
+还有一个$C++$版本的做法，用的*动态规划*，感觉思路很巧妙，但是不太好说，先放在这。
