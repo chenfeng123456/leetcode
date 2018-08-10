@@ -1,0 +1,62 @@
+# Add Binary
+## Description:
+```
+Given two binary strings, return their sum (also a binary string).
+
+The input strings are both non-empty and contains only characters 1 or 0.
+```
+### Example 1:
+```
+Input: a = "11", b = "1"
+Output: "100"
+```
+### Example 2:
+```
+Input: a = "1010", b = "1011"
+Output: "10101"
+```
+
+```python
+class Solution:
+    def addBinary(self, a, b):
+        """
+        :type a: str
+        :type b: str
+        :rtype: str
+        """
+        from itertools import zip_longest
+        
+        pre = 0
+        res = ''
+        
+        for x, y in zip_longest(reversed(a), reversed(b)):
+
+            if y == None:
+                temp = int(x) + pre
+            elif x == None:
+                temp = int(y) + pre
+            else:
+                temp = int(x) + int(y) + pre
+                
+            if temp >= 2:
+                pre = 1
+                temp -= 2
+            else:
+                pre = 0
+
+            res += str(temp)
+        
+        if pre == 1:
+            res = res + '1'
+            
+        return res[::-1]
+```
+***********************************
+这题的思路就是将每一个字符先转化成数字，然后同上一位所进的位数一起相加，若大于等于2，就把结果减2，然后用一个变量pre记录下进位数；反之不减，并把pre置为0。
+
+这里关于python要讲的是用for循环同时遍历两个序列。这里我们会用到$zip$函数，它会将两个或者两个以上的迭代器封装成生成器，取每个迭代器的下一个值组装成元组。但是**如果两个迭代器的长度不同，它会按较短的一个进行*截断*，即一个遍历完了，$zip$就不再产生元组了，较长的迭代器会无法遍历完**。
+
+解决的方法是$from\ itertools\ import\ zip_longest$，长度较小的迭代器会用$None$填充。
+
+
+
