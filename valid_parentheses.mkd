@@ -1,0 +1,87 @@
+# Valid Parentheses
+## Description:
+```
+Given a string containing just the characters '(', ')', '{', '}', '[' and ']', determine if the input string is valid.
+```
+An input string is valid if:
+
+   1. Open brackets must be closed by the same type of brackets.
+   2. Open brackets must be closed in the correct order.
+```
+Note that an empty string is also considered valid.
+```
+### Example 1:
+```
+Input: "()"
+Output: true
+```
+### Example 2:
+```
+Input: "()[]{}"
+Output: true
+```
+### Example 3:
+```
+Input: "(]"
+Output: false
+```
+### Example 4:
+```
+Input: "([)]"
+Output: false
+```
+### Example 5:
+```
+Input: "{[]}"
+Output: true
+```
+#### my code(*Accepted*)
+```python
+class Solution:
+    def isValid(self, s):
+        """
+        :type s: str
+        :rtype: bool
+        """
+        count = 0
+        length = len(s)
+
+        while(len(s) % 2 == 0):
+            if len(s) == 0:
+                return True
+            if(count > length / 2 + 1):
+                return False
+            s = s.replace('()', '')
+            s = s.replace('[]', '')
+            s = s.replace('{}', '')
+            count += 1
+
+        else:
+
+            return False
+```
+#### nice code(*Accepted*)
+```python
+class Solution:
+    def isValid(self, s):
+        """
+        :type s: str
+        :rtype: bool
+        """
+        st=[None]
+        compare={")":"(","]":"[","}":"{"}
+        for i in s:
+            if(i in compare):
+                if(st.pop()!=compare[i]):
+                    return(False)
+            else:
+                st.append(i)
+        print(st)
+        return(len(st)==1)
+```
+**************************************
+又是括号匹配，这回用python做换了个简便的方法，每一次把紧邻且匹配的括号都删除，如果删到中途发现字符串的长度为奇数，或者删了length/2+1次之后还没删完，说明肯定有不匹配的，返回False；反之返回True。
+
+这里要注意的是，replace方法是返回一个操作后的字符串，而不是直接在原字符串上进行操作。
+
+再讲一下最快的代码。它是将遇到的'('、'['、'{'都放进一个列表中（实际上这里是把它当做栈在用）。而遇到相应的反括号就从列表中弹出一个，**由于题目限制实际上最先匹配的括号一定是紧邻的**，所以我们只需要看弹出的括号是否与当前这个反括号是匹配的。**最后还需注意的是这里的st一开始不是空的，而是有一个None，所以如果字符串是有效的话，那么最后st的长度应该是1**。
