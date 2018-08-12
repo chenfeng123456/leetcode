@@ -1,0 +1,42 @@
+# Valid Palindrome II
+## Description
+```
+ Given a non-empty string s, you may delete at most one character. Judge whether you can make it a palindrome.
+```
+### Example 1:
+```
+Input: "aba"
+Output: True
+```
+### Example 2:
+```
+Input: "abca"
+Output: True
+Explanation: You could delete the character 'c'.
+```
+### Note:
+
+   1. The string will only contain lowercase characters a-z. The maximum length of the string is 50000.
+```python
+    class Solution:
+        def validPalindrome(self, s):
+            """
+            :type s: str
+            :rtype: bool
+            """
+            l = 0;
+            r = len(s) - 1
+            while l < r:
+                if s[l] != s[r]:
+                    s1,s2 = s[l:r],s[l+1:r+1]                
+                    return (s1 == s1[::-1]) or (s2 == s2[::-1])
+                l +=1
+                r -=1
+            return True
+```
+****************************************
+这道题一种很自然的想法就是从两头开始，向内一次判断两边的字符是否相同。但是难点在于如果两边不等时，我们该如何确定应当删去哪一个字符。
+
+事实上，当两边不等时，导致字符串不回文的字符肯定出在它们中间。由于在这两个字符之外的部分已经被判定为回文了，所以我们只需要考虑剩下这中间的一段被“掐头”或“去尾”后是否还是回文。
+
+这个道理其实也不能想明白，**在一个长度为偶数的字符串的正中央再插入一个回文字符串，得到的新字符串仍然回文。**
