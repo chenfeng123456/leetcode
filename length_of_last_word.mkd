@@ -1,0 +1,32 @@
+# Length of Last Word
+## Description
+```
+Given a string s consists of upper/lower-case alphabets and empty space characters ' ', return the length of last word in the string.
+
+If the last word does not exist, return 0.
+```
+**Note**: A word is defined as a character sequence consists of non-space characters only.
+
+### Example:
+```
+Input: "Hello World"
+Output: 5
+```
+```python
+class Solution:
+    def lengthOfLastWord(self, s):
+        """
+        :type s: str
+        :rtype: int
+        """
+        if len(s) == 0:
+            return 0
+        l = s.split(" ")
+        for each in reversed(l):
+            if each.isalpha():
+                return len(each)
+        
+        return 0
+```
+******************************************
+这道题用python做起来非常简单，由于题目中已经明确说了只包含大小写字母以及空格。所以我们可以直接用str.split(" ")来以空格为分隔符来把字符串划分为单词，然后从最后一个开始往前遍历，用str.isalpha()来判断是否组成均为字母，即它是否为一个单词，如果是的话，直接返回长度就行了。
