@@ -1,0 +1,46 @@
+# Repeated String Match
+## Description:
+```
+Given two strings A and B, find the minimum number of times A has to be repeated such that B is a substring of it. If no such solution, return -1.
+
+For example, with A = "abcd" and B = "cdabcdab".
+
+Return 3, because by repeating A three times (“abcdabcdabcd”), B is a substring of it; and B is not a substring of A repeated two times ("abcdabcd").
+```
+### Note:
+The length of A and B will be between 1 and 10000.
+
+```python
+class Solution:
+    def repeatedStringMatch(self, A, B):
+        """
+        :type A: str
+        :type B: str
+        :rtype: int
+        """
+        if B[0] not in A:
+            return -1
+
+        i = 1
+        a = A
+        l = len(A)
+        while(len(A) < len(B)):
+            i += 1
+            A += a
+
+        while(len(A) <= len(B)+2*l):
+            if B in A:
+                return i
+            i += 1
+            A += a
+        else:
+            return -1
+```            
+************************************
+我们假设A、B满足题目要求，那么B的首字母肯定是属于A的，所以我们可以先判定B[0]是否在A中。当然，其实不止是首字母，所有字母都必须属于A，所以最快的代码开头用的是:
+```python 
+if not set(B).issubset(set(A)):
+            return -1
+```
+同时我们也不难想见，将B的开头几个字和结尾几个字去掉，中间剩下的一定是若干个完整的A拼接在一起。所以当A、B满足条件时，A最后所呈现出的一定是将B的首尾补全后的样子。所以如果A的长度已经大于了B的长度再加上两倍的A的原长，我们就无须再判断下去了。
+    
