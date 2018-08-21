@@ -1,0 +1,81 @@
+# Trim a Binary Search Tree
+## Description
+```
+ Given a binary search tree and the lowest and highest boundaries as L and R, trim the tree so that all its elements lies in [L, R] (R >= L). You might need to change the root of the tree, so the result should return the new root of the trimmed binary search tree.
+```
+### Example 1:
+
+##### Input: 
+```
+    1
+   / \
+  0   2
+
+  L = 1
+  R = 2
+```
+##### Output: 
+```
+    1
+      \
+       2
+```
+### Example 2:
+
+##### Input: 
+```
+    3
+   / \
+  0   4
+   \
+    2
+   /
+  1
+
+  L = 1
+  R = 3
+```
+##### Output: 
+```
+      3
+     / 
+   2   
+  /
+ 1
+```
+```python 
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution:
+    def trimBST(self, root, L, R):
+        """
+        :type root: TreeNode
+        :type L: int
+        :type R: int
+        :rtype: TreeNode
+        """
+        if root == None:
+            return root
+        
+        while root != None and (root.val < L or root.val > R):
+            if root.val < L:
+                root = root.right
+            elif root.val > R:
+                root = root.left
+       
+        if root == None:
+            return root
+        root.left = self.trimBST(root.left, L, R)
+        root.right = self.trimBST(root.right, L, R)
+        
+        return root
+```
+***********************************************
+- beat 100%
+
+这题要注意给定的是**二叉搜索树**这个条件。由于给的是二叉搜索树，那么如果根节点的值大于上界，那么整个右子树包括根节点本身都要被舍去，此时我们只需要令根节点指向其左孩子即可。类似的，如果根节点的值小于下界，我们只需令根节点指向其右孩子。
