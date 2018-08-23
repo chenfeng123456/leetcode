@@ -1,0 +1,100 @@
+# Average of Levels in Binary Tree
+## Description:
+```
+Given a non-empty binary tree, return the average value of the nodes on each level in the form of an array.
+```
+### Example 1:
+```
+Input:
+    3
+   / \
+  9  20
+    /  \
+   15   7
+Output: [3, 14.5, 11]
+```
+### Explanation:
+```
+The average value of nodes on level 0 is 3,  on level 1 is 14.5, and on level 2 is 11. Hence return [3, 14.5, 11].
+```
+### Note:
+
+   1. The range of node's value is in the range of 32-bit signed integer.
+#### my code(*Accepted*)
+```python
+# Definition for a binary tree node.
+# class TreeNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution(object):
+    def averageOfLevels(self, root):
+        """
+        :type root: TreeNode
+        :rtype: List[float]
+        """
+        if root == None:
+            return
+        global l
+        l = list()
+        
+        def traverse(root, level):
+            if root == None:
+                return
+            global l
+            if level >= len(l):
+                l.append([float(root.val), 1.0])
+            else:
+                l[level][0] += root.val
+                l[level][1] += 1
+            traverse(root.left, level+1)
+            traverse(root.right, level+1)
+        
+        traverse(root, 0)
+        res = [0.] * len(l)
+        for i, k in zip(range(len(res)), l):
+            res[i] = k[0] / k[1]
+
+        return res
+```        
+#### nice code(*Accepted*)
+```python
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution:
+    def averageOfLevels(self, root):
+        """
+        :type root: TreeNode
+        :rtype: List[float]
+        """
+        if root is None:
+            return []
+        
+        result = []
+        current_level = [root]
+        while current_level:
+            level_nodes = []
+            next_level = []
+            
+            for node in current_level:
+                level_nodes.append(node.val)
+                if node.left:
+                    next_level.append(node.left)
+                if node.right:
+                    next_level.append(node.right)
+            
+            result.append(float(sum(level_nodes))/len(level_nodes))
+            current_level = next_level
+        return result 
+```
+******************************************
+我自己的方法比较直接，用一个列表来记录每一层的和及节点个数，最后再用一个列表来记录这个平均值就行了。
+
+再来说一下迭代的方法。这里用了四个列表：current_level里面存放的是当前层的所有节点；level_nodes存放的是当前层的节点值；next_level存放的是下一层的节点；result存放的是结果。知道了这些代码的思路就很明确了。*不过这里的level_nodes我觉得可以用一个变量来代替，每次直接把当前节点的值加到这个变量当中就可以了*。
