@@ -1,0 +1,141 @@
+# N-ary Tree Postorder Traversal
+## Description
+```
+Given an n-ary tree, return the postorder traversal of its nodes' values.
+ 
+
+For example, given a 3-ary tree:
+
+ 
+
+Return its postorder traversal as: [5,6,3,2,4,1].
+``` 
+
+**Note**: Recursive solution is trivial, could you do it iteratively?
+
+
+#### my code(*Accepted*)
+```python
+"""
+# Definition for a Node.
+class Node(object):
+    def __init__(self, val, children):
+        self.val = val
+        self.children = children
+"""
+"""
+# Definition for a Node.
+class Node(object):
+    def __init__(self, val, children):
+        self.val = val
+        self.children = children
+"""
+class Solution(object):
+    def postorder(self, root):
+        """
+        :type root: Node
+        :rtype: List[int]
+        """
+        if root == None:
+            return []
+        stack = []
+        stack.append(root)
+        res = [root.val]
+        index = []
+        index = [-1]
+        while(len(stack)):
+            if (-index[-1]) > len(stack[-1].children):
+                stack.pop(-1)
+                index.pop(-1)
+                if len(index):
+                    index[-1] -= 1
+                continue
+            
+            while(len(stack[-1].children)):
+                stack.append(stack[-1].children[index[-1]])
+                res.append(stack[-1].val)
+                index.append(-1)
+            stack.pop(-1)
+            index.pop(-1)
+            index[-1] -= 1
+                
+        return res[::-1]        
+```
+#### nice code(*Accepted*)
+```python
+"""
+# Definition for a Node.
+class Node(object):
+    def __init__(self, val, children):
+        self.val = val
+        self.children = children
+"""
+class Solution(object):
+    def postorder(self, root):
+        """
+        :type root: Node
+        :rtype: List[int]
+        """  
+        
+        """
+        # Recursive Solution
+        def order(self, root):   
+            if root:
+                if root.children:
+                    for child in root.children:
+                        order(self, child)
+                self.result.append(root.val)
+    
+        self.result = []
+        order(self, root)
+        return self.result
+        """
+        
+        # Iterative Solution??
+        if not root:
+            return []
+        
+        result = []
+        stack = [root]
+        
+        while stack:
+            current = stack.pop()
+            result.append(current.val)
+            stack.extend(current.children)
+        return result[::-1]
+```
+**************************************
+这题要用栈的思想来做。不过我做得比较复杂。我多用了一个栈index来记录对于当前这一节点应当访问它的**倒数**第几个子节点。如果它没有子节点，就把这个结点以及对应的index值删除，继而访问其父节点的下一个节点，也就是被删除节点的兄弟节点。如果父节点的子节点也访问完了，我们同样将其删去进而取访问父节点的兄弟节点。如果最后栈为空了，说明树已经被访问完了，跳出循环即可。
+
+这样着实复杂了些，最快的答案思路要简洁高效的多。这里就不细说了。
+
+另外一开始弄错了，写了个按层输出的代码（未检验，不知是否完全正确），先附上：
+```python
+def print_layer(root):
+            res = []
+            if root == None:
+                return res
+            print(root.val)
+            print("")
+            level_nodes = []
+            level_nodes.append(root)
+            level = 1
+            res.append(root.val)
+            while(len(level_nodes)):
+                if level == 0:
+                    level = len(level_nodes)
+                    for each in level_nodes:
+                        print each.val,
+                    print "\n"
+
+                temp = level_nodes.pop(0)
+                level -= 1
+                t = temp.children
+                t.reverse()
+                for each in t:
+                    if each != None:
+                        level_nodes.append(each)
+            res.reverse()
+            return res
+```
+
