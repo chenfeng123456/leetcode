@@ -1,0 +1,50 @@
+# Sum of Left Leaves
+## Description:
+```
+Find the sum of all left leaves in a given binary tree.
+```
+### Example:
+```
+    3
+   / \
+  9  20
+    /  \
+   15   7
+
+There are two left leaves in the binary tree, with values 9 and 15 respectively. Return 24.
+```
+```python
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution:
+    def sumOfLeftLeaves(self, root):
+        """
+        :type root: TreeNode
+        :rtype: int
+        """
+        if root == None:
+            return 0
+        global res
+        res = 0
+        
+        def leftL(root, left):
+            global res
+            if root.left == None and root.right == None:
+                if left:
+                    res += root.val
+                return
+            if root.left:
+                leftL(root.left, True)
+            if root.right:
+                leftL(root.right, False)
+        
+        leftL(root, False)
+        return res
+```
+********************************************
+这道题实际上是要我们把所有最末节点中是其父节点左孩子的节点值加起来，所以我们用一个bool值left来表示当前节点是否为左孩子，如果是且其左右子树都为空，则符合条件，把它加到res中。
