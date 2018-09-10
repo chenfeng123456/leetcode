@@ -1,0 +1,92 @@
+# Valid Tic-Tac-Toe State
+## Description:
+```
+A Tic-Tac-Toe board is given as a string array board. Return True if and only if it is possible to reach this board position during the course of a valid tic-tac-toe game.
+
+The board is a 3 x 3 array, and consists of characters " ", "X", and "O".  The " " character represents an empty square.
+
+Here are the rules of Tic-Tac-Toe:
+
+    Players take turns placing characters into empty squares (" ").
+    The first player always places "X" characters, while the second player always places "O" characters.
+    "X" and "O" characters are always placed into empty squares, never filled ones.
+    The game ends when there are 3 of the same (non-empty) character filling any row, column, or diagonal.
+    The game also ends if all squares are non-empty.
+    No more moves can be played if the game is over.
+```
+### Example 1:
+```
+Input: board = ["O  ", "   ", "   "]
+Output: false
+Explanation: The first player always plays "X".
+```
+### Example 2:
+```
+Input: board = ["XOX", " X ", "   "]
+Output: false
+Explanation: Players take turns making moves.
+```
+### Example 3:
+```
+Input: board = ["XXX", "   ", "OOO"]
+Output: false
+```
+### Example 4:
+```
+Input: board = ["XOX", "O O", "XOX"]
+Output: true
+```
+### Note:
+
+   - board is a length-3 array of strings, where each string board[i] has length 3.
+   - Each board[i][j] is a character in the set {" ", "X", "O"}.
+
+```cpp
+class Solution {
+public:
+    bool ifWin(vector<string>& board,char piece)
+    {
+        int count3=0,count4=0;
+        for(int i=0;i<3;i++)
+        {
+            int count1=0,count2=0;
+            if(board[i][i]==piece) count3++;
+            if(board[i][2-i]==piece) count4++;
+            for(int j=0;j<3;j++)
+            {
+                if(board[i][j]==piece) count1++;
+                if(board[j][i]==piece) count2++;
+            }      
+            if(count1==3||count2==3) return true;
+        }
+        if(count3==3||count4==3) return true;
+        else return false;
+    }
+    
+    
+    
+    bool validTicTacToe(vector<string>& board) {
+        int countX=0,countO=0;
+        for(int i=0;i<3;i++)
+            for(int j=0;j<3;j++)
+            {
+                if(board[i][j]=='X') countX++;
+                else if(board[i][j]=='O') countO++;
+            }
+        if(countX<countO||countX-countO>1) return false;
+        if(ifWin(board,'X')&&countX==countO) return false;
+        if(ifWin(board,'O')&&countX!=countO) return false;
+        return true;
+                
+    }
+};
+```
+*********************************
+这题主要是分类讨论，以下几种情况为false：
+
+- ‘O’数量比‘X’多，因为先下‘X’；
+- ‘X‘数比’O‘多2及以上；
+- 第一位玩家赢了而‘O’数不少于‘X’；
+- 第二位玩家赢了而‘X’数不等于‘O’。
+
+出去以上几种情况外均为true，由此写出代码即可。

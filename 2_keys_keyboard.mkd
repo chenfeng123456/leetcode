@@ -1,0 +1,47 @@
+#2 Keys Keyboard
+##Description:
+```
+ Initially on a notepad only one character 'A' is present. You can perform two operations on this notepad for each step:
+```
+   1. Copy All: You can copy all the characters present on the notepad (partial copy is not allowed).
+   2. Paste: You can paste the characters which are copied last time.
+```
+Given a number n. You have to get exactly n 'A' on the notepad by performing the minimum number of steps permitted. Output the minimum number of steps to get n 'A'.
+```
+###Example 1:
+```
+Input: 3
+Output: 3
+Explanation:
+Intitally, we have one character 'A'.
+In step 1, we use Copy All operation.
+In step 2, we use Paste operation to get 'AA'.
+In step 3, we use Paste operation to get 'AAA'.
+```
+###Note:
+
+   - The n will be in the range [1, 1000].
+```cpp
+class Solution {
+public:
+    int minSteps(int n) {
+        if(n==0||n==1) return 0;
+        if(n==2) return 2;
+        int factor=0,x=n/2;
+        for(int i=x;i>1;i--)
+        {
+            if(n%i==0)
+            {
+                factor=i;
+                break;
+            }
+        }
+        //cout<<n<<"-----"<<factor<<endl;
+        if(factor==0) return n;
+        int times=n/factor;
+        return minSteps(factor)+times;
+    }
+};
+```
+***************************
+对于这道题我们发现如果给定的数为质数，那么达到它的步数就等于它本身**（*0*、*1*和*2*要单独拿出来讨论）**；如果它不是质数，那么它的步数等于它的最大因数加上它的最小因数。这样我们就有了一个很清晰的递归思路。将其用代码写出即可。

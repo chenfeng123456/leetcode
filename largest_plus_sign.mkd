@@ -1,0 +1,200 @@
+# Largest Plus Sign
+## Description:
+```
+ In a 2D grid from (0, 0) to (N-1, N-1), every cell contains a 1, except those cells in the given list mines which are 0. What is the largest axis-aligned plus sign of 1s contained in the grid? Return the order of the plus sign. If there is none, return 0.
+
+An "axis-aligned plus sign of 1s of order k" has some center grid[x][y] = 1 along with 4 arms of length k-1 going up, down, left, and right, and made of 1s. This is demonstrated in the diagrams below. Note that there could be 0s or 1s beyond the arms of the plus sign, only the relevant area of the plus sign is checked for 1s.
+
+Examples of Axis-Aligned Plus Signs of Order k:
+
+Order 1:
+000
+010
+000
+
+Order 2:
+00000
+00100
+01110
+00100
+00000
+
+Order 3:
+0000000
+0001000
+0001000
+0111110
+0001000
+0001000
+0000000
+```
+### Example 1:
+```
+Input: N = 5, mines = [[4, 2]]
+Output: 2
+Explanation:
+11111
+11111
+11111
+11111
+11011
+In the above grid, the largest plus sign can only be order 2.  One of them is marked in bold.
+```
+### Example 2:
+```
+Input: N = 2, mines = []
+Output: 1
+Explanation:
+There is no plus sign of order 2, but there is of order 1.
+```
+### Example 3:
+```
+Input: N = 1, mines = [[0, 0]]
+Output: 0
+Explanation:
+There is no plus sign, so return 0.
+```
+Note:
+
+   1. N will be an integer in the range [1, 500].
+   2. mines will have length at most 5000.
+   3. mines[i] will be length 2 and consist of integers in the range [0, N-1].
+   4. (Additionally, programs submitted in C, C++, or C# will be judged with a slightly smaller time limit.)
+
+```cpp
+class Solution {
+public:
+    int orderOfLargestPlusSign(int N, vector<vector<int>>& mines) {
+        vector<vector<int>> grid(N,vector<int>(N,1));
+        int ans=0;
+        for(int i=0;i<mines.size();i++)
+            grid[mines[i][0]][mines[i][1]]=0;
+        
+        /*
+        for(int i=0;i<N;i++)
+        {
+            for(int j=0;j<N;j++)
+                cout<<grid[i][j]<<"  ";
+            cout<<endl;
+        }
+        */
+        
+        vector<vector<int>> col(N,vector<int>(N,0));
+        vector<vector<int>> row(N,vector<int>(N,0));
+        for(int i=0;i<N;i++)
+        {
+            for(int j=0;j<N;j++)
+            {
+                bool ij=1,ji=1;
+                if(grid[i][j]==0) 
+                {
+                    row[i][j]=0;
+                    ij=0;
+                }
+                if(grid[j][i]==0)
+                {
+                    col[j][i]=0;
+                    ji=0;
+                }
+                if(j>0) 
+                {
+                    if(ij) row[i][j]=grid[i][j]+row[i][j-1];
+                    if(ji) col[j][i]=grid[j][i]+col[j-1][i];
+                }
+                else
+                {
+                    row[i][j]=(grid[i][j]==0?0:1);
+                    col[j][i]=(grid[j][i]==0?0:1);
+                }
+            }   
+        }
+        
+        /*
+        cout<<"row:"<<endl;
+        for(int i=0;i<N;i++)
+        {
+            for(int j=0;j<N;j++)
+                cout<<row[i][j]<<"  ";
+            cout<<endl;
+        }
+        cout<<"col:"<<endl;
+        for(int i=0;i<N;i++)
+        {
+            for(int j=0;j<N;j++)
+                cout<<col[i][j]<<"  ";
+            cout<<endl;
+        }
+        cout<<endl;
+        */
+        
+        for(int i=N-1;i>=0;i--)
+        {
+            for(int j=N-1;j>=0;j--)
+            {
+                if(grid[i][j]==0) 
+                {
+                    row[i][j]=0;
+                }
+                if(grid[j][i]==0)
+                {
+                    col[j][i]=0;
+                }
+                if(j<N-1)
+                {
+                    row[i][j]=min(row[i][j],row[i][j+1]+grid[i][j]);
+                    col[j][i]=min(col[j][i],col[j+1][i]+grid[j][i]);
+                }
+                else
+                {
+                    row[i][j]=(grid[i][j]==0?0:1);
+                    col[j][i]=(grid[j][i]==0?0:1);
+                }
+                 
+            }
+        }
+        
+        /*
+        cout<<"row:"<<endl;
+        for(int i=0;i<N;i++)
+        {
+            for(int j=0;j<N;j++)
+                cout<<row[i][j]<<"  ";
+            cout<<endl;
+        }
+        cout<<"col:"<<endl;
+        for(int i=0;i<N;i++)
+        {
+            for(int j=0;j<N;j++)
+                cout<<col[i][j]<<"  ";
+            cout<<endl;
+        }
+        cout<<endl;
+        */
+        
+        for(int i=0;i<N;i++)
+            for(int j=0;j<N;j++)
+                ans=max(ans,min(row[i][j],col[i][j]));
+        return ans;
+    }
+};
+```
+我们可以定义两个数组row和col分别表示当前元素左边和上边1的个数加上自身（若自身为0，则直接为0）。为此我们采取动态规划的方法用一个嵌套循环来逐行和逐列地计算，递推关系很简单就是当前元素的值加上一行或上一列对应数组里的值（若自身为0，则直接为0）。
+然后我们用相同的方法，反着遍历一遍数组grid，只不过赋值时要取row和col当前元素的值和递推得到的值中较小者。
+ 
+
+- 
+```cpp 
+      if(grid[i][j]==0) 
+                {
+                    row[i][j]=0;
+                }
+      if(grid[j][i]==0)
+                {
+                    col[j][i]=0;
+                }
+```              
+                
+- row[i][j]=min(row[i][j],row[i][j+1]+grid[i][j]);
+- col[j][i]=min(col[j][i],col[j+1][i]+grid[j][i]);
+
+最后在遍历一遍数组row和col，取相同位置二者中的较小者，在与ans（初始值为0）比较，取较大者为ans的值即可。

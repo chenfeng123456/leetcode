@@ -1,0 +1,41 @@
+# Ugly Number II
+## Description:
+```
+ Write a program to find the n-th ugly number.
+
+Ugly numbers are positive numbers whose prime factors only include 2, 3, 5. For example, 1, 2, 3, 4, 5, 6, 8, 9, 10, 12 is the sequence of the first 10 ugly numbers.
+```
+Note: 
+
+- that 1 is typically treated as an ugly number, and n does not exceed 1690. 
+```cpp
+class Solution {
+public:
+    int nthUglyNumber(int n) {
+        //if(n==1) return 1;
+        vector<int> res(1,1);
+        int i1=0,i2=0,i3=0;
+        for(int i=1;i<n;i++)
+        {
+            int t1=res[i1]*2,t2=res[i2]*3,t3=res[i3]*5;
+            int m=min(t1,min(t2,t3));
+            if(m==t1) i1++;
+            if(m==t2) i2++;
+            if(m==t3) i3++;
+            res.push_back(m);
+            //cout<<i1<<','<<i2<<','<<i3<<','<<m<<"  ";
+        }
+        return res.back();
+    }
+};
+```
+***********************
+- [思路来源](https://www.cnblogs.com/grandyang/p/4743837.html)
+
+看了思路后很不甘心的我想要优化以下代码，将O（n）的空间复杂度变为O（1）。
+
+我的想法是，去掉数组，定义i1，i2，i3三个变量，每次取i1\*2，i2\*3,i3\*5中取最小值，并将对应的那一个变量ij（j为1、2或3）赋成这个最小值。
+
+这个方法适用于最开始几个数，但我发现很快结果就会造成数据溢出。我反思了下，原来是我们求丑数时是让2、3、5依次从最小的丑数开始乘以得到之后的。而我的思路则只能得到2、3和5的倍数，所以三个变量中存放的是2、3、5的x次方，所以很容易溢出。
+
+另外一个需要注意的细节是在计算的过程中不同的变量下标所对应的元素算出来的结果可能重复，所以在for循环中只能用三个连续的if，而不能是if，else if，else，我们必须把三个变量下标算出来的元素一次比较一番，才能避免这种情况。

@@ -1,0 +1,68 @@
+# Jump Game
+## Description:
+```
+Given an array of non-negative integers, you are initially positioned at the first index of the array.
+
+Each element in the array represents your maximum jump length at that position.
+
+Determine if you are able to reach the last index.
+```
+### Example 1:
+
+**Input**: [2,3,1,1,4]
+
+**Output**: true
+
+**Explanation**: Jump 1 step from index 0 to 1, then 3 steps to the last index.
+
+### Example 2:
+
+**Input**: [3,2,1,0,4]
+
+**Output**: false
+
+**Explanation**: You will always arrive at index 3 no matter what. Its maximum
+             jump length is 0, which makes it impossible to reach the last index.
+
+```cpp
+class Solution {
+public:
+    vector<int> can;
+    bool arrive(vector<int>& nums,int last)
+    {
+        if(last==0) return true;
+        bool res=false;
+        for(int i=last-1;i>0;i--)
+        {
+            if(can[i]==1) return true;
+            else if(can[i]==0) continue;
+            if(nums[i]>=last-i)
+            {
+                res=arrive(nums,i);
+                if(res) 
+                {
+                    can[i]=1;
+                    return res;
+                }
+                else can[i]=0;
+            }
+        }
+        if(nums[0]>=last) return true;
+        return res;
+    }
+    
+    
+    bool canJump(vector<int>& nums) {
+        int len=nums.size();
+        can.resize(len,-1);
+        can[0]=1;
+        return arrive(nums,len-1);
+    }
+};
+```
+****************************************
+这道题我采用动态规划的方法。每个位置是否能跳到取决于它前面元素的值是否大于等于它们之间的距离以及这些元素是否能到达。我们维护一个数组can来存储每个位置是否能跳到。然后用递归来穷举每一种情况，递推关系式为：
+
+>>> can[i]=(nums[j]>=i-j)&&(nums[j])
+
+由此我们便可以写出代码，注意一下i=0要单独拿出来考虑。

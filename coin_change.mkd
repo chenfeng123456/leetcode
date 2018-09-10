@@ -1,0 +1,42 @@
+#Coin Change
+##Description:
+```
+ You are given coins of different denominations and a total amount of money amount. Write a function to compute the fewest number of coins that you need to make up that amount. If that amount of money cannot be made up by any combination of the coins, return -1.
+```
+###Example 1:
+```
+coins = [1, 2, 5], amount = 11
+return 3 (11 = 5 + 5 + 1)
+```
+###Example 2:
+```
+coins = [2], amount = 3
+return -1.
+```
+###Note:
+```
+You may assume that you have an infinite number of each kind of coin.
+``` 
+
+```cpp
+class Solution {
+public:
+    int coinChange(vector<int>& coins, int amount) {
+        vector<int> ans(amount+1,INT_MAX-1);
+        ans[0]=0;
+        for(int i=0;i<ans.size();i++)
+            for(int j=0;j<coins.size();j++)
+                if(coins[j]<=i) ans[i]=min(ans[i],ans[i-coins[j]]+1);
+        if(ans[ans.size()-1]>amount) return -1;
+        else return ans[ans.size()-1];
+    }
+};
+```
+**************************************
+- [思路来源1](https://www.cnblogs.com/grandyang/p/5138186.html)
+- [思路来源2](https://leetcode.com/problems/coin-change/solution/)
+
+
+对于每一个金额i，我们都可以看作是某个已知金额的最小硬币数加上一个硬币后所得。当然这里还存在着有可能无法找零的情况，为了区别，我们将数组ans全部初始化为一个很大的数（至少保证大于amount），这样我们在进行递推时，无法找零的金额都会是这个很大的数。最后只需要再检查一下最后一个元素是否小于amount即可。
+
+对于动态规划，我们对于下标的认知不能仅仅停留在简单的“序号”这个层面上，很多时候我们可以为它赋予更多实际的意义，这样可以是我们的思路更加开阔，并且方便我们考虑问题。

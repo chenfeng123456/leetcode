@@ -1,0 +1,86 @@
+# Perfect Squares
+## Description:
+```
+ Given a positive integer n, find the least number of perfect square numbers (for example, 1, 4, 9, 16, ...) which sum to n.
+
+For example, given n = 12, return 3 because 12 = 4 + 4 + 4; given n = 13, return 2 because 13 = 4 + 9. 
+```
+#### my code(*Time Limit Exceeded*)
+```cpp
+class Solution {
+public:
+    int numSquares(int n) {
+        if(n==0) return 0;
+        if(n==1) return 1;
+        vector<int> dp(n+1,0);
+        dp[1]=1;
+        for(int i=2;i<=n;i++)
+        {
+            int m=INT_MAX;
+            int q=sqrt(i);
+            if(q*q==i)
+            {
+                dp[i]=1;
+                continue;
+            }
+            for(int j=i-1;j>=i/2;j--)
+            {
+                    m=min(m,dp[j]+dp[i-j]);
+            }
+            dp[i]=m;
+        }
+        return dp[n];
+    }
+};
+```
+#### nice code(*Accepted*)
+```cpp
+class Solution {
+public:
+    int numSquares(int n) {
+        if(n==0) return 0;
+        if(n==1) return 1;
+        vector<int> dp(n+1,0);
+        dp[1]=1;
+        for(int i=2;i<=n;i++)
+        {
+            int m=INT_MAX;
+            for(int j=1;j*j<=i;j++)
+            {
+                    m=min(m,dp[i-j*j]+1);
+            }
+            dp[i]=m;
+        }
+        return dp[n];
+    }
+};
+```
+#### best code(*Accepted*)
+```cpp
+class Solution {
+public:
+    int numSquares(int n) {
+        while (n % 4 == 0) n /= 4;
+        if (n % 8 == 7) return 4;
+        for (int a = 0; a * a <= n; ++a) {
+            int b = sqrt(n - a * a);
+            if (a * a + b * b == n) {
+                return !!a + !!b;
+            }
+        }
+        return 3;
+    }
+};
+```
+**************************************
+这回我吸取昨天Ones and Zeroes的经验，将每个数分解成两个数对应的最小值相加。我们定义一个数组dp，下标i表示对应的数可以由平方数相加得到的最小个数。我们先判断这个数是否为平方数，若是则直接返回1；否则从i-1开始计算，令j=i-1计算dp[i-j]+dp[j]值，取最小者为dp[i]的值。
+
+然而这样子做仍然超时了，于是我去网上看了下别人用动态规划的解题方法，大体思路跟我差不多，只是在内层循环中做了些优化，便大大减少了运算量。
+
+不过这道题还有一个最高效的做法，需要用到四平方和定理。这个定理大概说的是任何一个正整数都可以表示为4个整数的平方和，所以结果一定是1、2、3、4中的一个。方法为：
+
+>> 1. 一个数如果含有因子4，那么我们可以把4都去掉，并不影响结果，比如2和8,3和12等等，返回的结果都相同;
+>> 2. 如果一个数除以8余7的话，那么肯定是由4个完全平方数组成;
+>> 3. 最后再来尝试的将其拆为两个平方数之和，如果拆成功了那么就会返回1或2，因为其中一个平方数可能为0。
+
+***需要说明的一点是：!!的作用是判断这个数是否为正整数。感叹号!表示逻辑取反，那么一个正整数逻辑取反为0，再取反为1，所以用两个感叹号!!的作用就是看a和b是否为正整数，都为正整数的话返回2，只有一个是正整数的话返回1。***

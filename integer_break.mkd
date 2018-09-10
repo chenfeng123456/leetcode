@@ -1,0 +1,43 @@
+# Integer Break
+## Description:
+```
+ Given a positive integer n, break it into the sum of at least two positive integers and maximize the product of those integers. Return the maximum product you can get.
+```
+
+### For example
+```
+ given n = 2, return 1 (2 = 1 + 1); given n = 10, return 36 (10 = 3 + 3 + 4).
+```
+
+### Note: 
+
+```
+You may assume that n is not less than 2 and not larger than 58. 
+```
+```cpp
+class Solution {
+public:
+    int integerBreak(int n) {
+        vector<int> dp(n+1,0);
+        dp[0]=1;
+        dp[1]=1;
+        for(int i=2;i<=n;i++)
+        {
+            int res=0;
+            for(int j=1;j<i;j++)
+            {
+                int x=(dp[i-j]>(i-j))?dp[i-j]:(i-j);
+                int y=dp[j]>j?dp[j]:j;
+                res=max(res,x*y);
+            }
+            dp[i]=res;
+        }
+        return dp[n];
+    }
+};
+```
+*************************************
+- 又一次beat 100%         :sunglass: 
+
+
+这道题思路很清晰，我们把每个数分解成两个数的乘积，而这两个数又可以分解成两个数的乘积。由于是自底向上，所以在这个数前面的所有数的乘积最大值已经被找出来了。***需要注意的是，有可能这个乘积还没有该数本身大，所以要实现比较以下，取二者中大者作为因数。***

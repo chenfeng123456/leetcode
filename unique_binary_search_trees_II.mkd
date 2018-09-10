@@ -1,0 +1,77 @@
+# Unique Binary Search Trees II
+## Description:
+```
+Given an integer n, generate all structurally unique BST's (binary search trees) that store values 1...n.
+```
+### For example:
+Given n = 3, your program should return all 5 unique BST's shown below.
+```
+   1         3     3      2      1
+    \       /     /      / \      \
+     3     2     1      1   3      2
+    /     /       \                 \
+   2     1         2                 3
+```
+```cpp
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    vector<TreeNode*> creat(int start,int end)
+    {
+        vector<TreeNode*> res;
+        if(start>end) 
+        {
+            res.push_back(NULL);
+            return res;
+        }
+        
+        for(int k=start;k<=end;k++)
+        {
+            vector<TreeNode*> left=creat(start,k-1);
+            vector<TreeNode*> right=creat(k+1,end);
+            for(int i=0;i<left.size();i++)
+                for(int j=0;j<right.size();j++)
+                {
+                    TreeNode* root=new TreeNode(k);
+                    root->left=left[i];
+                    root->right=right[j];
+                    res.push_back(root);
+                }
+        }
+        return res;
+    }
+    
+    
+    vector<TreeNode*> generateTrees(int n) {
+        if(n<1)
+        {
+            vector<TreeNode*> res(0);
+            return res;
+        }
+        return creat(1,n);
+    }
+};
+```
+
+***********************************
+- [思路来源1](http://blog.csdn.net/lanxu_yy/article/details/17504837)
+- [思路来源2](http://blog.csdn.net/chilseasai/article/details/50083201)
+
+本题的中间过程大致分为以下几点：
+
+1. 在指定区间内（从start到end）依次选取根节点；
+2. 将小于根节点的数进行排列组合出所有可能的子树，存储在一个数组left中；
+3. 按同样方式处理大于根节点的数；
+4. 将左子树与右子树进行组合，连接到根节点的左右分支上；
+5. 将根节点存放在数组res中。
+
+其中2、3步用递归实现，也是本题最难考虑的地方。我们定义一个函数creat，其形参为两个整型数start和end。该函数的功能就是组合出从start到end区间中所有数能够组成的二叉树，存在一个数组中返回。
+我们每次在进行递归调用时都默认后面的步骤已经全部完成，所以我们在将小于根节点的区间和大于根节点的区间传入creat中时，已经表示左子树和右子树的全部组合已经实现并按二叉树的方式连接起来。所以我们剩下的工作就是将二者配对并连接在root上。再将所有的结果存在数组中返回即可。

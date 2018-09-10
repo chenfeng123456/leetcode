@@ -1,0 +1,57 @@
+# Unique Paths II
+## Description:
+```
+Follow up for "Unique Paths":
+
+Now consider if some obstacles are added to the grids. How many unique paths would there be?
+
+An obstacle and empty space is marked as 1 and 0 respectively in the grid.
+```
+### For example,
+```
+There is one obstacle in the middle of a 3x3 grid as illustrated below.
+
+[
+  [0,0,0],
+  [0,1,0],
+  [0,0,0]
+]
+
+The total number of unique paths is 2.
+```
+### Note:
+ m and n will be at most 100.
+ 
+```cpp
+class Solution {
+public:
+    int uniquePathsWithObstacles(vector<vector<int>>& obstacleGrid) {
+        if(obstacleGrid[0][0]==1) return 0;
+        int row=obstacleGrid.size(),col=obstacleGrid[0].size();
+        vector<vector<int>> dp(row,vector<int>(col,0));
+        for(int i=0;i<row;i++)
+        {
+            if(obstacleGrid[i][0]==1) break;
+            dp[i][0]=1;
+        }
+        for(int i=0;i<col;i++)
+        {
+            if(obstacleGrid[0][i]==1) break;
+            dp[0][i]=1;
+        }
+        for(int i=1;i<row;i++)
+            for(int j=0;j<col;j++)
+            {
+                if(obstacleGrid[i][j]==1) continue;
+                dp[i][j]=dp[i-1][j]+dp[i][j-1];
+            }
+        return dp[row-1][col-1];
+    }
+};
+```
+这题跟I差不多，就是加了些障碍，所以要注意两点：
+
+1. 当obstacleGrid[i][j]==1时，dp[i][j]应置为0；
+2. 当第一行或第一列中有一个为1时，其后的元素在dp中都应置为0。
+
+除这两点外，其余都相同。

@@ -1,0 +1,58 @@
+# Is Subsequence
+## Description:
+```
+ Given a string s and a string t, check if s is subsequence of t.
+
+You may assume that there is only lower case English letters in both s and t. t is potentially a very long (length ~= 500,000) string, and s is a short string (<=100).
+
+A subsequence of a string is a new string which is formed from the original string by deleting some (can be none) of the characters without disturbing the relative positions of the remaining characters. (ie, "ace" is a subsequence of "abcde" while "aec" is not).
+```
+### Example 1:
+```
+s = "abc", t = "ahbgdc"
+
+Return true.
+```
+### Example 2:
+```
+s = "axc", t = "ahbgdc"
+
+Return false.
+```
+### Follow up:
+```
+If there are lots of incoming S, say S1, S2, ... , Sk where k >= 1B, and you want to check one by one to see if T has its subsequence. In this scenario, how would you change your code?
+```
+```cpp
+class Solution {
+public:
+    bool isSubsequence(string s, string t) {
+        int dp=0;
+        for(int i=0,j=0;i<s.length()&&j<t.length();)
+        {
+            if(s[i]==t[j]) 
+            {
+                dp++;
+                i++;
+                j++;
+            }
+            else
+            {
+                j++;
+            }
+        }
+        if(dp==s.length()) return true;
+        else return false;
+    }
+};
+```
+***********************************
+昨天刚在慕课里面看到过关于子序列的例题，不过这题要简单些。顺着昨天的思路，我们可以这样考虑：
+
+1. 如果s[i]=t[j]，则二者都跳到下一个，在检验；
+
+2. 如果s[i]不等于t[j]，则j++，检验之后是否还有与s[i]一样的字符；
+
+3. 我们定义一个变量用于储存t中含有s的字符的个数（不包含重复的）。每次若二者相同，则dp++；反之则不加。最后再判断dp是否等于s的长度，如果等于，则证明s是t的子序列；反之则不是。
+
+根据以上思路写出代码即可。

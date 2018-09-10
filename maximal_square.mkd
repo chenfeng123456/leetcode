@@ -1,0 +1,53 @@
+# Maximal Square
+## Description:
+```
+ Given a 2D binary matrix filled with 0's and 1's, find the largest square containing only 1's and return its area.
+```
+### For example
+given the following matrix:
+```
+1 0 1 0 0
+1 0 1 1 1
+1 1 1 1 1
+1 0 0 1 0
+
+Return 4. 
+```
+```cpp
+class Solution {
+public:
+    int maximalSquare(vector<vector<char>>& matrix) {
+        if(matrix.size()==0) return 0;
+        int r=matrix.size(),c=matrix[0].size(),res=0;
+        vector<vector<int>> dp(r,vector<int>(c,0));
+        for(int i=0;i<r;i++)
+            if(matrix[i][0]!='0') 
+            {
+                dp[i][0]=1;
+                res=1;
+            }
+        for(int i=0;i<c;i++)
+            if(matrix[0][i]!='0') 
+            {
+                dp[0][i]=1;
+                res=1;
+            }
+        for(int i=1;i<r;i++)
+        {
+            for(int j=1;j<c;j++)
+            {
+                if(matrix[i][j]!='0')
+                {
+                    dp[i][j]=min(dp[i-1][j-1],min(dp[i-1][j],dp[i][j-1]))+1;
+                    res=max(res,dp[i][j]);
+                }
+            }
+        }
+        return res*res;
+    }
+};
+```
+******************************************
+这题我们定义一个与matrix等大的二维数组dp，其中dp[i][j]表示以这个位置为右下角的正方形的边长大小。对每个元素如果它在matrix中的对应位置不为0的话，那么我们就取它左边、上边以及左上角三个元素中的最小值加一。对于第一行和第一列的元素由于它们最大只能以自身为一个正方形，所以凡是matrix不为0的都赋为1。
+
+同时我们还需要一个res来记录当前的最大边长，最后我们只需返回res的平方即可。

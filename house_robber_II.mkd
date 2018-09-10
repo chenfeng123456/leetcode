@@ -1,0 +1,36 @@
+#House Robber II
+##Description:
+
+###Note:
+``` 
+This is an extension of House Robber.
+```
+```
+After robbing those houses on that street, the thief has found himself a new place for his thievery so that he will not get too much attention. This time, all houses at this place are arranged in a circle. That means the first house is the neighbor of the last one. Meanwhile, the security system for these houses remain the same as for those in the previous street.
+
+Given a list of non-negative integers representing the amount of money of each house, determine the maximum amount of money you can rob tonight without alerting the police.
+```
+```cpp
+class Solution {
+public:
+    int robStart(vector<int>& nums,int start)
+    {
+        int len=nums.size();
+        vector<int> dp(len-1);
+        dp[0]=nums[start];
+        dp[1]=max(nums[start],nums[start+1]);
+        for(int i=2;i<len-1;i++)
+            dp[i]=max(dp[i-1],dp[i-2]+nums[start+i]);
+        return dp[len-2];
+    }
+    
+    
+    int rob(vector<int>& nums) {
+        if(nums.size()==0) return 0;
+        else if(nums.size()==1) return nums[0];
+        else if(nums.size()==2) return max(nums[0],nums[1]);
+        return max(robStart(nums,0),robStart(nums,1));       
+    }
+};
+```
+这题相对于house robberII来说，就是将一条直线变成了一个圆圈。一开始我怎么也想不出办法，后来看了以下提示，发现只需要将它变成比较nums[0]~nums[n-2]和nums[1]~nums[n-1]的大小即可，其余方法与I相同。

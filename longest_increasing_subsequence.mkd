@@ -1,0 +1,40 @@
+# Longest Increasing Subsequence
+## Description:
+```
+ Given an unsorted array of integers, find the length of longest increasing subsequence.
+```
+### For example:
+```
+Given [10, 9, 2, 5, 3, 7, 101, 18],
+The longest increasing subsequence is [2, 3, 7, 101], therefore the length is 4. Note that there may be more than one LIS combination, it is only necessary for you to return the length.
+
+Your algorithm should run in O(n2) complexity.
+```
+### Follow up: 
+```
+Could you improve it to O(n log n) time complexity? 
+```
+```cpp
+class Solution {
+public:
+    int lengthOfLIS(vector<int>& nums) {
+        if(nums.size()==0) return 0;
+        int res=1;
+        vector<int> dp(nums.size(),1);
+        for(int i=1;i<nums.size();i++)
+        {
+                for(int j=i-1;j>=0;j--)
+                {
+                    if(nums[i]>nums[j]) 
+                    {
+                        dp[i]=max(dp[i],dp[j]+1);
+                    }
+                }
+            res=max(res,dp[i]);
+        }
+        return res;
+    }
+};
+```
+**************************************
+这道题思路很清晰，我们建立一个一维数组dp。dp[i]表示以nums[i]为结尾的最长递增子序列的长度。对于每个nums[i]，向前遍历寻找比它小的元素。若找得到，则证明以此元素位结尾的子序列还可以向后增加一位，即nums[i]，其长度为原子序列加一，然后取新长度与原dp[i]中大者为dp[i]的值；若找不到，则直接令其值为1。最终我们取左右长度中最大者返回即可。
