@@ -1,0 +1,95 @@
+# Binary Tree Paths
+## Description:
+```
+Given a binary tree, return all root-to-leaf paths.
+```
+**Note**: A leaf is a node with no children.
+
+### Example:
+```
+Input:
+
+   1
+ /   \
+2     3
+ \
+  5
+
+Output: ["1->2->5", "1->3"]
+
+Explanation: All root-to-leaf paths are: 1->2->5, 1->3
+```
+
+##### my code(*Acdepted*)
+```python
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution:
+    def binaryTreePaths(self, root):
+        """
+        :type root: TreeNode
+        :rtype: List[str]
+        """
+        if root == None:
+            return []
+        self.res = []
+        
+        def path(root, pre):
+            global res
+            if root.left == None and root.right == None:
+                pre += str(root.val) 
+                self.res.append(pre)
+                #print(pre)
+                return
+            pre += (str(root.val) + "->")
+            #print(pre)
+            if root.left != None:
+                path(root.left, pre)
+            if root.right != None:
+                path(root.right, pre)
+        
+        path(root, "")
+        return self.res
+        
+```
+
+##### nice code(*Accepted*)
+```python
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution:
+    def binaryTreePaths(self, root):
+        """
+        :type root: TreeNode
+        :rtype: List[str]
+        """
+        if not root: return []
+        stack = [(root, 0)]
+        path, result = [], []
+        while stack:
+            curr, depth = stack.pop()
+            if depth < len(path):
+                result.append('->'.join([str(n.val) for n in path]))
+                path = path[:depth]
+            path.append(curr)
+            if curr.left:
+                stack.append((curr.left, depth + 1))
+            if curr.right:
+                stack.append((curr.right, depth + 1))
+        result.append('->'.join([str(n.val) for n in path]))
+        return result
+```
+***********************************
+这题要求我们把每条通往最末端的路径用字符串的形式输出出来。用递归实现起来很简单，这里再附上最快答案，是用栈做的。其中用到了join方法，是用来返回通过指定字符连接序列中元素后生成的新字符串。
+
+另外我还发现当我们递归需要一个全局变量时，用sefl来定义比用global要快不少……
