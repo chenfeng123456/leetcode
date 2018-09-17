@@ -1,0 +1,62 @@
+# Balanced Binary Tree
+## Description:
+```
+Given a binary tree, determine if it is height-balanced.
+
+For this problem, a height-balanced binary tree is defined as:
+
+    a binary tree in which the depth of the two subtrees of every node never differ by more than 1.
+```
+### Example 1:
+Given the following tree [3,9,20,null,null,15,7]:
+```
+    3
+   / \
+  9  20
+    /  \
+   15   7
+```
+Return true.
+
+### Example 2:
+
+Given the following tree [1,2,2,3,3,null,null,4,4]:
+```
+       1
+      / \
+     2   2
+    / \
+   3   3
+  / \
+ 4   4
+```
+Return false.
+```python
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution:
+    def isBalanced(self, root):
+        """
+        :type root: TreeNode
+        :rtype: bool
+        """
+        
+        def judge(root):
+            if root == None:
+                return 0, True
+            hleft, fleft = judge(root.left)
+            hright, fright = judge(root.right)
+            if abs(hleft - hright) > 1:
+                return 0, False
+            return max(hleft, hright) + 1, fleft and fright
+        
+        _, res = judge(root)
+        return res
+```        
+*********************************        
+这道题要求我们判断给定二叉树中任意节点的两颗子树的高相差是否小于等于1。这里的递归我们返回两个值，第一个是该子树的高度，第二个是该子树是否为平衡二叉树。对每一个节点，我们先计算两颗子树的高度差是否小于等于1，若不是，直接返回False，子树高度可随意返回一个值；若是，则要返回两颗子树中较高者的高度值加一，以及判断左右子树是否都为平衡二叉树bool值。
