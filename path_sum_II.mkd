@@ -1,0 +1,72 @@
+# Path Sum II
+## Description:
+```
+ Given a binary tree and a sum, find all root-to-leaf paths where each path's sum equals the given sum.
+```
+### For example:
+Given the below binary tree and sum = 22,
+
+```
+              5
+             / \
+            4   8
+           /   / \
+          11  13  4
+         /  \    / \
+        7    2  5   1
+```
+return
+```
+[
+   [5,4,11,2],
+   [5,8,4,5]
+]
+```
+```cpp
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    vector<vector<int>> ans;
+    void push(TreeNode* root,int sum,int num,vector<int>& res)
+    {
+        num+=root->val;
+        res.push_back(root->val);
+        if(root->left==NULL&&root->right==NULL)
+        {
+            if(sum==num)
+            {
+                ans.push_back(res);
+            }
+        }
+        else
+        {
+            if(root->left!=NULL) push(root->left,sum,num,res);
+            if(root->right!=NULL) push(root->right,sum,num,res);
+        }
+        res.erase(res.end()-1);
+    }
+    
+    
+    
+    vector<vector<int>> pathSum(TreeNode* root, int sum) {
+        if(root==NULL) return ans;
+        vector<int> res;
+        push(root,sum,0,res);
+        return ans;
+    }
+};
+```
+***********************************
+- beat 100%
+
+这道题对I的扩展就是要把每条符合的路径里的数输出出来，这里我们需要用到一个数组来记录每一个节点，以及一个变量来记录到这个节点为止所有节点的和。如果已经搜索到最底层，则比较这个和是否与sum相等，如果相等，就将一维数组放入预先设好的二维数组中。
+
+另外，每次当前函数结束时要删除当前节点，也就是把一维数组的最后一个移除，以免影响对其它子树的搜索。
