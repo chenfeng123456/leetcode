@@ -1,0 +1,98 @@
+# All Nodes Distance K in Binary Tree
+## Description:
+```
+We are given a binary tree (with root node root), a target node, and an integer value K.
+
+Return a list of the values of all nodes that have a distance K from the target node.  The answer can be returned in any order.
+```
+ 
+
+### Example 1:
+```
+Input: root = [3,5,1,6,2,0,8,null,null,7,4], target = 5, K = 2
+
+Output: [7,4,1]
+
+Explanation: 
+The nodes that are a distance 2 from the target node (with value 5)
+have values 7, 4, and 1.
+
+
+
+Note that the inputs "root" and "target" are actually TreeNodes.
+The descriptions of the inputs above are just serializations of these objects.
+```
+ 
+
+### Note:
+
+    1. The given tree is non-empty.
+    2. Each node in the tree has unique values 0 <= node.val <= 500.
+    3. The target node is a node in the tree.
+    4. 0 <= K <= 1000.
+```python
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    void construct(TreeNode *root, TreeNode *pre, map<TreeNode *, pair<TreeNode *, string> > &m, string direction)
+    {
+        if (root == NULL)
+            return;
+        m[root].first = pre;
+        m[root].second = direction;
+        construct(root->left, root, m, "down_left");
+        construct(root->right, root, m, "down_right");
+    }
+    
+    void find(TreeNode *root, int dis, int K, vector<int> &res, string direction, map<TreeNode *, pair<TreeNode *, string> > &m)
+    {
+        if (root == NULL)
+            return;
+        //cout << "root->val = " << root->val << ", direction = " << direction << endl;
+        if (dis == K)
+        {
+            res.push_back(root->val);
+            return;
+        }
+        if (direction == "down_left")
+        {
+            find(root->right, dis+1, K, res, "up", m);
+            find(m[root].first, dis+1, K, res, m[root].second, m);
+        }
+        else if (direction == "down_right")
+        {
+            find(root->left, dis+1, K, res, "up", m);
+            find(m[root].first, dis+1, K, res, m[root].second, m);
+        }
+        else if (direction == "up")
+        {
+            find(root->left, dis+1, K, res, "up", m);
+            find(root->right, dis+1, K, res, "up", m);
+        }
+        else
+        {
+            find(root->left, dis+1, K, res, "up", m);
+            find(root->right, dis+1, K, res, "up", m);
+            find(m[root].first, dis+1, K, res, m[root].second, m);
+        }
+    }
+    
+    vector<int> distanceK(TreeNode* root, TreeNode* target, int K) {
+        map<TreeNode *, pair<TreeNode *, string> >m;
+        vector<int> res;
+        construct(root, NULL, m, " ");
+        find(target, 0, K, res, "", m);
+        return res;
+    }
+};
+```
+********************************************
+我做这题的思路简单粗暴，直接用一个map把所有节点与其父节点对应起来，然后从target开始向左下、右下和上遍历，找到要求的节点。
