@@ -1,0 +1,52 @@
+# Maximum Depth of N-ary Tree
+## Description:
+```
+Given a n-ary tree, find its maximum depth.
+
+The maximum depth is the number of nodes along the longest path from the root node down to the farthest leaf node.
+
+For example, given a 3-ary tree:
+
+
+ 
+
+We should return its max depth, which is 3.
+```
+### Note:
+
+   1. The depth of the tree is at most 1000.
+   2. The total number of nodes is at most 5000.
+```python
+"""
+# Definition for a Node.
+class Node(object):
+    def __init__(self, val, children):
+        self.val = val
+        self.children = children
+"""
+class Solution(object):
+    def maxDepth(self, root):
+        """
+        :type root: Node
+        :rtype: int
+        """
+        global res
+        res = 0
+
+        def traverse(root, depth):
+            if root == None:
+                return
+            depth += 1
+            global res
+
+            res = max(res, depth)
+            for each in root.children:
+                traverse(each, depth)
+
+        traverse(root, 0)
+        return res
+```
+*************************************
+注意这里并不是二叉树，每个节点可以跟多个节点相连，不过我们仍可按照以前的方法来做。
+
+需要特别强调的是在递归时关于变量的作用域。在python中，如果在函数内部要用到外部定义的变量的话，必须要用**global**来告诉系统这是个全局变量，不然要么会报错，要么会产生一个新的同名局部变量来覆盖全局变量。        

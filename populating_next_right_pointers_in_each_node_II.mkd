@@ -1,0 +1,101 @@
+# Populating Next Right Pointers in Each Node II
+## Description:
+```
+Given a binary tree
+
+struct TreeLinkNode {
+  TreeLinkNode *left;
+  TreeLinkNode *right;
+  TreeLinkNode *next;
+}
+
+Populate each next pointer to point to its next right node. If there is no next right node, the next pointer should be set to NULL.
+
+Initially, all next pointers are set to NULL.
+```
+### Note:
+
+   - You may only use constant extra space.
+   - Recursive approach is fine, implicit stack space does not count as extra space for this problem.
+
+### Example:
+```
+Given the following binary tree,
+
+     1
+   /  \
+  2    3
+ / \    \
+4   5    7
+
+After calling your function, the tree should look like:
+
+     1 -> NULL
+   /  \
+  2 -> 3 -> NULL
+ / \    \
+4-> 5 -> 7 -> NULL
+```
+```cpp
+/**
+ * Definition for binary tree with next pointer.
+ * struct TreeLinkNode {
+ *  int val;
+ *  TreeLinkNode *left, *right, *next;
+ *  TreeLinkNode(int x) : val(x), left(NULL), right(NULL), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    void connect(TreeLinkNode *root) {
+        if (root == NULL) return;
+        if (root->left != NULL)
+        {
+            if (root->right != NULL) root->left->next = root->right;
+            else  
+            {
+                TreeLinkNode *cur = root;
+                while (cur->next)
+                {
+                    cur = cur->next;
+                    if (cur->left != NULL) 
+                    {
+                        root->left->next = cur->left;
+                        break;
+                    }
+                    else if (cur->right != NULL) 
+                    {
+                        root->left->next = cur->right;
+                        break;
+                    }
+                }
+            }
+        }
+        if (root->right != NULL)
+        {
+            TreeLinkNode *cur = root;
+            while (cur->next != NULL)
+            {
+                cur = cur->next;
+                if(cur->left != NULL) 
+                {
+                    root->right->next = cur->left;
+                    break;
+                }
+                else if(cur->right != NULL) 
+                {
+                    root->right->next = cur->right;
+                    break;
+                }
+            }
+        }
+        connect(root->right);
+        connect(root->left);
+    }
+};
+```
+***********************************
+这道题跟[Populating Next Right Pointers in Each Node](https://github.com/chenfeng123456/leetcode/blob/tree/populating_next_right_pointers_in_each_node.mkd)比起来，就是没有了一定是完美二叉树这个条件，实现思路差不多，只不过要加两个循环用来遍历父节点那一层以找到下一层中最靠近的子节点。
+
+这里有一个恨隐秘的bug，至少我花了好久才发现它。那就是
+***如果我们在递归调用时如果先递归左孩子，那么事实上左孩子那一层还没有全部连接起来，我们只是连了当前这个父节点的两个子节点以及右孩子和它的右边节点***。一开始我对这个bug毫无头绪，后来看了一下[别人的代码](www.cnblogs.com/grandyang/p/4288151.html)，发现其实只要改一下递归调用的顺序就行了。

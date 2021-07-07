@@ -1,0 +1,117 @@
+# Find Mode in Binary Search Tree
+## Description:
+```
+Given a binary search tree (BST) with duplicates, find all the mode(s) (the most frequently occurred element) in the given BST.
+
+Assume a BST is defined as follows:
+
+    The left subtree of a node contains only nodes with keys less than or equal to the node's key.
+    The right subtree of a node contains only nodes with keys greater than or equal to the node's key.
+    Both the left and right subtrees must also be binary search trees.
+```
+ 
+
+For example:
+Given BST [1,null,2,2],
+```
+   1
+    \
+     2
+    /
+   2
+```
+ 
+
+return [2].
+
+**Note**: If a tree has more than one mode, you can return them in any order.
+
+**Follow up**: Could you do that without using any extra space? (Assume that the implicit stack space incurred due to recursion does not count).
+##### my code(*Accepted*)
+```python
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution:
+    def findMode(self, root):
+        """
+        :type root: TreeNode
+        :rtype: List[int]
+        """
+        self.num = dict()
+        self.res = set()
+        self.freq = 0
+        
+        def find(root):
+            if root == None:
+                return 
+            if not root.val in self.num.keys():
+                self.num[root.val] = 1
+            else:
+                self.num[root.val] += 1
+            temp = self.num[root.val]
+            if temp > self.freq:
+                self.res.clear()
+                self.res.add(root.val)
+                self.freq = temp
+            elif temp == self.freq:
+                self.res.add(root.val)
+            find(root.left)
+            find(root.right)
+        find(root)
+        return list(self.res)
+```
+##### nice code(*Accepted*)
+```python
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution:
+    def findMode(self, root):
+        """
+        :type root: TreeNode
+        :rtype: List[int]
+        """
+        current_item=None
+        counter=0
+        max_num=0
+        ans=[]
+        def visit(item):
+            nonlocal current_item
+            nonlocal counter
+            nonlocal ans
+            nonlocal max_num
+            if item==current_item:
+                counter=counter+1
+            else:
+                counter=1
+                current_item=item
+            if counter==max_num:
+                ans.append(item)
+            if counter>max_num:
+                ans.clear()
+                ans.append(item)
+                max_num=counter
+            return
+        def walk(root):
+            if root.left!=None:
+                walk(root.left)
+            visit(root.val)
+            if root.right!=None:
+                walk(root.right)
+        
+        if root==None:
+            return ans
+        walk(root)
+        return ans
+```
+********************************
+这题我想了很久，最后还是用了一个字典来做。其实我们关注的只有最大出现次数以及对应的数字，而且这是一个BST，相同的数字都是挨在一起的，所以我们只需要用一个变量来记录最大次数即可。同时遍历顺序很重要，必须保证直接相连的节点遍历时也应当是紧邻的才行。

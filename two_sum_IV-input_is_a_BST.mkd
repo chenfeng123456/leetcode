@@ -1,0 +1,56 @@
+# Two Sum IV - Input is a BST
+## Description:
+```
+Given a Binary Search Tree and a target number, return true if there exist two elements in the BST such that their sum is equal to the given target.
+```
+### Example 1:
+```
+Input: 
+    5
+   / \
+  3   6
+ / \   \
+2   4   7
+
+Target = 9
+
+Output: True
+```
+### Example 2:
+```
+Input: 
+    5
+   / \
+  3   6
+ / \   \
+2   4   7
+
+Target = 28
+
+Output: False
+```
+```python
+class Solution:
+    def findTarget(self, root, k):
+        """
+        :type root: TreeNode
+        :type k: int
+        :rtype: bool
+        """
+        global s
+        s = set([root.val])
+        
+        def search(root):
+            if root == None:
+                return False
+            if (k - root.val) in s:
+                return True
+            else:
+                s.add(root.val)
+                return search(root.left) or search(root.right)
+        
+        return search(root.left) or search(root.right)
+```
+***************************************
+这题的思路很简单，将遍历过的每一个元素放在一个集合里面，然后对于每一个遍历到的元素查看k与它的差是否在这个集合中，如果在则直接返回True，否则继续遍历。如果遍历完整颗二叉树都没有找到，则返回False。
+

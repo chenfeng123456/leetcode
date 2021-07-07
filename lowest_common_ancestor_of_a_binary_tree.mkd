@@ -1,0 +1,78 @@
+# Lowest Common Ancestor of a Binary Tree
+## Description
+```
+Given a binary tree, find the lowest common ancestor (LCA) of two given nodes in the tree.
+
+According to the definition of LCA on Wikipedia: “The lowest common ancestor is defined between two nodes p and q as the lowest node in T that has both p and q as descendants (where we allow a node to be a descendant of itself).”
+
+Given the following binary tree:  root = [3,5,1,6,2,0,8,null,null,7,4]
+
+        _______3______
+       /              \
+    ___5__          ___1__
+   /      \        /      \
+   6      _2       0       8
+         /  \
+         7   4
+```
+### Example 1:
+```
+Input: root = [3,5,1,6,2,0,8,null,null,7,4], p = 5, q = 1
+Output: 3
+Explanation: The LCA of of nodes 5 and 1 is 3.
+```
+### Example 2:
+```
+Input: root = [3,5,1,6,2,0,8,null,null,7,4], p = 5, q = 4
+Output: 5
+Explanation: The LCA of nodes 5 and 4 is 5, since a node can be a descendant of itself
+             according to the LCA definition.
+```
+### Note:
+
+   - All of the nodes' values will be unique.
+   - p and q are different and both values will exist in the binary tree.
+```cpp
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode *res;
+    
+    vector<bool> search(TreeNode *root, TreeNode *p, TreeNode *q)
+    {
+        vector<bool> m(2);
+        if (root == NULL) return m;
+        if (root == p)
+            m[0] = true;
+        else if (root == q)
+            m[1] = true;
+        
+            vector<bool> leftM = search(root->left, p, q);
+            vector<bool> rightM = search(root->right, p, q);
+            if (!m[0]) m[0] = leftM[0] || rightM[0];
+            if (!m[1]) m[1] = leftM[1] || rightM[1];
+            if (m[0] && m[1] == true)
+            {
+                res = root;
+                m[0] = false;
+                m[1] = false;
+            }
+        
+        return m;
+    }
+    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+        search(root, p, q);
+        return res;
+    }
+};
+```
+********************************************
+我做这道题的想法其实很简单，从根节点开始往下遍历直至找到p和q，用一个一个长度为2的小数组来记录其子树中是否有p和q。当数组中两个元素都为true时，说明这个节点是它们的祖先节点。由于递归返回时是自下而上，为了保证最终得到的是最靠下的祖先节点，我们在第一次发现两个元素同时为true时就记下该节点，并把两个值都置为false，使得其上的节点不可能满足同时为true的条件。

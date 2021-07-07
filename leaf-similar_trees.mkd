@@ -1,0 +1,53 @@
+# Leaf-Similar Trees
+# Description:
+```
+
+
+For example, in the given tree above, the leaf value sequence is (6, 7, 4, 9, 8).
+
+Two binary trees are considered leaf-similar if their leaf value sequence is the same.
+
+Return true if and only if the two given trees with head nodes root1 and root2 are leaf-similar.
+```
+ 
+
+### Note:
+
+   - Both of the given trees will have between 1 and 100 nodes.
+```python
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution:
+    def traverse(self, root):
+        """
+        :type root: TreeNode
+        """
+        if root == None:
+            return []
+        if root.left == None and root.right == None:
+            return [root.val]
+        
+        l = self.traverse(root.left)
+        l += self.traverse(root.right)
+        return l
+    
+    def leafSimilar(self, root1, root2):
+        """
+        :type root1: TreeNode
+        :type root2: TreeNode
+        :rtype: bool
+        """
+        l1 = self.traverse(root1)
+        l2 = self.traverse(root2)
+        
+        print(l1)
+        print(l2)
+        return l1 == l2
+```
+****************************************
+这道题要求从左到右把最末端的值按顺序放在一起比较，思路比较简单，注意$python$里面空指针相当于$None$，在类里面调用类方法时要加$self.$。

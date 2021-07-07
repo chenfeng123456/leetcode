@@ -1,0 +1,129 @@
+# Construct Binary Tree from Inorder and Postorder Traversal
+## Description:
+```
+Given inorder and postorder traversal of a tree, construct the binary tree.
+```
+### Note:
+```
+You may assume that duplicates do not exist in the tree.
+```
+### For example, given
+```
+inorder = [9,3,15,20,7]
+postorder = [9,15,7,20,3]
+
+Return the following binary tree:
+
+    3
+   / \
+  9  20
+    /  \
+   15   7
+
+```
+#### mycode(*Time Limit Exceeded*)
+```cpp
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    void construct(int start,int end,vector<int>& inorder,vector<int>& postorder,TreeNode* root)
+    {
+        if(start>end) return;
+        int rootInPost=-1;
+        int rootInIn=-1;
+        for(int i=start;i<=end;i++)
+        {
+            for(int j=0;j<postorder.size();j++)
+            {
+                if(inorder[i]==postorder[j])
+                {
+                    if(rootInPost<j)
+                    {
+                        rootInPost=j;
+                        rootInIn=i;
+                    }
+                    break;
+                }
+            }
+        }
+        root->val=postorder[rootInPost];
+        if(rootInIn>start)
+        {
+            root->left=new TreeNode(0);
+            construct(start,rootInIn-1,inorder,postorder,root->left);
+        }
+        if(rootInIn<end)
+        {
+            root->right=new TreeNode(0);
+            construct(rootInIn+1,end,inorder,postorder,root->right);
+        }
+    }
+    
+    TreeNode* buildTree(vector<int>& inorder, vector<int>& postorder) {
+        TreeNode *root=NULL;
+        if(inorder.empty()) return root;
+        root=new TreeNode(0); 
+        construct(0,inorder.size()-1,inorder,postorder,root);
+        return root;
+    }
+};
+```
+#### nice code
+```cpp
+/**
+ * Definition for binary tree
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode *buildTree(vector<int> &inorder, vector<int> &postorder) {
+        return buildTree(inorder, 0, inorder.size() - 1, postorder, 0, postorder.size() - 1);
+    }
+    TreeNode *buildTree(vector<int> &inorder, int iLeft, int iRight, vector<int> &postorder, int pLeft, int pRight) {
+        if (iLeft > iRight || pLeft > pRight) return NULL;
+        TreeNode *cur = new TreeNode(postorder[pRight]);
+        int i = 0;
+        for (i = iLeft; i < inorder.size(); ++i) {
+            if (inorder[i] == cur->val) break;
+        }
+        cur->left = buildTree(inorder, iLeft, i - 1, postorder, pLeft, pLeft + i - iLeft - 1);
+        cur->right = buildTree(inorder, i + 1, iRight, postorder, pLeft + i - iLeft, pRight - 1);
+        return cur;
+    }
+};
+```
+******************************************
+这题就思路而言并不难。中序遍历的顺序是左-根-右，后序遍历的顺序是左-右-根，因此我们不难想到对于某一个中序遍历数组的区间中的元素，对应在后序遍历数组中位置最靠后的即为当前根节点的值。之后再以根节点为分界点，将中序遍历数组分为左、右两个区间，左区间中的所有元素就是当前节点左子树中的所有元素，右区间类似。配合递归我们可以很容易地写出代码，但关键在于查找元素的时间复杂度特别大，我的代码就卡在了这上面（恰好是最后一组测试数据 :sob:）。
+
+于是我上网查了以下别人是怎样实现这个查找的，发现其实根据两种遍历的特点可以算出右子树对应在两个数组中的相对位置。由于二者都是从左子树开始遍历，那么两个数组从左端开始一直到左子树元素全部列完，它们的值都是一样的，而这段长度可以由中序遍历数组中根节点下标减去区间起始位置下标算出来。显然中序遍历数组的起始位置加上该长度等于根节点元素的下标，而后序遍历数组的起始位置加上这段长度则为右子树第一个元素的下标。所以我们就得出来左子树所有元素在后序遍历数组中对应区间的坐标：
+        
+- [起始位置，起始位置+(中序遍历数组中根节点下标-中序遍历数组起始位置)-1]
+
+那么对应的右子树区间在中序遍历数组中的位置就是：
+
+- [起始位置+(中序遍历数组中根节点下标-中序遍历数组起始位置)，终止位置-1]
+
+这样就可以大大节省时间了。
+
+- [代码来源](https://www.cnblogs.com/grandyang/p/4296193.html)
+
+
+
+
+
+
+
+

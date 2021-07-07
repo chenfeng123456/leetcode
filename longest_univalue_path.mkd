@@ -1,0 +1,72 @@
+# Longest Univalue Path
+## Description:
+
+Given a binary tree, find the length of the longest path where each node in the path has the same value. This path may or may not pass through the root.
+
+**Note**: The length of path between two nodes is represented by the number of edges between them.
+
+### Example 1:
+
+Input:
+```
+              5
+             / \
+            4   5
+           / \   \
+          1   1   5
+```
+Output:
+```
+2
+```
+### Example 2:
+
+Input:
+```
+              1
+             / \
+            4   5
+           / \   \
+          4   4   5
+```
+Output:
+```
+2
+```
+**Note**: The given binary tree has not more than 10000 nodes. The height of the tree is not more than 1000. 
+```python
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution:
+    def longestUnivaluePath(self, root):
+        """
+        :type root: TreeNode
+        :rtype: int
+        """
+        self.res = 0
+        
+        def find(root):
+            if root == None:
+                return 0
+            l = find(root.left)
+            r = find(root.right)
+            l = l + 1 if root.left and root.val == root.left.val else 0
+            r= r + 1 if root.right and root.val == root.right.val else 0
+            self.res = max(self.res, l + r)
+            return max(l, r)
+        find(root)
+        return self.res
+```
+*********************************
+- [思路来源](https://www.cnblogs.com/grandyang/p/7636259.html)
+
+这道题麻烦的地方在于最长路径可能是包含某个子树的根节点。所以我们对于每个节点要先求出左右子树到根节点为止最长相同值路径，再比较根节点与左右节点的值是否相同，若相同，则对应路径长度加一；若不相同，则对应路径长度置为0。最后比较左右路径长度之和是否大于当前的最长路径长度。
+
+注意这里我们之所以可以在根节点和其子节点值不相同时直接将对应路径置为0，一是因为如果父节点、子节点值不相同那么路径就断了，而我们要求的是**包含根节点的**的路径长度；二是返回回来的长度一定小于等于**包含该子节点**的路径长度，而它已经在递归子节点时与最长路径比较过了，所以如果子节点与父节点连不起来的话，这条路径就没有用了。
+
+另外我们在根节点与左右子节点的值相同时分别把对应路径长度加了一，这样并不会导致多加，因为我们要算的长度是节点之间的连线，而非节点数。

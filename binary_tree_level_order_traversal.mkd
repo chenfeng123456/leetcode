@@ -1,0 +1,64 @@
+# 102. Binary Tree Level Order Traversal
+## Description:
+```
+Given a binary tree, return the level order traversal of its nodes' values. (ie, from left to right, level by level).
+```
+### For example:
+```
+Given binary tree [3,9,20,null,null,15,7],
+
+    3
+   / \
+  9  20
+    /  \
+   15   7
+
+return its level order traversal as:
+
+[
+  [3],
+  [9,20],
+  [15,7]
+]
+```
+```cpp
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    vector<vector<int>> res;
+    
+    void level(int height,TreeNode *root)
+    {
+        if(root==NULL) return;
+        if(height>res.size()) 
+        {
+            vector<int> t;
+            res.push_back(t);    
+        }
+        res[height-1].push_back(root->val);
+        level(height+1,root->left);
+        level(height+1,root->right);
+    }
+    
+    
+    
+    vector<vector<int>> levelOrder(TreeNode* root) {
+        level(1,root);
+        return res;
+    }
+};
+```
+***************************************
+这道题有点麻烦的地方在于一方面我们要将同一层的元素放在一行中输出，另一方面我们还要保证它们是按照在二叉树中从左到右的顺序输出。
+
+对于前者，我们可以用一个变量height来记录当前是第几层，并把这一层的元素全部放到数组的height行中去。对于后者，我们只需将递归的顺序设定为先遍历左子树再遍历右子树即可。
+
+另外这里还有一个小技巧：由于我们一开始并不会知道这个二叉树会有几层，所以我们必须在遍历的时候先检查当前的height是否超出了数组的大小，如果超出了，我们要用resize函数给它扩容。但这个函数效率很低，我们可以通过定义一个空数组，再用push_back把它加入到原数组中，由于我们从上到下逐层遍历，所以我们push进来的数组一定是对应这当前height的。这两种方法的效率差别极大，前者提交显示只打败了27%的代码，而后者打败了95%的代码。

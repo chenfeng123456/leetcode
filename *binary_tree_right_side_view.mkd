@@ -1,0 +1,64 @@
+# Binary Tree Right Side View
+## Description:
+```
+Given a binary tree, imagine yourself standing on the right side of it, return the values of the nodes you can see ordered from top to bottom.
+```
+### For example:
+```
+Given the following binary tree,
+
+   1            <---
+ /   \
+2     3         <---
+ \     \
+  5     4       <---
+
+ 
+
+You should return [1, 3, 4].
+```
+```cpp
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    int depth;
+    void right(TreeNode* root,int d,vector<int>& res)
+    {
+        if(root!=NULL) 
+        {
+            if(d>depth) res.push_back(root->val);
+            right(root->right,d+1,res);
+            right(root->left,d+1,res);
+        }
+        else if(d>depth) depth=d-1;
+    }
+
+    vector<int> rightSideView(TreeNode* root) {
+        vector<int> res;
+        if(root==NULL) return res;
+        depth=0;
+        right(root,1,res);
+        return res;
+    }
+};
+```
+****************************************
+- beat 100%
+
+这道题很有意思，要求我们输出从树的右侧可以看到的节点的值。
+
+我们可以这样想，如果在当前节点的深度大于右边的所有子树，那么该节点就是可以看到的；同时它又挡住了其左边比它深度小的所有节点。
+
+基于这个想法，我们在类中定义一个成员变量depth，用于记录已搜索完的子树中的最大深度，我们在搜索每一个节点时都要先把当前深度跟这个值比一下，若大于，则将当前节点的值放入数组中；否则就跳过这一步。
+
+接下来我们进行递归，递归时深度要加一，并且要先搜索当前节点的右子树，再搜索左子树。每搜索完一个子树，即当前节点为空，如果此时的d-1（上一个非空节点的深度）不小于depth的话，则将depth更新为d-1。
+
+这样就完成了对整个二叉树的搜索。

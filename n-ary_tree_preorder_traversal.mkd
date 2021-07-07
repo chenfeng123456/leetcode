@@ -1,0 +1,45 @@
+# N-ary Tree Preorder Traversal
+## Description:
+```
+Given an n-ary tree, return the preorder traversal of its nodes' values.
+ 
+
+For example, given a 3-ary tree:
+
+ 
+
+Return its preorder traversal as: [1,3,5,6,2,4].
+```
+**Note**: Recursive solution is trivial, could you do it iteratively?
+
+```python
+"""
+# Definition for a Node.
+class Node(object):
+    def __init__(self, val, children):
+        self.val = val
+        self.children = children
+"""
+class Solution(object):
+    def preorder(self, root):
+        """
+        :type root: Node
+        :rtype: List[int]
+        """
+        if root == None:
+            return []
+        res = []
+        l = []
+        l.append(root)
+        
+        i = 0
+        while len(l):
+            temp = l.pop()
+            res.append(temp.val)
+            if len(temp.children):
+                l.extend(temp.children[::-1])
+
+        return res
+```
+******************************************
+这题参照之前[N-ary Tree Postorder Traversal](https://github.com/chenfeng123456/leetcode/blob/tree/n-ary_tree_postorder_traversal.mkd)的*nice code*的思路来写很容易，只不过这里顺序不一样，我们每次需要pop的节点应该是每一层的第一个。这个问题看起来似乎有点麻烦，其实我们只需要在给l扩展时将children反着插入进来就可以了。

@@ -1,0 +1,87 @@
+# Binary Tree Zigzag Level Order Traversal
+## Description:
+```
+Given a binary tree, return the zigzag level order traversal of its nodes' values. (ie, from left to right, then right to left for the next level and alternate between).
+
+For example:
+Given binary tree [3,9,20,null,null,15,7],
+
+    3
+   / \
+  9  20
+    /  \
+   15   7
+
+return its zigzag level order traversal as:
+
+[
+  [3],
+  [20,9],
+  [15,7]
+]
+```
+```cpp
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    vector<vector<int>> zigzagLevelOrder(TreeNode* root) {
+        vector<vector<int> > res;
+        if (root == NULL)
+            return res;
+        list<TreeNode*> nodes(1, root);
+        res.push_back(vector<int>(1, root->val));
+        bool left = false;
+        int level = 1;
+        
+        while(!nodes.empty())
+        {
+            if (!level)
+            {
+                vector<int> temp;
+                if (left)
+                {
+                    for (list<TreeNode*>::iterator i=nodes.begin(); i != nodes.end(); i++)
+                        temp.push_back((*i)->val);
+                    left = false;
+                }
+                else
+                {
+                    for (list<TreeNode*>::reverse_iterator i=nodes.rbegin(); i != nodes.rend(); i++)
+                        temp.push_back((*i)->val);
+                    left = true;
+                }
+                res.push_back(temp);
+                level = nodes.size();
+            }
+            
+            TreeNode *temp = nodes.front();
+            nodes.pop_front();
+            level--;
+            
+
+                if (temp->left)
+                    nodes.push_back(temp->left);
+                if (temp->right)
+                    nodes.push_back(temp->right);
+        }
+        return res;
+    }
+};
+```
+*****************************
+- beat 100%
+
+好久没用c++写题了，有一点不习惯。
+
+这道题要求我们按层输出节点值，并且是正反向遍历交替进行。仿照之前的做法我们这里用一个list，即nodes来当队列（之所以不用deque是因为我们还要遍历它）。每次把最前面的元素删除后再往list的尾部加入它的子节点。用一个变量level来记录每一层的节点数。当我们遍历完一层之后，nodes中的这一层节点也都被删除了，剩余的都是下一层节点。我们此时再遍历nodes，把里面所有节点的值放进一个数组中，再把这个数组放进返回结果res里。至于遍历的顺序我们用一个bool变量left来控制，原理很简单，就不细说了。
+
+这里其实可以优化一下，我们每次删除第一个元素时，其实可以直接把这个元素的值放进一个临时数组中，当删除完一层的节点后直接把这个数组放进res中即可。这样可以减少一次对每一层的遍历。
